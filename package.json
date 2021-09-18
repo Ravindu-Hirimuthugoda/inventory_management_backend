@@ -1,0 +1,23 @@
+{
+  "name": "inventory_management_backend",
+  "version": "1.0.0",
+  "description": "InventoryManagementSystem",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wishwashan/inventory_management_backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wishwashan/inventory_management_backend/issues"
+  },
+  "homepage": "https://github.com/wishwashan/inventory_management_backend#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1"
+  }
+}
