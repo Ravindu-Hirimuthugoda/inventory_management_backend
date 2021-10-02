@@ -24,6 +24,8 @@ db.LectureBorrowing = require('../models/lecture_borrowing_model')(sequelize);
 
 db.Student = require('../models/student_model')(sequelize);
 db.TemporyBorrowing = require('../models/tempory_borrowing_model')(sequelize);
+db.Request = require('../models/requestmodel')(sequelize, Sequelize);
+db.RequestBorrowing = require('../models/normal_borrowing')(sequelize);
 //Relations
 
 
@@ -49,8 +51,24 @@ db.TemporyBorrowing.belongsTo(db.BorrowData);
 db.BorrowData.hasMany(db.TemporyBorrowing);
 
 
+db.RequestBorrowing.belongsTo(db.BorrowData);
+db.BorrowData.hasMany(db.RequestBorrowing);
+
+db.RequestBorrowing.belongsTo(db.Request);
+db.Request.hasMany(db.RequestBorrowing);
+
+
 db.BorrowData.belongsTo(db.Equipment);
 db.Equipment.hasMany(db.BorrowData);
+
+db.Request.belongsTo(db.Student);
+db.Student.hasMany(db.Request);
+
+db.Request.belongsTo(db.Lecture);
+db.Lecture.hasMany(db.Request);
+
+db.Request.belongsTo(db.Equipment);
+db.Equipment.hasMany(db.Request);
 
 module.exports = db;
 

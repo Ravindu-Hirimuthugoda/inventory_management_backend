@@ -3,6 +3,7 @@ const Equipment = require('../../services/technical_officer/equipment')
 const BorrowData = require('../../services/technical_officer/borrow_data');
 const Lab = require('../../services/technical_officer/lab');
 const Model = require('../../services/technical_officer/model');
+const Request = require('../../services/technical_officer/request');
 
 
 
@@ -158,12 +159,54 @@ const acceptEquipment = async (req, res, next) => {
 }
 const GetReport=async(req,res,next)=>{
     let borrow = new BorrowData();
-     const { fromdate, toDate, categories } = req.body;
+    const { fromdate, toDate, categories,reportType } = req.body;
+
+    console.log(fromdate, toDate, categories,reportType);
     try {
-        const result = await borrow.getReport(fromdate, toDate, categories);
-    } catch (error) {
+        if (reportType === 'usage') {
+            const result = await borrow.getReport(fromdate, toDate, categories);
+            console.log(result);
+            res.status(200).json(result);
+        }
+        else {
+            const result = await borrow.getAvailableReport(fromdate, toDate, categories);
+            res.status(200).json(result);
+        }
+
         
+        
+    } catch (error) {
+        console.log(error);
     }
 }
-
-module.exports = {acceptEquipment,AddEquipment,Getcategories,findIteamsByCatogary,getBorrowData,Getlabs,GetModels,findIteamByid,UpdateEquipment,temporyBorrow,GetlastBorrowData,GetReport};
+const getRequestData = async (req, res, next) => {
+   
+    const  {id} = req.params;
+     const requset = new Request();
+    try {
+       const result=await requset.GetrequestData(id);
+        console.log(result);
+        res.status(200).json(result);
+    } catch (error) {
+        console.log(error)
+    }
+    
+}
+const normalBorrow = async (req, res, next) => {
+     let borrow = new BorrowData();
+    const { userid,storeid,fromdate,todate,requestId } = req.body;
+    console.log(userid,storeid,fromdate,todate);
+    try {
+        const result = await borrow.AddnormalBorrow(userid, storeid, fromdate.split('T')[0], todate.split('T')[0],requestId);
+        if (result != null) {
+            res.status(406).json({ message: result });
+        }
+        else {
+            res.status(201).json({ message: result });
+        }
+        
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+}
+module.exports = {acceptEquipment,AddEquipment,Getcategories,findIteamsByCatogary,getBorrowData,Getlabs,GetModels,findIteamByid,UpdateEquipment,temporyBorrow,GetlastBorrowData,GetReport,getRequestData,normalBorrow};

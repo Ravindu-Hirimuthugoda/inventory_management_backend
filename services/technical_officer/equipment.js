@@ -42,7 +42,8 @@ class Equipment {
             modelId: model,
             LaboratoryId: lab,
             availability: 1,
-            status: 'notdamaged',
+                status: 'notdamaged',
+            addDate:new Date(),
             imageURL:'http://pngimg.com/uploads/photo_camera/photo_camera_PNG101644.png'
             ,
                 id: `${category}-${model}-${lab}-${c}`

@@ -1,20 +1,21 @@
 const { DataTypes } = require('sequelize');
 const StudentModel = require('./student_model');
 const BorrowData = require('./borrowing_model');
+const requestmodel = require('./requestmodel');
 
 module.exports = (sequelize) => {
-    const TemporyBorrowingModel = sequelize.define('TemporyBorrowing', {
+    const RequestBorrowing = sequelize.define('requestborrowing', {
         id: {
             type: DataTypes.INTEGER(11),
             autoincrement: true,
             allowNull: false,
             primaryKey: true
         },
-        studentId: {
+        requestId: {
             type: DataTypes.STRING(8),
             allowNull: false,
             references: {
-                model: StudentModel,
+                model: requestmodel,
                 key: 'id',
             }
         },
@@ -26,15 +27,11 @@ module.exports = (sequelize) => {
                 model: BorrowData,
                 key: 'id',
             }
-    },
-        reason: {
-            type: DataTypes.STRING(50),
-            allowNull: false,
-        }
+    }
     }, {
-        tableName: 'TemporyBorrowing',
+        tableName: 'requestborrowing',
         timestamps: false,
 
     });
-    return TemporyBorrowingModel;
+    return RequestBorrowing;
 }

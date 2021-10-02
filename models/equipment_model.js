@@ -48,7 +48,11 @@ module.exports = (sequelize, DataTypes) => {
         status: {
             type: DataTypes.ENUM('damaged', 'notdamaged'),
             allowNull: false,
-        }
+        },
+        addDate: {
+        type: DataTypes.DATE,
+            allowNull: false,
+    },
     }, {
         tableName: 'Equipment',
         timestamps: false,
