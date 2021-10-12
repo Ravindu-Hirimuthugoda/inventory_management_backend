@@ -26,4 +26,22 @@ const rejectRequest = async(id)=>{
     const res = await lecturer.rejectRequest(id);
 }
 
-module.exports = {getPendingRequests,getPendingDetails,approveRequest,rejectRequest};
+const saveLecturerNormalData = async(detail)=>{
+    try{
+        const response = await lecturer.saveNormalData(detail);
+        return('Suxxessfully save data');
+    }catch(error){
+        return(error);
+    }
+}
+
+const saveLecturerTemporyData = async(detail)=>{
+    try{
+        const response = await lecturer.saveTemporyData(detail);
+        return('Suxxessfully save data');
+    }catch(error){
+        return(error);
+    }
+}
+
+module.exports = {getPendingRequests,getPendingDetails,approveRequest,rejectRequest,saveLecturerNormalData,saveLecturerTemporyData};

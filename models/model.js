@@ -7,10 +7,6 @@ const Model = sequelize.define('Model',{
         primaryKey:true,
         allowNull:false,
     },
-    categoryId:{
-        type:DataTypes.INTEGER,
-        allowNull:false,
-    },
     modelName:{
         type: DataTypes.STRING,
         allowNull:false,

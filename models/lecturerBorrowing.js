@@ -17,7 +17,7 @@ const LecturerBorrowing = sequelize.define('LecturerBorrowing',{
     },
     borrowingId:{
         type:DataTypes.INTEGER,
-        allowNull:false,
+        allowNull:true,
     }
 },{
     sequelize,

@@ -24,8 +24,8 @@ class User{
         equipment.belongsTo(category);
         equipment.belongsTo(model);
         equipment.belongsTo(lab);
-        const details = await equipment.findAll({include:[{model:category,attributes:['categoryName']},{model:lab,attributes:['labName']},{model:model,attributes:['modelName']}],attributes:['id','imageURL','availability',],raw:true});
-        //console.log(details);
+        const details = await equipment.findAll({include:[{model:category,attributes:['categoryName']},{model:lab,attributes:['labName']},{model:model,attributes:['modelName']}],attributes:['id','imageURL','availability'],raw:true});
+        console.log(details);
         return details;
     }
 
@@ -42,16 +42,20 @@ class User{
     }
 
     async getCategories(){
-        const result = await category.findAll({attributes:['categoryName']});
+        category.hasMany(equipment);
+        equipment.belongsTo(category);
+        const result = await equipment.findAll({include:[{model:category,attributes:['categoryName']}],where:{availability:{[Op.eq]:'1'}},attributes:[],raw:true});
         //console.log(result);
         return result;
     }
 
     async getModels(categoryName){
-        category.hasMany(model);
-        model.belongsTo(category);
-        const result = await model.findAll({include:{model:category,where:{categoryName:{[Op.eq]:categoryName}},attributes:['categoryName']},attributes:['modelName'],raw:true})
-        //console.log(result);
+        category.hasMany(equipment);
+        equipment.belongsTo(category);
+        model.hasMany(equipment);
+        equipment.belongsTo(model);
+        const result = await equipment.findAll({include:[{model:category,where:{categoryName:{[Op.eq]:categoryName}},attributes:['categoryName']},{model:model,attributes:['modelName']}],where:{availability:{[Op.eq]:'1'}},attributes:[],raw:true});
+        console.log(result);
         return result;
     }
 
@@ -62,8 +66,8 @@ class User{
         equipment.belongsTo(category);
         equipment.belongsTo(model);
         equipment.belongsTo(lab);
-        const result = await equipment.findAll({include:[{model:category,where:{categoryName:{[Op.eq]:categoryName}},attributes:[]},{model:model,where:{modelName:{[Op.eq]:modelName}},attributes:[]},{model:lab,attributes:['labName']},],raw:true,attributes:[]});
-        console.log(result);
+        const result = await equipment.findAll({include:[{model:category,where:{categoryName:{[Op.eq]:categoryName}},attributes:[]},{model:model,where:{modelName:{[Op.eq]:modelName}},attributes:[]},{model:lab,attributes:['labName']},],where:{availability:{[Op.eq]:'1'}},raw:true,attributes:[]});
+        //console.log(result);
         return result;
     }
 
@@ -74,13 +78,14 @@ class User{
         equipment.belongsTo(category);
         equipment.belongsTo(model);
         equipment.belongsTo(lab);
-        const result = await equipment.findAll({include:[{model:category,where:{categoryName:{[Op.eq]:categoryName}},attributes:[]},{model:model,where:{modelName:{[Op.eq]:modelName}},attributes:[]},{model:lab,where:{labName:{[Op.eq]:labName}},attributes:[]},],raw:true,attributes:['id']});
+        const result = await equipment.findAll({include:[{model:category,where:{categoryName:{[Op.eq]:categoryName}},attributes:[]},{model:model,where:{modelName:{[Op.eq]:modelName}},attributes:[]},{model:lab,where:{labName:{[Op.eq]:labName}},attributes:[]},],where:{availability:{[Op.eq]:'1'}},raw:true,attributes:['id']});
         console.log(result);
         return result;
     }
 
     async getReturnDate(id){
-        const result = await request.findAll({where:{equipmentId:{[Op.eq]:id}},attributes:['returnDate']});
+        const result = await request.findAll({where:{equipmentId:id},attributes:['returnDate']});
+        //console.log(result);
         return result;
     }
 

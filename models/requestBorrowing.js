@@ -14,7 +14,7 @@ const RequestBorrowingModel = sequelize.define('RequestBorrowing',{
     },
     borrowingId:{
         type:DataTypes.INTEGER,
-        allowNull:false,
+        allowNull:true,
     },
     studentId:{
         type:DataTypes.STRING,

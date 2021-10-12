@@ -6,6 +6,7 @@ const RequestModel = sequelize.define('Request',{
         type:DataTypes.INTEGER,
         allowNull:false,
         primaryKey:true,
+        autoIncrement:true,
     },
     status:{
         type:DataTypes.ENUM('pass','fail','pending'),

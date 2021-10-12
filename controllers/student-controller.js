@@ -19,5 +19,35 @@ const getStudentBorrowedItems = async (req,res,next)=>{
     }
 }
 
+const getReleventLecturer = async(labId)=>{
+    try{
+        const result = await student.getLecturer(labId);
+        if(result){
+            return(result);
+        }else{
+            return('Error')
+        }
+    }catch(err){
+        return(err);
+    }
+}
 
-module.exports = {getStudentBorrowedItems}
+const saveData = async(detail)=>{
+    try{
+        const response = await student.saveData(detail);
+        return('Suxxessfully save data');
+    }catch(error){
+        return(error);
+    }
+}
+
+const saveStudentTemporyData = async(detail)=>{
+    try{
+        const response = await student.saveTemoryData(detail);
+        return('Suxxessfully save data');
+    }catch(error){
+        return(error);
+    }
+}
+
+module.exports = {getStudentBorrowedItems,getReleventLecturer,saveData,saveStudentTemporyData}

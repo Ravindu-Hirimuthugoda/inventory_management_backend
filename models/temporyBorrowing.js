@@ -17,7 +17,7 @@ const TemporyBorrowing = sequelize.define('TemoryBorrowing',{
     },
     borrowingId:{
         type:DataTypes.INTEGER,
-        allowNull:false,
+        allowNull:true,
     }
 },{
     sequelize,

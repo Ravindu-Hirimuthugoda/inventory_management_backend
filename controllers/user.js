@@ -9,7 +9,8 @@ const checkAvailability = async(req,res,next)=>{
             console.log(m);
             if(!m.availability){
                 const date = await user.getReturnDate(m.id);
-                m= {...m,returnDate:date[0].returnDate};
+                console.log(date.slice(-1));
+                m= {...m,returnDate:date.slice(-1)[0].returnDate};
             }
             lst.push(m);
         }
@@ -52,46 +53,48 @@ const getAllCategories = async(req,res,next)=>{
     }
 }
 
-const getModels = async(req,res,next)=>{
-    console.log(req.body);
+const getModels = async(category)=>{
     try{
-        const result = await user.getModels('projector');
+        const result = await user.getModels(category);
         //console.log(result)
         if(result){
-            res.send(result);
+            return result;
         }else{
-            res.send('Error');
+            return('Error');
         }
     }catch(err){
-        next(err);
+        return(err);
     }
 }
 
-const getLab = async(req,res,next)=>{
-    //urlEncoder
+
+
+const getLab = async(category,model)=>{
     try{
-        const result = await user.getLab('projector','CA124-B');
+        const result = await user.getLab(category,model);
+        console.log(result);
         if(result){
-            res.send(result);
+            return(result);
         }else{
-            res.send('Error');
+            console.log('something ');
+            return('Error');
         }
     }catch(err){
-        next(err);
+        return(err);
     }
 }
 
-const getStoreCode = async(req,res,next)=>{
+const getStoreCode = async(category,model,labName)=>{
     //urlEncoder
     try{
-        const result = await user.getStoreCode('projector','CA124-B','CSE Level 1');
+        const result = await user.getStoreCode(category,model,labName);
         if(result){
-            res.send(result);
+            return(result);
         }else{
-            res.send('Error');
+            return('Error');
         }
     }catch(err){
-        next(err);
+        return(err);
     }
 }
 

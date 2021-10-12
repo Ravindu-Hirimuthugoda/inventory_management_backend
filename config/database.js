@@ -4,7 +4,8 @@ const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize("inventoryManagement", "root", "", {
     dialect:"mysql",
-    host:"localhost"
+    host:"localhost",
+    logging:console.log
   });
 
 
