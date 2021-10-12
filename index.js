@@ -134,7 +134,7 @@ app.post('/test',async(req,res,next)=>{
     res.send('Happy');
 });
 
-app.listen(port,()=>{
+app.listen(process.env.PORT || port,()=>{
     console.log('Server running');
 });
 
