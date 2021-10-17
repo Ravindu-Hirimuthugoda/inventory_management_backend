@@ -13,9 +13,9 @@ class Lecturer{
     constructor(){
         try{
             sequelize.authenticate();
-            console.log('Database connected');
+            //console.log('Database connected');
         }catch(err){
-            console.log('Database error', err);
+            //console.log('Database error', err);
         } 
     }
 
@@ -25,7 +25,7 @@ class Lecturer{
         request.belongsTo(equipment);
         
         const result = await request.findAll({include:[{model:requestBorrowing,where:{lecturerId:{[Op.eq]:'123456L'}},attributes:['studentId','lecturerId']}],where:{status:{[Op.eq]:'pending'}},attributes:['id','equipmentId','requestDate','returnDate'],raw:true});
-        console.log(result);
+        //console.log(result);
         return result;
     }
 
@@ -64,7 +64,7 @@ class Lecturer{
         const reqDate=this.convert(req);
         const retDate = this.convert(ret);
         //console.log(a);
-        console.log(detail);
+        //console.log(detail);
 
         try{
             const total = await request.count();
@@ -90,10 +90,10 @@ class Lecturer{
 
             const equpment = await equipment.update({availability:'0'},{where:{id:detail.equipmentId}},{transaction});
             
-            console.log('success');
+            //console.log('success');
             await transaction.commit();
         }catch(err){
-            console.log('Error');
+            //console.log('Error');
             await transaction.rollback();
         }
     }
@@ -101,11 +101,11 @@ class Lecturer{
     async saveTemporyData(detail){
         const transaction = await sequelize.transaction();
         //console.log(a);
-        console.log(detail);
+        //console.log(detail);
 
         try{
             const total = await request.count();
-            console.log(total);
+            //console.log(total);
             const req = await request.create({
                 id: total+1,
                 status:'pass',
@@ -127,10 +127,10 @@ class Lecturer{
 
             const equpment = await equipment.update({availability:'0'},{where:{id:detail.equipmentId}},{transaction});
             
-            console.log('success');
+            //console.log('success');
             await transaction.commit();
         }catch(err){
-            console.log('Error');
+            //console.log('Error');
             await transaction.rollback();
         }
     }

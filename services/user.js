@@ -11,7 +11,7 @@ class User{
     constructor(){
         try{
             sequelize.authenticate();
-            console.log('Database connected');
+            //console.log('Database connected');
         }catch(err){
             console.log('Database error', err);
         }

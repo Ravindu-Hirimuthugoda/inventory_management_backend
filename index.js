@@ -2,14 +2,34 @@ const sequelize = require('./config/database');
 const {checkAvailability,getAllCategories, getModels, getLab, getStoreCode,getAvailabelItems} = require('./controllers/user');
 const {getStudentBorrowedItems,getReleventLecturer,saveData,saveStudentTemporyData} = require('./controllers/student-controller');
 const {getPendingRequests,getPendingDetails,approveRequest,rejectRequest, saveLecturerNormalData,saveLecturerTemporyData} = require('./controllers/lecturer-controller');
+const {Server, Socket} = require('socket.io');
+const http = require('http');
 
 
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const port = 5000;
+const port = 5000 || process.env.PORT;
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// const server = http.createServer(app);
+
+// const io = new Server(server,{
+//     cors:{
+//         origin: "*",
+//         methods: ["GET","POST"],
+//     },
+// });
+
+// io.on("connection",(socket)=>{
+//     console.log(`User connected: ${socket.id}`);
+
+//     socket.on("join_room",(data)=>{
+//         socket.join(data);
+//         console.log(`User with ID: ${socket.id} joined to the room ${data}`);
+//     })
+// })
 
 app.use((req,res,next)=>{
     res.header("Access-Control-Allow-Origin", "*");
@@ -21,12 +41,12 @@ app.use((req,res,next)=>{
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
-app.use('/checkAvaiability',checkAvailability);
-app.use('/ava',getAvailabelItems);
-app.use('/category',getAllCategories);
-app.use('/borrow',getStudentBorrowedItems);
-app.use('/pending',getPendingRequests);
-app.use('/requestDetail/:id',async(req,res,next)=>{
+app.get('/checkAvaiability',checkAvailability);
+app.get('/ava',getAvailabelItems);
+app.get('/category',getAllCategories);
+app.get('/borrow',getStudentBorrowedItems);
+app.get('/pending',getPendingRequests);
+app.get('/requestDetail/:id',async(req,res,next)=>{
     try{
         const response= await getPendingDetails(req.params.id);
         //console.log(response);
@@ -35,7 +55,7 @@ app.use('/requestDetail/:id',async(req,res,next)=>{
         return err;
     }
 });
-app.use('/model/:category',async(req,res,next)=>{
+app.get('/model/:category',async(req,res,next)=>{
     try{
         const response = await getModels(req.params.category);
         res.send(response);
@@ -140,9 +160,11 @@ app.post('/test',async(req,res,next)=>{
     res.send('Happy');
 });
 
-app.listen(process.env.PORT || port,()=>{
-    console.log('Server running');
+app.listen(port,()=>{
+    //console.log(`Server running in ${port}`);
 });
+
+module.exports = app;
 
 
 
