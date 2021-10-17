@@ -1,4 +1,6 @@
+const dotenv = require("dotenv");
 const config = require('./config');
+require('dotenv').config()
 
 const { Sequelize } = require('sequelize');
 
@@ -8,11 +10,14 @@ const { Sequelize } = require('sequelize');
 //     logging:console.log
 //   });
 
-const sequelize = new Sequelize("heroku_2f094f4ccd51bd3", "b5f38ad8090f87", "fabca632", {
+
+
+const sequelize = new Sequelize(process.env.dbname, process.env.username, process.env.psw, {
   dialect:"mysql",
-  host:"us-cdbr-east-04.cleardb.com",
+  host:process.env.host,
   logging:console.log
 });
+
 
 
 module.exports = sequelize;

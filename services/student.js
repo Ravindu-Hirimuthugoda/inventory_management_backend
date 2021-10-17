@@ -1,4 +1,4 @@
-const sequelize =require("../config/database");
+const db =require("../config/database");
 const borrowing = require('../models/borrowing');
 const request = require('../models/request');
 const requestBorrowing = require('../models/requestBorrowing');
@@ -14,7 +14,7 @@ const {Op, where} = require('sequelize');
 class Student{
     constructor(){
         try{
-            sequelize.authenticate();
+            db.sequelize.authenticate();
             //console.log('Database connected');
         }catch(err){
             console.log('Database error', err);
@@ -55,7 +55,7 @@ class Student{
     }
 
     async saveData(detail){
-        const transaction = await sequelize.transaction();
+        const transaction = await db.sequelize.transaction();
         const req= new Date(detail.requestDate).toString();
         const ret = new Date(detail.returnDate).toString();
         const reqDate=this.convert(req);
@@ -97,7 +97,7 @@ class Student{
     }
 
     async saveTemoryData(detail){
-        const transaction = await sequelize.transaction();
+        const transaction = await db.sequelize.transaction();
         //console.log(a);
         console.log(detail);
 

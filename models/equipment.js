@@ -28,9 +28,13 @@ const EquipmentModel = sequelize.define('Equipment',{
         allowNull:false,
     },
     status:{
-        type:DataTypes.STRING,
+        type: DataTypes.ENUM('damage', 'notdamage'),
         allowNull:false,
-    }
+    },
+    addDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+    },
 },{
     sequelize,
     timestamps:false,

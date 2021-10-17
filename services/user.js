@@ -1,4 +1,4 @@
-const sequelize = require("../config/database");
+const db = require("../config/database");
 const category = require('../models/category');
 const model = require('../models/model');
 const lab = require('../models/laboratory');
@@ -10,7 +10,7 @@ class User{
 
     constructor(){
         try{
-            sequelize.authenticate();
+            db.sequelize.authenticate();
             //console.log('Database connected');
         }catch(err){
             console.log('Database error', err);
