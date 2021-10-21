@@ -1,4 +1,4 @@
-const db = require("../config/database");
+const sequelize = require("../config/database");
 const request = require('../models/request');
 const requestBorrowing = require('../models/requestBorrowing');
 const temporyBorrowing = require('../models/temporyBorrowing');
@@ -12,7 +12,7 @@ const lecturerBorrowing = require('../models/lecturerBorrowing');
 class Lecturer{
     constructor(){
         try{
-            db.sequelize.authenticate();
+            sequelize.authenticate();
             //console.log('Database connected');
         }catch(err){
             //console.log('Database error', err);
@@ -58,7 +58,7 @@ class Lecturer{
     }
 
     async saveNormalData(detail){
-        const transaction = await db.sequelize.transaction();
+        const transaction = await sequelize.transaction();
         const req= new Date(detail.requestDate).toString();
         const ret = new Date(detail.returnDate).toString();
         const reqDate=this.convert(req);
@@ -99,7 +99,7 @@ class Lecturer{
     }
 
     async saveTemporyData(detail){
-        const transaction = await db.sequelize.transaction();
+        const transaction = await sequelize.transaction();
         //console.log(a);
         //console.log(detail);
 

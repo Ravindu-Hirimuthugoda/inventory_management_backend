@@ -1,4 +1,4 @@
-db = {}
+const db = {}
 
 db.Equipment = require('./equipment');
 db.Category = require('./category');

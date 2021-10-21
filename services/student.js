@@ -1,4 +1,4 @@
-const db =require("../config/database");
+const sequelize =require("../config/database");
 const borrowing = require('../models/borrowing');
 const request = require('../models/request');
 const requestBorrowing = require('../models/requestBorrowing');
@@ -14,7 +14,7 @@ const {Op, where} = require('sequelize');
 class Student{
     constructor(){
         try{
-            db.sequelize.authenticate();
+            sequelize.authenticate();
             //console.log('Database connected');
         }catch(err){
             console.log('Database error', err);
@@ -22,6 +22,7 @@ class Student{
     }
 
     async getBorrowedItems(){
+        
         borrowing.hasOne(temporyBorrowing);
         borrowing.hasOne(requestBorrowing);
 
@@ -30,7 +31,8 @@ class Student{
         const result1 = await borrowing.findAll({include:{model:temporyBorrowing,where:{[Op.and]:[{borrowingId:{[Op.ne]:null}},{studentId:{[Op.eq]:'180244B'}}]},attributes:[]},raw:true});
         const result2 = await borrowing.findAll({include:{model:requestBorrowing,where:{[Op.and]:[{borrowingId:{[Op.ne]:null}},{studentId:{[Op.eq]:'180244B'}}]},attributes:[]},raw:true});
         const result = result1.concat(result2);
-        //console.log(result1);
+        //console.log(result);
+        //console.log('run here');
         return result;
 
     }
@@ -54,14 +56,16 @@ class Student{
         return result;
     }
 
-    async saveData(detail){
-        const transaction = await db.sequelize.transaction();
+    async saveDataDB(detail){
+        console.log('run here 4');
+        const transaction = await sequelize.transaction();
         const req= new Date(detail.requestDate).toString();
         const ret = new Date(detail.returnDate).toString();
         const reqDate=this.convert(req);
         const retDate = this.convert(ret);
         //console.log(a);
         console.log(detail);
+        
 
         try{
             const total = await request.count();
@@ -97,7 +101,7 @@ class Student{
     }
 
     async saveTemoryData(detail){
-        const transaction = await db.sequelize.transaction();
+        const transaction = await sequelize.transaction();
         //console.log(a);
         console.log(detail);
 

@@ -28,3 +28,4 @@ module.exports = sequelize;
 // psw = fabca632
 // host = us-cdbr-east-04.cleardb.com
 // dbname = heroku_2f094f4ccd51bd3
+//hjklkjhjk

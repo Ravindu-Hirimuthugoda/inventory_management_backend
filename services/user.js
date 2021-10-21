@@ -1,4 +1,4 @@
-const db = require("../config/database");
+const sequelize = require("../config/database");
 const category = require('../models/category');
 const model = require('../models/model');
 const lab = require('../models/laboratory');
@@ -10,7 +10,7 @@ class User{
 
     constructor(){
         try{
-            db.sequelize.authenticate();
+            sequelize.authenticate();
             //console.log('Database connected');
         }catch(err){
             console.log('Database error', err);
@@ -44,7 +44,7 @@ class User{
     async getCategories(){
         category.hasMany(equipment);
         equipment.belongsTo(category);
-        const result = await equipment.findAll({include:[{model:category,attributes:['categoryName']}],where:{availability:{[Op.eq]:'1'}},attributes:[],raw:true});
+        const result = await equipment.findAll({include:[{model:category,attributes:['categoryName']}],where:{availability:{[Op.eq]:'1'}},group:['categoryId'],attributes:[],raw:true});
         //console.log(result);
         return result;
     }
@@ -54,7 +54,7 @@ class User{
         equipment.belongsTo(category);
         model.hasMany(equipment);
         equipment.belongsTo(model);
-        const result = await equipment.findAll({include:[{model:category,where:{categoryName:{[Op.eq]:categoryName}},attributes:['categoryName']},{model:model,attributes:['modelName']}],where:{availability:{[Op.eq]:'1'}},attributes:[],raw:true});
+        const result = await equipment.findAll({include:[{model:category,where:{categoryName:{[Op.eq]:categoryName}},attributes:['categoryName']},{model:model,attributes:['modelName']}],where:{availability:{[Op.eq]:'1'}},group:['modelId'],attributes:[],raw:true});
         console.log(result);
         return result;
     }
@@ -66,7 +66,7 @@ class User{
         equipment.belongsTo(category);
         equipment.belongsTo(model);
         equipment.belongsTo(lab);
-        const result = await equipment.findAll({include:[{model:category,where:{categoryName:{[Op.eq]:categoryName}},attributes:[]},{model:model,where:{modelName:{[Op.eq]:modelName}},attributes:[]},{model:lab,attributes:['labName']},],where:{availability:{[Op.eq]:'1'}},raw:true,attributes:[]});
+        const result = await equipment.findAll({include:[{model:category,where:{categoryName:{[Op.eq]:categoryName}},attributes:[]},{model:model,where:{modelName:{[Op.eq]:modelName}},attributes:[]},{model:lab,attributes:['labName']},],where:{availability:{[Op.eq]:'1'}},group:['labId'],raw:true,attributes:[]});
         //console.log(result);
         return result;
     }
