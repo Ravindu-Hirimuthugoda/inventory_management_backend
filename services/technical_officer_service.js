@@ -30,58 +30,51 @@ class TechnicalOfficerService{
         return technicalOfficer;
     }
 
-    async readTechnicalOfficer(email){
-        
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
-                    
-        //     },raw:true
-        // });
+    async readLastEntry(){
+        const technicalOfficers =  await TechnicalOfficerModel.findAll({
+             limit: 1,
+             order: [ [ 'createdAt', 'DESC' ]]
+           });
+           if(technicalOfficers == null){
+             throw new Error('Something went wrong!');
+         }
+         console.log(technicalOfficers);
+         return technicalOfficers;
+     }
 
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
+    async readAllTechnicalOfficer(){        
+        console.log("read technicalOfficer");
+        const technicalOfficers = await TechnicalOfficerModel.findAll({
+
+        });
+        if(technicalOfficers == null){
+            throw new Error('Something went wrong!');
+        }
+        console.log(technicalOfficers);
+        return technicalOfficers;
+    
     }
 
-    async readAllTechnicalOfficer(){
-        
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
+    async updateTechnicalOfficer(firstName,lastName,labId){
+        await TechnicalOfficerModel.update(
+            {
+            where:{[Op.and]:
+                [{id:id }]
                     
-        //     },raw:true
-        // });
+            },raw:true
+            },
+            {
+                firstName: firstName,
+                lastName: lastName,
+                laboratoryId:labId
+            }
+        ).success(function(technicalOfficer) { 
 
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
-    }
-
-    async updateTechnicalOfficer(email){
-        
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
-                    
-        //     },raw:true
-        // });
-
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
+           return technicalOfficer;
+       
+        }).error(function(err) {        
+            throw new Error('technicalOfficer not updated');            
+        });        
     }
 
 

@@ -14,7 +14,7 @@ var DamageItem = sequelizeConfig.define('damageitem', {
       allowNull:false,
     },
     itemStatus: {
-        type: DataTypes.ENUM("pending","repair","close"),
+        type: DataTypes.STRING,
         defaultValue: "pending",
         allowNull:false
       },

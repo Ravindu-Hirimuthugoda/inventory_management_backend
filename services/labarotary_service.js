@@ -3,6 +3,7 @@ const sequelize=require('../config/database_config');
  const LaboratoryModel=require('../models/laboratory_model');
 const {Op} = require("sequelize");
 
+
 class LaboratoryService{
     
     constructor(){
@@ -33,28 +34,27 @@ class LaboratoryService{
 
         });
         if(laboratory == null){
-            return null;
+            throw new Error('Laboratory Exsist');
         }
         console.log(laboratory);
         return laboratory;
     }
 
-    async readLaboratory(email){
-        
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
-                    
-        //     },raw:true
-        // });
+    
+    async readLastEntry(){
+        await LaboratoryModel.findAll({
+            limit: 1,
+            where: {
+              //your where conditions, or without them if you need ANY entry
+            },
+            order: [ [ 'createdAt', 'DESC' ]]
+          }).success(function(admin) { 
 
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
+           return admin;
+       
+        }).error(function(err) {        
+            throw new Error('Admin not updated');            
+        });
     }
 
     async readAllLaboratory(){
@@ -64,29 +64,32 @@ class LaboratoryService{
 
         });
         if(laboratory == null){
-            return null;
+            throw new Error('Something went wrong!');
         }
         console.log(laboratory);
         return laboratory;
     
     }
 
-    async updateLaboratory(email){
-        
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
+    async updateLaboratory(labName,department){
+        await AdminModel.update(
+            {
+            where:{[Op.and]:
+                [{id:id }]
                     
-        //     },raw:true
-        // });
+            },raw:true
+            },
+            {
+                firstName: firstName,
+                lastName: lastName
+            }
+        ).success(function(admin) { 
 
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
+           return admin;
+       
+        }).error(function(err) {        
+            throw new Error('Admin not updated');            
+        });        
     }
 
 }

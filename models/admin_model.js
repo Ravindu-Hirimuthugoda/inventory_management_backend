@@ -15,7 +15,7 @@ var Admin = sequelizeConfig.define('admin', {
     },
   }, {
     freezeTableName: true,
-    timestamps:false
+
 
   });
 

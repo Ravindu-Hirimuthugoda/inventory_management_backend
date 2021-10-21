@@ -31,59 +31,51 @@ class LecturerService{
         console.log(lecture);
         return lecture;
     }
+    async readLastEntry(){
+        const lecturers =  await LectureModel.findAll({
+             limit: 1,
+             order: [ [ 'createdAt', 'DESC' ]]
+           });
+           if(lecturers == null){
+             throw new Error('Something went wrong!');
+         }
+         console.log(lecturers);
+         return lecturers;
+     }
 
-    async readLecturer(email){
-        
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
-                    
-        //     },raw:true
-        // });
+    async readAllLecture(){        
+        console.log("read Lecture");
+        const lecture = await LectureModel.findAll({
 
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
+        });
+        if(lecture == null){
+            throw new Error('Something went wrong!');
+        }
+        console.log(lecture);
+        return lecture;
+    
     }
 
-    async readAllLecturer(){
-        
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
+    async updateLecture(firstName,lastName,department){
+        await LectureModel.update(
+            {
+            where:{[Op.and]:
+                [{id:id }]
                     
-        //     },raw:true
-        // });
+            },raw:true
+            },
+            {
+                firstName: firstName,
+                lastName: lastName,
+                department:department
+            }
+        ).success(function(lecture) { 
 
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
-    }
-
-    async updateLecturer(email){
-        
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
-                    
-        //     },raw:true
-        // });
-
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
+           return lecture;
+       
+        }).error(function(err) {        
+            throw new Error('lecture not updated');            
+        });        
     }
 
 

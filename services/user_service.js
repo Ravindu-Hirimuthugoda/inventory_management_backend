@@ -60,23 +60,23 @@ class UserService{
 
     async readUser(){
         
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
+        console.log(email);
+        const user = await TestModel.findOne({
+            arrtibute:["id","type","password"],
+            where:{[Op.and]:
+                [{email:email,isDelete: 0 }]
                     
-        //     },raw:true
-        // });
+            },raw:true
+        });
 
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
+        // console.log(user);
+        if(user == null){
+            throw new Error('Invalid email or password');
+        }
+        return user;
     }
 
-    async updateUser(email){
+    async updateUserEmail(email){
         
         // console.log(email);
         // const user = await TestModel.findOne({
@@ -93,6 +93,24 @@ class UserService{
         // }
         // return user;
     }
+    async updateUserPassword(email){
+        
+        // console.log(email);
+        // const user = await TestModel.findOne({
+        //     arrtibute:["id","type","password"],
+        //     where:{[Op.and]:
+        //         [{email:email,isDelete: 0 }]
+                    
+        //     },raw:true
+        // });
+
+        // // console.log(user);
+        // if(user == null){
+        //     throw new Error('Invalid email or password');
+        // }
+        // return user;
+    }
+
 
     
 

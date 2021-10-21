@@ -15,7 +15,7 @@ var OfficeClerk = sequelizeConfig.define('officeclerk', {
 
   }, {
     freezeTableName: true,
-    timestamps:false
+
   });
   
 

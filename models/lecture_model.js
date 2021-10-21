@@ -17,7 +17,7 @@ var Lecturer = sequelizeConfig.define('lecturer', {
     },
   }, {
     freezeTableName: true,
-    timestamps:false
+
   });
 
   module.exports = Lecturer;

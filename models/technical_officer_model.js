@@ -14,7 +14,7 @@ var TechnicalOfficer = sequelizeConfig.define('technicalofficer', {
     },
   }, {
     freezeTableName: true,
-    timestamps:false
+
   });
   
 

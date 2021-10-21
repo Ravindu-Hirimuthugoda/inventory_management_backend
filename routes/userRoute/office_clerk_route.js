@@ -1,10 +1,17 @@
 const express = require('express');
 const router = express.Router();
+const authorization = require('../../middleware/authorization');
 
-const { getDamageItem } = require('../../controllers/office_clerk_controller');
+const officeClerkController = require('../../controllers/office_clerk_controller');
 
 
-router.get('/get-damage-item', getDamageItem);
+router.get('/get-new-damage-item', authorization,officeClerkController.getNewDamageItem);
+router.get('/get-old-damage-item',authorization, officeClerkController.getFinishedDamageItem);
+router.get('/get-under-repair-item',authorization, officeClerkController.getUnderRepairItem);
+
+router.put('/send-to-repair/:damageid',authorization, officeClerkController.markAsSendToRepair);
+router.put('/finish-repair/:damageid',authorization, officeClerkController.markAsFinishedRepair);
+
 
 
 

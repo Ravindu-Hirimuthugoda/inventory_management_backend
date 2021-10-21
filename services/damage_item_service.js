@@ -16,94 +16,98 @@ class DamageItemService{
         }
     }
 
-    async createDamageItem(index,firstName,lastName,uid){
+    // async createDamageItem(index,firstName,lastName,uid){
         
       
-    }
+    // }
 
-    async readDamageItem(email){
-        
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
-                    
-        //     },raw:true
-        // });
-
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
-    }
-
-    async readNewDamageItem(){
-        
-        // console.log("read damage");
-        // const damages = await DamageItemModel.findAll({
-        //     where:{[Op.and]:
-        //         [{status:"pending" }]
-                    
-        //     },raw:true
-        // });
-        // console.log(damages);
-        // console.log("damages");
-        
-        // if(damages == null){
-        //     return false;
-        // }
-        
-        // return damages;
-        console.log("read laboratory");
-        const laboratory = await DamageItemModel.findAll({
+    async readUnderRepairDamageItem(email){
+        const damageItems = await DamageItemModel.findAll({
             subQuery: false,
             include: [{
                     model:ItemModel,
                 }],
-            // where:{[Op.and]:[{status:"pending" }]},
+            where:{[Op.and]:[{itemStatus:"repair" }]},
 
         });
-        if(laboratory == null){
-            return null;
+        if(damageItems == null){
+            throw new Error('Something went wrong!');;
         }
-        console.log(laboratory);
-        return laboratory;
+        // console.log(damageItems);
+        return damageItems;
+
     }
 
-    async updateDamageItem(id,status,isClose){
-        let damageItem;
-        if(isClose){
-            damageItem = await DamageItemModel.update({     
-                subQuery: false,
-                include: [{
+    async readOldDamageItem(email){
+        const damageItems = await DamageItemModel.findAll({
+            subQuery: false,
+            include: [{
                     model:ItemModel,
-                }], 
-                where:{[Op.and]:
-                    [{id:id,}]                        
-                },raw:true
-            });
+                }],
+            where:{[Op.and]:[{itemStatus:"finished" }]},
 
-        }else{
-            damageItem = await DamageItemModel.update({
-                where:{[Op.and]:
-                    [{id:id }]
-                        
-                },raw:true
-            });
-
+        });
+        if(damageItems == null){
+            throw new Error('Something went wrong!');;
         }
-        
-        console.log(email);
-      
+        // console.log(damageItems);
+        return damageItems;
 
-        // console.log(user);
-        if(damageItem == null){
-            throw new Error('Invalid Damage Item');
-        }
-        return damageItem;
     }
+
+    async readNewDamageItem(){
+        const damageItems = await DamageItemModel.findAll({
+            subQuery: false,
+            include: [{
+                    model:ItemModel,
+                }],
+            where:{[Op.and]:[{itemStatus:"pending" }]},
+
+        });
+        if(damageItems == null){
+            throw new Error('Something went wrong!');;
+        }
+        // console.log(damageItems);
+        return damageItems;
+    }
+
+    async markFinishedRepair(id,status){
+        const damageItems = await DamageItemModel.update(
+            {closeDate : sequelize.literal('CURRENT_TIMESTAMP'), itemStatus: status },
+            {
+            subQuery: false,
+            include: [{
+                    model:ItemModel,
+                }],
+            where:{[Op.and]:[{itemStatus:"repair" , id: id}]},
+
+        });
+        if(damageItems == null){
+            throw new Error('Something went wrong!');;
+        }
+        return true;
+ 
+    }
+
+    async markAsSendToRepair(id,status){
+        const damageItems = await DamageItemModel.update(
+            {itemStatus: status },
+            {
+            subQuery: false,
+            include: [{
+                    model:ItemModel,
+                }],
+            where:{[Op.and]:[{itemStatus:"pending" , id: id}]},
+
+        });
+        if(damageItems == null){
+            throw new Error('Something went wrong!');;
+        }
+        return true;
+ 
+    }
+
+    
 
 
 }

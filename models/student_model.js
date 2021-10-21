@@ -17,7 +17,7 @@ var Student = sequelizeConfig.define('student', {
     },
   }, {
     freezeTableName: true,
-    timestamps:false
+  
   });
   
 

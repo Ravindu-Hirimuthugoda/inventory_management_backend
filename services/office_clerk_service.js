@@ -29,59 +29,51 @@ class OfficeClerkService{
         console.log(officeClerk);
         return officeClerk;
     }
+    async readLastEntry(){
+        const officeClerks =  await OfficeClerkModel.findAll({
+             limit: 1,
+             order: [ [ 'createdAt', 'DESC' ]]
+           });
+           if(officeClerks == null){
+             throw new Error('Something went wrong!');
+         }
+         console.log(officeClerks);
+         return officeClerks;
+     }
 
-    async readOfficeClerk(email){
-        
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
-                    
-        //     },raw:true
-        // });
+    async readAllOfficeClerk(){        
+        console.log("read OfficeClerk");
+        const officeClerks = await OfficeClerkModel.findAll({
 
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
+        });
+        if(officeClerks == null){
+            throw new Error('Something went wrong!');
+        }
+        console.log(officeClerks);
+        return officeClerks;
+    
     }
 
-    async readAllOfficeClerk(){
-        
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
+    async updateOfficeClerk(firstName,lastName,department){
+        await OfficeClerkModel.update(
+            {
+            where:{[Op.and]:
+                [{id:id }]
                     
-        //     },raw:true
-        // });
+            },raw:true
+            },
+            {
+                firstName: firstName,
+                lastName: lastName,
+                department:department
+            }
+        ).success(function(officeClerk) { 
 
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
-    }
-
-    async updateOfficeClerk(email){
-        
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
-                    
-        //     },raw:true
-        // });
-
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
+           return officeClerk;
+       
+        }).error(function(err) {        
+            throw new Error('OfficeClerk not updated');            
+        });        
     }
 
 

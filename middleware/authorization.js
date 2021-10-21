@@ -8,14 +8,17 @@ function authorization(req, res, next) {
         return errorMessage(res, "No token, authentication failed", 401);
     }
 
-    const token = authHeader.split(' ')[1]; //'Bearer token'-->['Bearer','token']-->'token'    
+    const token = authHeader.split(' ')[1];
+    console.log(token) //'Bearer token'-->['Bearer','token']-->'token'    ;
     let decodedToken;
     try {
+        
         decodedToken = jwt.verify(token, "secretKey");
         console.log(decodedToken);
     }
 
     catch (err) {
+        console.log(err);
         errorMessage(res, "Something went wrong", 500);
     }
 
@@ -25,7 +28,7 @@ function authorization(req, res, next) {
     console.log(decodedToken.type);
     
     req.user = decodedToken;
-    console.log(req.user);
+    console.log(req.user.type);
     next();
 }
 

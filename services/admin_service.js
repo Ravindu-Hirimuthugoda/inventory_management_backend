@@ -16,7 +16,7 @@ class AdminService{
     }
 
     async createAdmin(index,firstName,lastName,uid){
-        console.log("create admin");
+        console.log("create admin start");
         const admin = await AdminModel.create({
            id: index,
            firstName: firstName,
@@ -24,48 +24,65 @@ class AdminService{
            userId: uid     
         });
         if(admin == null){
-            return null;
+            throw new Error('Admin not created');
         }
-        console.log(admin);
         return admin;
 
     }
 
-    async readAdmin(){
-        
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
-                    
-        //     },raw:true
-        // });
+    async readLastEntry(){
+        const admin =  await AdminModel.findAll({
+             limit: 1,
+             order: [ [ 'createdAt', 'DESC' ]]
+           });
+           if(admin == null){
+             throw new Error('Something went wrong!');
+         }
+         console.log(admin);
+         return admin;
+     }
 
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
+    async updateAdmin(id,firstName,lastName){
+       await AdminModel.update(
+            {
+            where:{[Op.and]:
+                [{id:id }]
+                    
+            },raw:true
+            },
+            {
+                firstName: firstName,
+                lastName: lastName
+            }
+        ).success(function(admin) { 
+
+           return admin;
+       
+        }).error(function(err) {        
+            throw new Error('Admin not updated');            
+        });
+    }
+    async readAllAdmin(){
+        console.log("get all admin start");
+        const admin = await AdminModel.findAll({
+        });
+        if(admin == null){
+            throw new Error('Admin not created');
+        }
+        return admin;
     }
 
-    async updateAdmin(email){
-        
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
-                    
-        //     },raw:true
-        // });
-
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
+    async readOneAdmin(id){
+        console.log("get all admin start");
+        const admin = await AdminModel.findOne({
+        });
+        if(admin == null){
+            throw new Error('Admin not created');
+        }
+        return admin;
     }
+
+
 
     
 

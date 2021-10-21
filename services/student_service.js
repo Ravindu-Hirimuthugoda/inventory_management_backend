@@ -31,59 +31,53 @@ class StudentService{
         return student;
     }
 
-    async readStudent(email){
-        
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
-                    
-        //     },raw:true
-        // });
-
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
+    async readLastEntry(){
+       const students =  await StudentModel.findAll({
+            limit: 1,
+            order: [ [ 'createdAt', 'DESC' ]]
+          });
+          if(students == null){
+            throw new Error('Something went wrong!');
+        }
+        console.log(students);
+        return students;
     }
 
-    async readAllStudent(){
-        
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
-                    
-        //     },raw:true
-        // });
+    async readAllStudent(){        
+        console.log("read student");
+        const students = await StudentModel.findAll({
 
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
+        });
+        if(students == null){
+            throw new Error('Something went wrong!');
+        }
+        console.log(students);
+        return students;
+    
     }
 
-    async updateStudent(email){
-        
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{[Op.and]:
-        //         [{email:email,isDelete: 0 }]
+    async updateStudent(firstName,lastName,department){
+        await StudentModel.update(
+            {
+            where:{[Op.and]:
+                [{id:id }]
                     
-        //     },raw:true
-        // });
+            },raw:true
+            },
+            {
+                firstName: firstName,
+                lastName: lastName,
+                department:department
+            }
+        ).success(function(student) { 
 
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
+           return student;
+       
+        }).error(function(err) {        
+            throw new Error('student not updated');            
+        });        
     }
+
 
 
 }
