@@ -31,6 +31,23 @@ class LecturerService{
         console.log(lecture);
         return lecture;
     }
+
+    async getLecturerByID(index){
+        let cnt = await LectureModel.count({where: {
+            [Op.and]: [
+                { id: index },             
+        ]}});
+
+        if (cnt > 0) {
+            return null;
+        }else{                    
+                    
+            return "no user";         
+        }
+          
+      
+    }
+
     async readLastEntry(){
         const lecturers =  await LectureModel.findAll({
              limit: 1,

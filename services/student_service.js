@@ -31,6 +31,21 @@ class StudentService{
         return student;
     }
 
+    async getStudentByID(index){
+
+        let cnt = await StudentModel.count({where: {
+            [Op.and]: [
+                { id: index },             
+        ]}});
+
+        if (cnt > 0) {
+            return null;
+        }else{                    
+                    
+            return "no user";         
+        }
+    }
+
     async readLastEntry(){
        const students =  await StudentModel.findAll({
             limit: 1,

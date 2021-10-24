@@ -11,16 +11,11 @@ const login = async (req, res, next) => {
     try {
         console.log(req.body);
         const email = req.body.email;
-        const password = req.body.password;
-        
+        const password = req.body.password;        
         let user;
         try {
             user = await guest.getUser(email);
-            // console.log(email);
-            // console.log(password);
-            // console.log(user.password);
-            if(user.password == password){
-                // return successMessage(res, {user})
+            if(user.password == password){              
                 jwt.sign({ userID: user.id, expiresIn: 3600, type:user.type},"secretKey",(err,token)=>{
                         if (err) throw err;
                         return successMessage(res, {token})

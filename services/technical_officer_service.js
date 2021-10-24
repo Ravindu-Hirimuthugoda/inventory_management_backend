@@ -30,6 +30,21 @@ class TechnicalOfficerService{
         return technicalOfficer;
     }
 
+    async getTechnicalOfficerByID(index){
+               
+        let cnt = await TechnicalOfficerModel.count({where: {
+            [Op.and]: [
+                { id: index },             
+        ]}});
+
+        if (cnt > 0) {
+            return null;
+        }else{                    
+                    
+            return "no user";         
+        }
+    }
+
     async readLastEntry(){
         const technicalOfficers =  await TechnicalOfficerModel.findAll({
              limit: 1,

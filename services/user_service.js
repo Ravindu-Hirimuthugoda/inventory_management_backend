@@ -38,6 +38,21 @@ class UserService{
         }
     }
 
+    async getUserByEmail(email){
+        let cnt = await UserModel.count({where: {
+            [Op.and]: [
+                { email: email },
+                { isDelete: false }
+        ]}});
+
+        if (cnt > 0) {
+            return null;
+        }else{                    
+                    
+            return "no user";         
+        }
+    }
+
     async getUser(email){
         
         console.log(email);

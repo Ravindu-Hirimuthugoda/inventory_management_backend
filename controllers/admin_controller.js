@@ -31,7 +31,7 @@ const addAdmin = async (req, res, next) => {
     if (checkUserType(req.user.type, "Admin")) {
       try {
         user = await userService.createUser(email, password, "Admin", false);
-        console.log(user);
+        
         if (user != null) {
           admin = await adminService.createAdmin(
             index,
@@ -77,27 +77,28 @@ const addStudent = async (req, res, next) => {
     let student;
     if (checkUserType(req.user.type, "Admin")) {
       try {
-        user = await userService.createUser(email, password, "Student", false);
-        console.log(user);
-        if (user != null) {
-          student = await studentService.createStudent(
-            index,
-            firstName,
-            lastName,
-            user.id,
-            department
-          );
-          if (student != null) {
+        let isUser = await userService.getUserByEmail(email);
+        if (isUser != null) {
+          let isStudent = await studentService.getStudentByID(index);
+          if (isStudent != null) {
+            user = await userService.createUser(email, password, "Student", false);
+            student = await studentService.createStudent(
+              index,
+              firstName,
+              lastName,
+              user.id,
+              department
+            );
             let out = {
               user: user,
               student: student,
             };
             return successMessage(res, out);
           } else {
-            return errorMessage(res, "User did not added", 401);
+            return errorMessage(res, "Student already exsist for entered index", 406);
           }
         } else {
-          return errorMessage(res, "User already exsist", 401);
+          return errorMessage(res, "User already exsist", 406);
         }
       } catch (e) {
         console.log(e);
@@ -126,27 +127,32 @@ const addLecturer = async (req, res, next) => {
 
     if (checkUserType(req.user.type, "Admin")) {
       try {
-        user = await userService.createUser(email, password, "Lecturer", false);
-        console.log(user);
-        if (user != null) {
-          lecturer = await lectureService.createLecturer(
+       let isUser = await userService.getUserByEmail(email);
+    
+        if (isUser != null) {
+          let isLecturer = await lectureService.getLecturerByID(
             index,
-            firstName,
-            lastName,
-            user.id,
-            department
+            
           );
-          if (lecturer != null) {
+          if (isLecturer != null) {
+            user = await userService.createUser(email, password, "Lecturer", false);
+            lecturer = await lectureService.createLecturer(
+              index,
+              firstName,
+              lastName,
+              user.id,
+              department
+            );
             let out = {
               user: user,
               lecturer: lecturer,
             };
             return successMessage(res, out);
           } else {
-            return errorMessage(res, "User did not added", 401);
+            return errorMessage(res, "Lecturer  already exsist", 406);
           }
         } else {
-          return errorMessage(res, "User already exsist", 401);
+          return errorMessage(res, "User already exsist", 406);
         }
       } catch (e) {
         console.log(e);
@@ -173,31 +179,39 @@ const addOfficeClerk = async (req, res, next) => {
     let officeClerk;
     if (checkUserType(req.user.type, "Admin")) {
       try {
-        user = await userService.createUser(
+       let isUser = await userService.getUserByEmail(
           email,
-          password,
-          "OfficeClerk",
-          false
+          
         );
-        console.log(user);
-        if (user != null) {
-          officeClerk = await officeClerkService.createOfficeClerk(
+        
+        if (isUser != null) {
+         let isOfficeClerk = await officeClerkService.getOfficeClerkByID(
             index,
-            firstName,
-            lastName,
-            user.id
+            
           );
-          if (officeClerk != null) {
+          if (isOfficeClerk != null) {
+            user = await userService.createUser(
+              email,
+              password,
+              "OfficeClerk",
+              false
+            );
+            officeClerk = await officeClerkService.createOfficeClerk(
+              index,
+              firstName,
+              lastName,
+              user.id
+            );
             let out = {
               user: user,
               officeClerk: officeClerk,
             };
             return successMessage(res, out);
           } else {
-            return errorMessage(res, "User did not added", 401);
+            return errorMessage(res, "Office Clerk already exsist", 406);
           }
         } else {
-          return errorMessage(res, "User already exsist", 401);
+          return errorMessage(res, "User already exsist", 406);
         }
       } catch (e) {
         console.log(e);
@@ -226,15 +240,25 @@ const addTechnicalOfficer = async (req, res, next) => {
 
     if (checkUserType(req.user.type, "Admin")) {
       try {
-        user = await userService.createUser(
-          email,
-          password,
-          "TechnicalOfficer",
-          false
+       let isUser = await userService.getUserByEmail(
+          email
+          
         );
-        console.log(user);
-        if (user != null) {
-          technicalOfficer =
+        
+        if (isUser != null) {
+         let isTechnicalOfficer =
+            await technicalOfficerService.getTechnicalOfficerByID(
+              index,
+              
+            );
+          if (isTechnicalOfficer != null) {
+            user = await userService.createUser(
+              email,
+              password,
+              "TechnicalOfficer",
+              false
+            );
+            technicalOfficer =
             await technicalOfficerService.createTechnicalOfficer(
               index,
               firstName,
@@ -242,17 +266,16 @@ const addTechnicalOfficer = async (req, res, next) => {
               user.id,
               labId
             );
-          if (technicalOfficer != null) {
             let out = {
               user: user,
               technicalOfficer: technicalOfficer,
             };
             return successMessage(res, out);
           } else {
-            return errorMessage(res, "User did not added", 401);
+            return errorMessage(res, "Technical Officer already exsist", 406);
           }
         } else {
-          return errorMessage(res, "User already exsist", 401);
+          return errorMessage(res, "User already exsist", 406);
         }
       } catch (e) {
         console.log(e);
@@ -285,7 +308,7 @@ const addLaboratory = async (req, res, next) => {
           };
           return successMessage(res, out);
         } else {
-          return errorMessage(res, "User did not added", 401);
+          return errorMessage(res, "Laboratory has already exist", 406);
         }
       } catch (e) {
         console.log(e);
@@ -311,7 +334,7 @@ const getLaboratory = async (req, res, next) => {
           };
           return successMessage(res, out);
         } else {
-          return errorMessage(res, "User did not added", 401);
+          return errorMessage(res, "Laboratories not found", 500);
         }
       } catch (e) {
         console.log(e);

@@ -29,6 +29,21 @@ class OfficeClerkService{
         console.log(officeClerk);
         return officeClerk;
     }
+
+    async getOfficeClerkByID(index){
+        
+        let cnt = await OfficeClerkModel.count({where: {
+            [Op.and]: [
+                { id: index },             
+        ]}});
+
+        if (cnt > 0) {
+            return null;
+        }else{                    
+                    
+            return "no user";         
+        }
+    }
     async readLastEntry(){
         const officeClerks =  await OfficeClerkModel.findAll({
              limit: 1,
