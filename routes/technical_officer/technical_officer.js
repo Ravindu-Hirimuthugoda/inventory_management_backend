@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-const  {Getcategories,findIteamsByCatogary,getBorrowData,Getlabs,GetModels,AddEquipment,findIteamByid,UpdateEquipment,temporyBorrow,normalBorrow,GetlastBorrowData,acceptEquipment,GetReport,getRequestData}  = require('../../controllers/technical_officer/techcical_officer_controller');
+const  {addmodel,addcategory,Getcategories,findIteamsByCatogary,getBorrowData,Getlabs,GetModels,AddEquipment,findIteamByid,UpdateEquipment,temporyBorrow,normalBorrow,GetlastBorrowData,acceptEquipment,GetReport,getRequestData}  = require('../../controllers/techcical_officer_controller');
 
 router.get('/categories', Getcategories);
 router.get('/labs', Getlabs);
@@ -17,4 +17,6 @@ router.post('/acceptEquipment', acceptEquipment);
 router.post('/report', GetReport);
 router.get('/requestdata/:id', getRequestData);
 router.post('/normalborrowing', normalBorrow);
+router.post('/addmodel', addmodel);
+router.post('/addcategory', addcategory);
 module.exports = router;

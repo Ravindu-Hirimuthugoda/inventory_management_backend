@@ -1,11 +1,11 @@
 const { DataTypes } = require('sequelize');
-const connection = require('../config/database');
+const sequelize = require('../config/database');
 
-const DamageItemModel = connection.define('DamageItem', {
+const DamageItemModel = sequelize.define('DamageItem', {
     id: {
         type: DataTypes.INTEGER(3),
         autoincrement: true,
-        primaryKey:true
+        primaryKey: true
     },
     itemId: {
         type: DataTypes.STRING(10),
@@ -16,21 +16,23 @@ const DamageItemModel = connection.define('DamageItem', {
         allowNull: false,
     },
     openDate: {
-        type: DataTypes.timestamps,
+        type: DataTypes.DATE,
         allowNull: false,
     },
     closeDate: {
-        type: DataTypes.timestamps,
+        type: DataTypes.DATE,
         allowNull: true,
-        defaultValue:null
+        defaultValue: null
     },
     status: {
         type: DataTypes.ENUM('pending', 'repair', 'close'),
-        allowNull:false
+        allowNull: false
     }
-},{
-    tableName: 'Category',
-    timestamps: false,
+}, {
+     sequelize,
+    timestamps:false,
+    modelName:'damageitem',
+    tableName: 'damageitem',
 
 });
-module.exports = CategoryModel;
+module.exports = DamageItemModel;

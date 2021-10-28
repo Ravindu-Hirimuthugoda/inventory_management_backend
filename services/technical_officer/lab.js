@@ -1,11 +1,13 @@
-const db = require('../../config/database')
+const sequelize = require("../../config/database");
+const db = require('../../models/allmodels');
+
 
 
 class Lab{
     constructor() {
         try {
-            db.sequelize.authenticate();
-           
+            sequelize.sequelize.authenticate();
+            db.setRelationship
         } catch (error) {
             
         }

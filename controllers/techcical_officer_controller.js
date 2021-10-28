@@ -1,41 +1,51 @@
-const Category = require('../../services/technical_officer/category');
-const Equipment = require('../../services/technical_officer/equipment')
-const BorrowData = require('../../services/technical_officer/borrow_data');
-const Lab = require('../../services/technical_officer/lab');
-const Model = require('../../services/technical_officer/model');
-const Request = require('../../services/technical_officer/request');
-
-
-
-
-
-
-
+const Category = require('../services/technical_officer/category');
+const Equipment = require('../services/technical_officer/equipment')
+const BorrowData = require('../services/technical_officer/borrow_data');
+const Lab = require('../services/technical_officer/lab');
+const Model = require('../services/technical_officer/model');
+const Request = require('../services/technical_officer/request');
+//var cloudinary = require('../utils/coludanary')
+var cloudinary = require('cloudinary').v2
+cloudinary.config({
+    cloud_name:"inventorysep",
+    api_key:"346587284581111",
+    api_secret:"1354B6XJXPqKfCNVcvOq2eT6GxA"
+})
 const AddEquipment = async(req,res,next) => {
-    const { category, model, lab } = req.body;
-    console.log(category, model, lab);
+    const { category, model, lab,imgPreview } = req.body;
+   
     try {
-        const result = await Equipment.AddEquipment(category, model, lab);
+        const upload = await cloudinary.uploader.upload(imgPreview, function(error, result) {});
+console.log(upload.url,'jj');
+        const result = await Equipment.AddEquipment(category, model, lab,upload.url);
         res.json(result);
         console.log(result,'jj');
     } catch (error) {
-        console.log(error);
+        //console.log(error);
     }
 }
 const UpdateEquipment = async (req, res, next) => {
-     let equipment = new Equipment();
-    const { store_code, status } = req.body;
+    let equipment = new Equipment();
+    
+    const { store_code, status,imgPreview,issetimage } = req.body;
     console.log(store_code, status);
     try {
-        const result = await equipment.UpdateEquipment(store_code,status);
+        var url=imgPreview
+        if (issetimage) {
+           const upload = await cloudinary.uploader.upload(imgPreview, function(error, result) { console.log(result,"img") });
+        url=upload.url
+        }
+        const result = await equipment.UpdateEquipment(store_code,status,url);
         res.json(result);
         console.log(result,'jj');
     } catch (error) {
         console.log(error);
+        res.status(409).json({ message: error.message });
     }
 }
 const Getcategories = async (req, res, next) => {
     let category = new Category();
+    
     try {
         const result=await category.getAllCategories();
         console.log(result);
@@ -74,13 +84,15 @@ const GetModels = async (req, res, next) => {
 const getBorrowData = async (req, res, next) => {
    
     const { store_code, fromDate, toDate } = req.body;
-     const borrowdata = new BorrowData();
+    const borrowdata = new BorrowData();
+    console.log(store_code, fromDate, toDate);
     try {
        const result=await borrowdata.getBorrowData(store_code, fromDate.split('T')[0], toDate.split('T')[0]);
         
         res.status(200).json(result);
     } catch (error) {
         console.log(error)
+         res.status(409).json({ message: error.message });
     }
     
 }
@@ -89,11 +101,18 @@ const GetlastBorrowData = async (req, res, next) => {
     const  {store_code} = req.params;
      const borrowdata = new BorrowData();
     try {
-       const result=await borrowdata.GetlastBorrowData(store_code);
-        
-        res.status(200).json(result);
+        const result = await borrowdata.GetlastBorrowData(store_code);
+        console.log(result,'kk');
+        if (result.length==0) {
+            res.status(409).json({ message: 'invaild id' });
+            
+        }
+        else {
+            res.status(200).json(result);
+        }
     } catch (error) {
         console.log(error)
+        res.status(409).json({ message: error.message });
     }
     
 }
@@ -104,7 +123,7 @@ const findIteamsByCatogary = async (req, res, next) => {
     try {
         console.log(categoryid);
         const result=await equipment.findIteamsByCatogary(categoryid);
-        
+        console.log( result);
         res.status(200).json(result);
     } catch (error) {
         
@@ -121,6 +140,7 @@ const findIteamByid = async (req, res, next) => {
         res.status(200).json(result);
     } catch (error) {
         console.log(error)
+        res.status(409).json({ message: error.message });
     }
     
 }
@@ -129,9 +149,10 @@ const temporyBorrow = async (req, res, next) => {
     const { userid,storeid,fromdate,todate,reason } = req.body;
     console.log(userid,storeid,fromdate,todate);
     try {
-        const result = await borrow.AddTemporyBorrow(userid, storeid, fromdate.split('T')[0], todate.split('T')[0],reason);
+        const result = await borrow.AddTemporyBorrow(userid, storeid, fromdate.split('T')[0], todate.split('T')[0], reason);
+        console.log(result);
         if (result != null) {
-            res.status(406).json({ message: result });
+            res.json({ message: result });
         }
         else {
             res.status(201).json({ message: result });
@@ -177,6 +198,7 @@ const GetReport=async(req,res,next)=>{
         
     } catch (error) {
         console.log(error);
+        res.status(409).json({ message: error.message });
     }
 }
 const getRequestData = async (req, res, next) => {
@@ -189,6 +211,7 @@ const getRequestData = async (req, res, next) => {
         res.status(200).json(result);
     } catch (error) {
         console.log(error)
+        res.status(409).json({ message: error.message });
     }
     
 }
@@ -209,4 +232,43 @@ const normalBorrow = async (req, res, next) => {
         res.status(409).json({ message: error.message });
     }
 }
-module.exports = {acceptEquipment,AddEquipment,Getcategories,findIteamsByCatogary,getBorrowData,Getlabs,GetModels,findIteamByid,UpdateEquipment,temporyBorrow,GetlastBorrowData,GetReport,getRequestData,normalBorrow};
+const addmodel = async (req, res, next) => {
+    let mode = new Model();
+    const { model, category } = req.body;
+    console.log(mode, category);
+    try {
+        const result = await mode.addmodel(model , category);
+       if (result == null) {
+            res.status(409).json({ message: 'error' });
+        }
+        else {
+            res.status(201).json( result );
+            
+         }
+        
+    } catch (error) {
+          console.log(error)
+        res.status(409).json({ message: error.message });
+    }
+}
+const addcategory = async (req, res, next) => {
+    let cat = new Category();
+    const { category } = req.body;
+    console.log(cat);
+    try {
+        const result = await cat.addcategory(category);
+        if (result == null) {
+            res.status(409).json({ message: 'error' });
+        }
+        else {
+            res.status(201).json( result);
+            
+         }
+         
+        
+    } catch (error) {
+          console.log(error)
+        res.status(409).json({ message: error.message });
+    }
+}
+module.exports = {addmodel,addcategory,acceptEquipment,AddEquipment,Getcategories,findIteamsByCatogary,getBorrowData,Getlabs,GetModels,findIteamByid,UpdateEquipment,temporyBorrow,GetlastBorrowData,GetReport,getRequestData,normalBorrow};
