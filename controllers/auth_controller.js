@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 // const config = require('config');
 // const md5 = require('md5');
+const bcrypt = require("bcrypt");
 const { successMessage, errorMessage } = require("../utils/response_message");
 const UserService = require('../services/user');
 

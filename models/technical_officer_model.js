@@ -12,6 +12,9 @@ var TechnicalOfficer = sequelize.define('technicalofficer', {
     lastName: {
       type: DataTypes.STRING
     },
+    userId:{
+      type: DataTypes.INTEGER
+    }
   }, {
     sequelize,
     freezeTableName: true,

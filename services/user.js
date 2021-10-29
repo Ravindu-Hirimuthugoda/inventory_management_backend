@@ -100,13 +100,17 @@ class User{
 
         if (cnt > 0) {
             return null;
-        }else{                    
-           const user =  await UserModel.create({           
+        }else{ 
+            const rowCount = await UserModel.count();     
+                
+           const user =  await UserModel.create({
+               id:   rowCount + 1,        
               email: email,
                 password:   password,
                type: type,
               isDelete: isDelete
             });
+            
             console.log(user);
             
             return user;         

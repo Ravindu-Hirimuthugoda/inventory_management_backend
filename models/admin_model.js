@@ -13,6 +13,9 @@ var Admin = sequelize.define('admin', {
     lastName: {
       type: DataTypes.STRING
     },
+    userId:{
+      type: DataTypes.INTEGER
+    }
   }, {
     sequelize,
     freezeTableName: true,

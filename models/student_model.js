@@ -15,8 +15,15 @@ var Student = sequelize.define('student', {
     department: {
       type: DataTypes.STRING
     },
+    userId:{
+      type: DataTypes.INTEGER
+    }
+
   }, {
     sequelize,
+    timestamps: true,
+    modelName: 'student',
+    tableName: 'student',
   
   });
   

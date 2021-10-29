@@ -8,6 +8,7 @@ const LaboratoryService = require("../services/labarotary_service");
 const OfficeClerkService = require("../services/office_clerk_service");
 const TechnicalOfficerService = require("../services/technical_officer_service");
 const { checkUserType } = require("../utils/check_user_type");
+const bcrypt = require("bcrypt");
 
 let adminService = new AdminService();
 let userService = new UserService();
@@ -89,7 +90,7 @@ const addStudent = async (req, res, next) => {
    
         const salt = await bcrypt.genSalt(10);
         let hashPw = await bcrypt.hash(password, salt);
-            user = await userService.createUser(email, hashPw, "Student", false);
+            user = await userService.createUser(email, hashPw, "student", false);
             student = await studentService.createStudent(
               index,
               firstName,

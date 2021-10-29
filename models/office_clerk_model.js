@@ -12,6 +12,9 @@ var OfficeClerk = sequelize.define('officeclerk', {
     lastName: {
       type: DataTypes.STRING
     },
+    userId:{
+      type: DataTypes.INTEGER
+    }
 
   }, {
     freezeTableName: true,
