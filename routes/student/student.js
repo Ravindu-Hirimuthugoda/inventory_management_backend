@@ -4,20 +4,10 @@ const { getPendingRequests, getPendingDetails, approveRequest, rejectRequest, sa
 
 const express = require('express');
 
-<<<<<<< HEAD
-const authorization = require('../../middleware/authorization');
-
-const router = express.Router();
- 
-router.get('/checkAvaiability',checkAvailability);
-router.get('/ava',authorization, getAvailabelItems);
-// router.get('/ava', getAvailabelItems);
-=======
 const router = express.Router();
  
 router.get('/checkAvaiability',checkAvailability);
 router.get('/ava',getAvailabelItems);
->>>>>>> 3721db27ec71889c8e7f14527f4fe27296e4f2aa
 router.get('/category',getAllCategories);
 router.get('/borrow',getStudentBorrowedItems);
 
