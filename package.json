@@ -28,7 +28,7 @@
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.0",
     "sequelize": "^6.6.5",
-     "cloudinary": "^1.27.1",
+     "cloudinary": "^1.27.1"
   },
   "devDependencies": {
     "dotenv": "^10.0.0",
