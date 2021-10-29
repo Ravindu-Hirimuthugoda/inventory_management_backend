@@ -90,7 +90,7 @@ const addStudent = async (req, res, next) => {
    
         const salt = await bcrypt.genSalt(10);
         let hashPw = await bcrypt.hash(password, salt);
-            user = await userService.createUser(email, hashPw, "student", false);
+            user = await userService.createUser(email, hashPw, "Student", false);
             student = await studentService.createStudent(
               index,
               firstName,
