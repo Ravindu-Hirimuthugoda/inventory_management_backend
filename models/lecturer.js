@@ -3,7 +3,8 @@ const sequelize = require('../config/database');
 
 const Lecturer = sequelize.define('Lecturers',{
     id:{
-        type: DataTypes.INTEGER,
+        // type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull:false,
         primaryKey:true,
     },
@@ -20,8 +21,7 @@ const Lecturer = sequelize.define('Lecturers',{
         allowNull:false
     }
 },{
-    sequelize,
-    timestamps:false,
+    sequelize,  
     modelName: 'Lecturer',
     tableName: 'lecturer',
 });

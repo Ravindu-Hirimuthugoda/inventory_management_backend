@@ -1,339 +1,339 @@
-const sequelize=require('../config/database_config');
-const TestModel = require("../models/testModel");
-// const UserModel=require('../models/user-model');
-const {Op} = require("sequelize");
-// const md5 = require('md5');
-// const RecommendationModel = require('../models/recommendation-model');
-// const SkillModel = require('../models/skill-model');
-// const ConnectionModel = require('../models/connection-model');
-// const { login } = require('../controllers/auth-controller');
+// const sequelize=require('../config/database_config');
+// const TestModel = require("../models/testModel");
+// // const UserModel=require('../models/user-model');
+// const {Op} = require("sequelize");
+// // const md5 = require('md5');
+// // const RecommendationModel = require('../models/recommendation-model');
+// // const SkillModel = require('../models/skill-model');
+// // const ConnectionModel = require('../models/connection-model');
+// // const { login } = require('../controllers/auth-controller');
 
 
-// let testModel = new TestModel();
+// // let testModel = new TestModel();
 
-class Guest{
+// class Guest{
     
-    constructor(){
-        try {
-            sequelize.authenticate();
-            console.log('Connection has been established successfully.');
-        } catch (error) {
-            console.error('Unable to connect to the database:', error);
-        }
-    }
+//     constructor(){
+//         try {
+//             sequelize.authenticate();
+//             console.log('Connection has been established successfully.');
+//         } catch (error) {
+//             console.error('Unable to connect to the database:', error);
+//         }
+//     }
 
-    async getUser(email){
+//     async getUser(email){
         
-        console.log(email);
-        const user = await TestModel.findOne({
-            arrtibute:["id","type","password"],
-            where:{[Op.and]:
-                [{email:email,isDelete: 0 }]
+//         console.log(email);
+//         const user = await TestModel.findOne({
+//             arrtibute:["id","type","password"],
+//             where:{[Op.and]:
+//                 [{email:email,isDelete: 0 }]
                     
-            },raw:true
-        });
+//             },raw:true
+//         });
 
-        // console.log(user);
-        if(user == null){
-            throw new Error('Invalid email or password');
-        }
-        return user;
-    }
+//         // console.log(user);
+//         if(user == null){
+//             throw new Error('Invalid email or password');
+//         }
+//         return user;
+//     }
 
-    async createUser(email){
+//     async createUser(email){
         
-        console.log(email);
-        const user = await TestModel.findOne({
-            arrtibute:["id","type","password"],
-            where:{[Op.and]:
-                [{email:email,isDelete: 0 }]
+//         console.log(email);
+//         const user = await TestModel.findOne({
+//             arrtibute:["id","type","password"],
+//             where:{[Op.and]:
+//                 [{email:email,isDelete: 0 }]
                     
-            },raw:true
-        });
+//             },raw:true
+//         });
 
-        // console.log(user);
-        if(user == null){
-            throw new Error('Invalid email or password');
-        }
-        return user;
-    }
-
-
+//         // console.log(user);
+//         if(user == null){
+//             throw new Error('Invalid email or password');
+//         }
+//         return user;
+//     }
 
 
-    // async  createAccount(info) {
-    //     //check if the user had already created an account 
-        // let guest_email = info[0].email;
-        // let cnt = await UserModel.count({where: {
-        //     [Op.and]: [
-        //         { email: guest_email },
-        //         { is_deleted: 0 }
-        // ]}});
+
+
+//     // async  createAccount(info) {
+//     //     //check if the user had already created an account 
+//         // let guest_email = info[0].email;
+//         // let cnt = await UserModel.count({where: {
+//         //     [Op.and]: [
+//         //         { email: guest_email },
+//         //         { is_deleted: 0 }
+//         // ]}});
     
-        // if (cnt > 0) {
-        //     return false;
+//         // if (cnt > 0) {
+//         //     return false;
 
-        // }else{
-        //     let guest_first_name = info[0].first_name;
-        //     let guest_last_name = info[0].last_name;
-        //     let guest_password = info[0].password;
+//         // }else{
+//         //     let guest_first_name = info[0].first_name;
+//         //     let guest_last_name = info[0].last_name;
+//         //     let guest_password = info[0].password;
             
     
-        //     //let result = new User();
-        //     await this.addUser(guest_first_name, guest_last_name,guest_email,guest_password);
-        //     return true;
+//         //     //let result = new User();
+//         //     await this.addUser(guest_first_name, guest_last_name,guest_email,guest_password);
+//         //     return true;
          
-        // }
+//         // }
             
-    // }
+//     // }
 
-    // async addUser(first_name,last_name,email,password){
+//     // async addUser(first_name,last_name,email,password){
 
-    //     let hashPassword = md5(password);
-    //     const newUser= await UserModel.create({
-    //         first_name: `${first_name}`,
-    //         last_name:`${last_name}`,
-    //         email: `${email}`,
-    //         password: `${hashPassword}`,
+//     //     let hashPassword = md5(password);
+//     //     const newUser= await UserModel.create({
+//     //         first_name: `${first_name}`,
+//     //         last_name:`${last_name}`,
+//     //         email: `${email}`,
+//     //         password: `${hashPassword}`,
      
-    // });
-    // }
+//     // });
+//     // }
    
 
-    // async searchUser(name){
+//     // async searchUser(name){
     
-    //     const user=UserModel.findAll({
-    //         attributes:['id','first_name','last_name','profile_pic'], raw: true,
-    //         where:{
-    //             [Op.or]:[{first_name: {[Op.substring]: name},is_deleted:0},{last_name: {[Op.substring]: name}, is_deleted:0}]
+//     //     const user=UserModel.findAll({
+//     //         attributes:['id','first_name','last_name','profile_pic'], raw: true,
+//     //         where:{
+//     //             [Op.or]:[{first_name: {[Op.substring]: name},is_deleted:0},{last_name: {[Op.substring]: name}, is_deleted:0}]
                     
-    //         }
-    //     });
-    //     return user;
+//     //         }
+//     //     });
+//     //     return user;
     
-    // } 
+//     // } 
 
-    // async viewProfile(user_id){
+//     // async viewProfile(user_id){
        
-    //     const user=await UserModel.findAll({
-    //         attributes:['id','first_name','last_name','profile_pic'], raw: true,
-    //         where:{[Op.and]:
-    //             [{id:`${user_id}`,is_deleted:0}]
+//     //     const user=await UserModel.findAll({
+//     //         attributes:['id','first_name','last_name','profile_pic'], raw: true,
+//     //         where:{[Op.and]:
+//     //             [{id:`${user_id}`,is_deleted:0}]
                     
-    //         }
+//     //         }
     
-    //         });
+//     //         });
        
-    //     const records= await RecommendationModel.findAll({
-    //         attributes:['Recommended_by','description'], raw: true,
-    //         where:
-    //             [{user_id:`${user_id}`}]
-    //     });
-    //     var recommendations=[]
-    //     for (const i in records){
-    //         let recommended_by= records[i].Recommended_by;
-    //         let description=records[i].description;
+//     //     const records= await RecommendationModel.findAll({
+//     //         attributes:['Recommended_by','description'], raw: true,
+//     //         where:
+//     //             [{user_id:`${user_id}`}]
+//     //     });
+//     //     var recommendations=[]
+//     //     for (const i in records){
+//     //         let recommended_by= records[i].Recommended_by;
+//     //         let description=records[i].description;
 
-    //         let recommended_name=await UserModel.findOne({
-    //         attributes:["id", "first_name","last_name", "profile_pic"],
-    //         where:{id:recommended_by},raw:true
-    //         });
+//     //         let recommended_name=await UserModel.findOne({
+//     //         attributes:["id", "first_name","last_name", "profile_pic"],
+//     //         where:{id:recommended_by},raw:true
+//     //         });
 
-    //         recommended_name.description=description;
-    //         recommendations.push(recommended_name);
+//     //         recommended_name.description=description;
+//     //         recommendations.push(recommended_name);
 
-    //     }
+//     //     }
     
-    //     const skills=await SkillModel.findAll({
-    //         attributes:['id','name','validations'], raw: true,
-    //         where:
-    //             [{user_id:`${user_id}`}]
-    //     });
+//     //     const skills=await SkillModel.findAll({
+//     //         attributes:['id','name','validations'], raw: true,
+//     //         where:
+//     //             [{user_id:`${user_id}`}]
+//     //     });
 
-    //     var profile=[];
-    //     profile.push(user);
-    //     profile.push(skills);
-    //     profile.push(recommendations);
+//     //     var profile=[];
+//     //     profile.push(user);
+//     //     profile.push(skills);
+//     //     profile.push(recommendations);
 
-    //     let connections1 = await ConnectionModel.findAll({
-    //         attributes:["requester_id"],
-    //         where:{[Op.and]:[{
-    //             recipient_id:user_id
-    //         },{state:"accepted"}]
-    //     },raw:true});
+//     //     let connections1 = await ConnectionModel.findAll({
+//     //         attributes:["requester_id"],
+//     //         where:{[Op.and]:[{
+//     //             recipient_id:user_id
+//     //         },{state:"accepted"}]
+//     //     },raw:true});
 
-    //     let connections2 = await ConnectionModel.findAll({
-    //         attributes:["recipient_id"],
-    //         where:{[Op.and]:[{
-    //             requester_id:user_id
-    //         },{state:"accepted"}]
-    //     },raw:true});
+//     //     let connections2 = await ConnectionModel.findAll({
+//     //         attributes:["recipient_id"],
+//     //         where:{[Op.and]:[{
+//     //             requester_id:user_id
+//     //         },{state:"accepted"}]
+//     //     },raw:true});
 
-    //     var names=[];
+//     //     var names=[];
 
-    //     for (const x in connections1){
-    //         let con_id=connections1[x].requester_id;
-    //        // console.log(con_id);
+//     //     for (const x in connections1){
+//     //         let con_id=connections1[x].requester_id;
+//     //        // console.log(con_id);
             
-    //         let name=await UserModel.findOne({
-    //             attributes:["id","first_name","last_name", "profile_pic"],
-    //             where:{
-    //                 id:con_id                    
-    //             },raw:true
-    //         });
-    //         //Object.assign({},name);
+//     //         let name=await UserModel.findOne({
+//     //             attributes:["id","first_name","last_name", "profile_pic"],
+//     //             where:{
+//     //                 id:con_id                    
+//     //             },raw:true
+//     //         });
+//     //         //Object.assign({},name);
 
-    //         names.push(name);
+//     //         names.push(name);
 
-    //     }
+//     //     }
 
-    //     for (const y in connections2){
-    //         let con_id=connections2[y].recipient_id;
-    //        // console.log(con_id);
+//     //     for (const y in connections2){
+//     //         let con_id=connections2[y].recipient_id;
+//     //        // console.log(con_id);
             
-    //         let name=await UserModel.findOne({
-    //             attributes:["id","first_name","last_name","profile_pic"],
-    //             where:{
-    //                 id:con_id
-    //             },raw:true
-    //         });
-    //         //console.log(name);
-    //         //Object.assign({},name);
-    //         names.push(name);
+//     //         let name=await UserModel.findOne({
+//     //             attributes:["id","first_name","last_name","profile_pic"],
+//     //             where:{
+//     //                 id:con_id
+//     //             },raw:true
+//     //         });
+//     //         //console.log(name);
+//     //         //Object.assign({},name);
+//     //         names.push(name);
 
-    //     }
+//     //     }
 
         
-    //     profile.push(names);
+//     //     profile.push(names);
 
-    //     //console.log(connections);
-    //     //return records;
-    //     //return user;
-    //     //return mergeduser;
-    //     return profile;
-    // }
+//     //     //console.log(connections);
+//     //     //return records;
+//     //     //return user;
+//     //     //return mergeduser;
+//     //     return profile;
+//     // }
 
-    // async getUser(email){
+//     // async getUser(email){
         
 
-    //     const login_id = await UserModel.findOne({
-    //         arrtibute:["id"],
-    //         where:{[Op.and]:
-    //             [{email:email,is_deleted:0}]
+//     //     const login_id = await UserModel.findOne({
+//     //         arrtibute:["id"],
+//     //         where:{[Op.and]:
+//     //             [{email:email,is_deleted:0}]
                     
-    //         },raw:true
-    //     });
+//     //         },raw:true
+//     //     });
 
-    //     if (login_id === null) throw new Error('Invalid email or password');
+//     //     if (login_id === null) throw new Error('Invalid email or password');
 
-    //     let user_id= login_id.id;
+//     //     let user_id= login_id.id;
        
-    //     const user=await UserModel.findAll({
-    //         attributes:['first_name','last_name','profile_pic','password','id'], raw: true,
-    //         where:{[Op.and]:
-    //             [{id:user_id,is_deleted:0}]
+//     //     const user=await UserModel.findAll({
+//     //         attributes:['first_name','last_name','profile_pic','password','id'], raw: true,
+//     //         where:{[Op.and]:
+//     //             [{id:user_id,is_deleted:0}]
                     
-    //         }
+//     //         }
     
-    //         });
+//     //         });
        
-    //     const records= await RecommendationModel.findAll({
-    //         attributes:['Recommended_by','description'], raw: true,
-    //         where:
-    //             [{user_id:user_id}]
-    //     });
-    //     var recommendations=[]
-    //     for (const i in records){
-    //         let recommended_by= records[i].Recommended_by;
-    //         let description=records[i].description;
+//     //     const records= await RecommendationModel.findAll({
+//     //         attributes:['Recommended_by','description'], raw: true,
+//     //         where:
+//     //             [{user_id:user_id}]
+//     //     });
+//     //     var recommendations=[]
+//     //     for (const i in records){
+//     //         let recommended_by= records[i].Recommended_by;
+//     //         let description=records[i].description;
 
-    //         let recommended_name=await UserModel.findOne({
-    //         attributes:["first_name","last_name","profile_pic"],
-    //         where:{id:recommended_by},raw:true
-    //         });
+//     //         let recommended_name=await UserModel.findOne({
+//     //         attributes:["first_name","last_name","profile_pic"],
+//     //         where:{id:recommended_by},raw:true
+//     //         });
 
-    //         recommended_name.description=description;
-    //         recommendations.push(recommended_name);
+//     //         recommended_name.description=description;
+//     //         recommendations.push(recommended_name);
 
-    //     }
+//     //     }
     
-    //     const skills=await SkillModel.findAll({
-    //         attributes:['name','validations'], raw: true,
-    //         where:
-    //             [{user_id:user_id}]
-    //     });
+//     //     const skills=await SkillModel.findAll({
+//     //         attributes:['name','validations'], raw: true,
+//     //         where:
+//     //             [{user_id:user_id}]
+//     //     });
 
-    //     var profile=[];
-    //     profile.push(user);
-    //     profile.push(skills);
-    //     profile.push(recommendations);
+//     //     var profile=[];
+//     //     profile.push(user);
+//     //     profile.push(skills);
+//     //     profile.push(recommendations);
 
-    //     let connections1 = await ConnectionModel.findAll({
-    //         attributes:["requester_id"],
-    //         where:{[Op.and]:[{
-    //             recipient_id:user_id
-    //         },{state:"accepted"}]
-    //     },raw:true});
+//     //     let connections1 = await ConnectionModel.findAll({
+//     //         attributes:["requester_id"],
+//     //         where:{[Op.and]:[{
+//     //             recipient_id:user_id
+//     //         },{state:"accepted"}]
+//     //     },raw:true});
 
-    //     let connections2 = await ConnectionModel.findAll({
-    //         attributes:["recipient_id"],
-    //         where:{[Op.and]:[{
-    //             requester_id:user_id
-    //         },{state:"accepted"}]
-    //     },raw:true});
+//     //     let connections2 = await ConnectionModel.findAll({
+//     //         attributes:["recipient_id"],
+//     //         where:{[Op.and]:[{
+//     //             requester_id:user_id
+//     //         },{state:"accepted"}]
+//     //     },raw:true});
 
-    //     var names=[];
+//     //     var names=[];
 
-    //     for (const x in connections1){
-    //         let con_id=connections1[x].requester_id;
-    //        // console.log(con_id);
+//     //     for (const x in connections1){
+//     //         let con_id=connections1[x].requester_id;
+//     //        // console.log(con_id);
             
-    //         let name=await UserModel.findOne({
-    //             attributes:["first_name","last_name","profile_pic"],
-    //             where:{
-    //                 id:con_id
-    //             },raw:true
-    //         });
-    //         //Object.assign({},name);
+//     //         let name=await UserModel.findOne({
+//     //             attributes:["first_name","last_name","profile_pic"],
+//     //             where:{
+//     //                 id:con_id
+//     //             },raw:true
+//     //         });
+//     //         //Object.assign({},name);
 
-    //         names.push(name);
+//     //         names.push(name);
 
-    //     }
+//     //     }
 
-    //     for (const y in connections2){
-    //         let con_id=connections2[y].recipient_id;
-    //        // console.log(con_id);
+//     //     for (const y in connections2){
+//     //         let con_id=connections2[y].recipient_id;
+//     //        // console.log(con_id);
             
-    //         let name=await UserModel.findOne({
-    //             attributes:["first_name","last_name","profile_pic"],
-    //             where:{
-    //                 id:con_id
-    //             },raw:true
-    //         });
-    //         //console.log(name);
-    //         //Object.assign({},name);
-    //         names.push(name);
+//     //         let name=await UserModel.findOne({
+//     //             attributes:["first_name","last_name","profile_pic"],
+//     //             where:{
+//     //                 id:con_id
+//     //             },raw:true
+//     //         });
+//     //         //console.log(name);
+//     //         //Object.assign({},name);
+//     //         names.push(name);
 
-    //     }
+//     //     }
 
         
-    //     profile.push(names);
+//     //     profile.push(names);
 
-    //     //console.log(connections);
-    //     //return records;
-    //     //return user;
-    //     //return mergeduser;
+//     //     //console.log(connections);
+//     //     //return records;
+//     //     //return user;
+//     //     //return mergeduser;
         
-    //     return profile;
+//     //     return profile;
         
-    // }
+//     // }
 
 
-}
+// }
 
-module.exports=Guest;
-//guest1 = new Guest();
-//guest1.searchUser("Lahiru").then(result => console.log('Connection Added: ', result));
-//guest1.createAccount([{first_name: "Lahiru" ,last_name: "Madhushan", email:'lahiru1@gmail.com', password:'abc'}]).then(result => console.log('Account Creation: ', result));
-//guest1.viewProfile(2).then(result => console.log('Profile Status: ', result));
-//guest1.getUser("sanga@gmail.com").then(result => console.log('Connection Added: ', result));
+// module.exports=Guest;
+// //guest1 = new Guest();
+// //guest1.searchUser("Lahiru").then(result => console.log('Connection Added: ', result));
+// //guest1.createAccount([{first_name: "Lahiru" ,last_name: "Madhushan", email:'lahiru1@gmail.com', password:'abc'}]).then(result => console.log('Account Creation: ', result));
+// //guest1.viewProfile(2).then(result => console.log('Profile Status: ', result));
+// //guest1.getUser("sanga@gmail.com").then(result => console.log('Connection Added: ', result));

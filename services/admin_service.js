@@ -1,4 +1,4 @@
-const sequelize=require('../config/database_config');
+const sequelize = require("../config/database");
 
 // const UserModel =require('../models/testModel');
 const AdminModel =require('../models/admin_model');
@@ -40,47 +40,46 @@ class AdminService{
          }
          console.log(admin);
          return admin;
-     }
+    
+    }
 
-    async updateAdmin(id,firstName,lastName){
-       await AdminModel.update(
-            {
-            where:{[Op.and]:
-                [{id:id }]
+    // async updateAdmin(id,firstName,lastName){
+    //    await AdminModel.update(
+    //         {
+    //         where:{id:id
                     
-            },raw:true
-            },
-            {
-                firstName: firstName,
-                lastName: lastName
-            }
-        ).success(function(admin) { 
+    //         },raw:true
+    //         },
+    //         {
+    //             firstName: firstName,
+    //             lastName: lastName
+    //         }
+    //     ).success(function(admin) { 
 
-           return admin;
+    //        return admin;
        
-        }).error(function(err) {        
-            throw new Error('Admin not updated');            
-        });
-    }
-    async readAllAdmin(){
-        console.log("get all admin start");
-        const admin = await AdminModel.findAll({
-        });
-        if(admin == null){
-            throw new Error('Admin not created');
-        }
-        return admin;
-    }
+    //     }).error(function(err) {        
+    //         throw new Error('Admin not updated');            
+    //     });
+    // }
+    // async readAllAdmin(){
+    //     console.log("get all admin start");
+    //     const admin = await AdminModel.findAll({
+    //     });
+    //     if(admin == null){
+    //         throw new Error('Admin not created');
+    //     }
+    //     return admin;
+    // }
 
-    async readOneAdmin(id){
-        console.log("get all admin start");
-        const admin = await AdminModel.findOne({
-        });
-        if(admin == null){
-            throw new Error('Admin not created');
-        }
-        return admin;
-    }
+    // async readOneAdmin(id){
+    //     console.log("get all admin start");
+    //     const admin = await AdminModel.findOne();
+    //     if(admin == null){
+    //         throw new Error('Admin not created');
+    //     }
+    //     return admin;
+    // }
 
 
 

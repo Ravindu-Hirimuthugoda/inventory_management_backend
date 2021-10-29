@@ -1,9 +1,9 @@
 const { successMessage, errorMessage } = require("../utils/response_message");
 
 const AdminService = require("../services/admin_service");
-const UserService = require("../services/user_service");
-const StudentService = require("../services/student_service");
-const LectureService = require("../services/lecture_service");
+const UserService = require("../services/user");
+const StudentService = require("../services/student");
+const LectureService = require("../services/lecturer");
 const LaboratoryService = require("../services/labarotary_service");
 const OfficeClerkService = require("../services/office_clerk_service");
 const TechnicalOfficerService = require("../services/technical_officer_service");

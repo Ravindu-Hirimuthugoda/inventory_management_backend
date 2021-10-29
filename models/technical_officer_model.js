@@ -1,7 +1,7 @@
-const sequelizeConfig =require("../config/database_config");
 const {DataTypes} = require('sequelize');
+const sequelize = require('../config/database');
 
-var TechnicalOfficer = sequelizeConfig.define('technicalofficer', {
+var TechnicalOfficer = sequelize.define('technicalofficer', {
     id: {
       type: DataTypes.STRING,
       primaryKey:true
@@ -13,6 +13,7 @@ var TechnicalOfficer = sequelizeConfig.define('technicalofficer', {
       type: DataTypes.STRING
     },
   }, {
+    sequelize,
     freezeTableName: true,
 
   });

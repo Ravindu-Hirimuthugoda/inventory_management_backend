@@ -1,7 +1,7 @@
-const sequelizeConfig =require("../config/database_config");
+const sequelize = require('../config/database');
 const {DataTypes} = require('sequelize');
 
-var OfficeClerk = sequelizeConfig.define('officeclerk', {
+var OfficeClerk = sequelize.define('officeclerk', {
     id: {
       type: DataTypes.STRING,
       primaryKey:true

@@ -1,4 +1,4 @@
-const sequelize=require('../config/database_config');
+const sequelize = require("../config/database");
 
 const OfficeClerkModel=require('../models/office_clerk_model');
 const {Op} = require("sequelize");
@@ -32,18 +32,15 @@ class OfficeClerkService{
 
     async getOfficeClerkByID(index){
         
-        let cnt = await OfficeClerkModel.count({where: {
-            [Op.and]: [
-                { id: index },             
-        ]}});
+        let cnt = await OfficeClerkModel.count({where: { id: index }});
 
         if (cnt > 0) {
             return null;
-        }else{                    
-                    
+        }else{                                   
             return "no user";         
         }
     }
+
     async readLastEntry(){
         const officeClerks =  await OfficeClerkModel.findAll({
              limit: 1,
@@ -72,10 +69,7 @@ class OfficeClerkService{
     async updateOfficeClerk(firstName,lastName,department){
         await OfficeClerkModel.update(
             {
-            where:{[Op.and]:
-                [{id:id }]
-                    
-            },raw:true
+            where:{id:id },raw:true
             },
             {
                 firstName: firstName,

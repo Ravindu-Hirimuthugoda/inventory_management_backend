@@ -1,4 +1,4 @@
-const sequelize=require('../config/database_config');
+const sequelize = require("../config/database");
 
 const TechnicalOfficerModel=require('../models/technical_officer_model');
 const {Op} = require("sequelize");
@@ -32,10 +32,7 @@ class TechnicalOfficerService{
 
     async getTechnicalOfficerByID(index){
                
-        let cnt = await TechnicalOfficerModel.count({where: {
-            [Op.and]: [
-                { id: index },             
-        ]}});
+        let cnt = await TechnicalOfficerModel.count({where:{ id: index }});
 
         if (cnt > 0) {
             return null;
@@ -73,10 +70,7 @@ class TechnicalOfficerService{
     async updateTechnicalOfficer(firstName,lastName,labId){
         await TechnicalOfficerModel.update(
             {
-            where:{[Op.and]:
-                [{id:id }]
-                    
-            },raw:true
+            where:{id:id },raw:true
             },
             {
                 firstName: firstName,

@@ -1,7 +1,7 @@
-const sequelizeConfig =require("../config/database_config");
 const {DataTypes} = require('sequelize');
+const sequelize = require('../config/database');
 
-var Student = sequelizeConfig.define('student', {
+var Student = sequelize.define('student', {
     id: {
       type: DataTypes.STRING,
       primaryKey:true
@@ -16,7 +16,7 @@ var Student = sequelizeConfig.define('student', {
       type: DataTypes.STRING
     },
   }, {
-    freezeTableName: true,
+    sequelize,
   
   });
   

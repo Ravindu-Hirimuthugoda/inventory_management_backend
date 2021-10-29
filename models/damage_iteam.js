@@ -16,11 +16,11 @@ const DamageItemModel = sequelize.define('DamageItem', {
         allowNull: false,
     },
     openDate: {
-        type: DataTypes.timestamps,
+        type: DataTypes.DATE,
         allowNull: false,
     },
     closeDate: {
-        type: DataTypes.timestamps,
+        type: DataTypes.DATE,
         allowNull: true,
         defaultValue: null
     },
@@ -29,10 +29,9 @@ const DamageItemModel = sequelize.define('DamageItem', {
         allowNull: false
     }
 }, {
-    dbsequelize,
+    sequelize,
     timestamps: false,
-    tableName: 'Category',
-    timestamps: false,
+    tableName: 'DamageItem',
 
 });
-module.exports = CategoryModel;
+module.exports = DamageItemModel;

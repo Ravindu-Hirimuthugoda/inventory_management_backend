@@ -1,8 +1,8 @@
-const sequelizeConfig =require("../config/database_config");
-const {DataTypes} = require('sequelize');
+const {DataTypes, ENUM} = require('sequelize');
+const sequelize = require('../config/database');
 
 
-var Admin = sequelizeConfig.define('admin', {
+var Admin = sequelize.define('admin', {
     id: {
       type: DataTypes.STRING,
       primaryKey:true
@@ -14,6 +14,7 @@ var Admin = sequelizeConfig.define('admin', {
       type: DataTypes.STRING
     },
   }, {
+    sequelize,
     freezeTableName: true,
 
 

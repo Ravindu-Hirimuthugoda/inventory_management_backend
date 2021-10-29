@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 // const config = require('config');
 // const md5 = require('md5');
 const { successMessage, errorMessage } = require("../utils/response_message");
-const UserService = require('../services/user_service');
+const UserService = require('../services/user');
 
 let guest = new UserService();
 

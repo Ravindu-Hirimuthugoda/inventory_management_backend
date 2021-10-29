@@ -1,6 +1,6 @@
-const sequelize=require('../config/database_config');
+const sequelize = require("../config/database");
 
- const LaboratoryModel=require('../models/laboratory_model');
+ const LaboratoryModel=require('../models/laboratory');
 const {Op} = require("sequelize");
 
 
@@ -19,10 +19,7 @@ class LaboratoryService{
 
         const tempLab = await LaboratoryModel.findOne({
             arrtibute:["id"],
-            where:{[Op.and]:
-                [{labName:labName,department: department }]
-                    
-            },raw:true
+            where:{labName:labName,department: department },raw:true
         });
         if(tempLab != null){
             return null;
@@ -60,9 +57,7 @@ class LaboratoryService{
     async readAllLaboratory(){
         
         console.log("read laboratory");
-        const laboratory = await LaboratoryModel.findAll({
-
-        });
+        const laboratory = await LaboratoryModel.findAll();
         if(laboratory == null){
             throw new Error('Something went wrong!');
         }
@@ -70,27 +65,7 @@ class LaboratoryService{
         return laboratory;
     
     }
-
-    async updateLaboratory(labName,department){
-        await AdminModel.update(
-            {
-            where:{[Op.and]:
-                [{id:id }]
-                    
-            },raw:true
-            },
-            {
-                firstName: firstName,
-                lastName: lastName
-            }
-        ).success(function(admin) { 
-
-           return admin;
-       
-        }).error(function(err) {        
-            throw new Error('Admin not updated');            
-        });        
-    }
+   
 
 }
 

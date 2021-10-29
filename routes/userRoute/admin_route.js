@@ -21,10 +21,6 @@ router.get('/last-admin',authorization,adminController.getLastAdmin);
 
 router.get('/get-all-labs',authorization, adminController.getLaboratory);
 
-// router.get('/api',(req,res)=>{
-//     res.json({
-//         message:"Hello world",
-//     });
-// });
+
 
 module.exports = router;

@@ -1,6 +1,7 @@
-const sequelize=require('../config/database_config');
+// const sequelize=require('../config/database_config');
+const sequelize = require("../config/database");
 
-const DamageItemModel=require('../models/damage_item_model');
+const DamageItemModel=require('../models/damage_iteam');
 const {Op} = require("sequelize");
 
 const ItemModel = require("../models/item_model")
@@ -16,52 +17,13 @@ class DamageItemService{
         }
     }
 
-    // async createDamageItem(index,firstName,lastName,uid){
-        
-      
-    // }
-
-    async readUnderRepairDamageItem(email){
-        const damageItems = await DamageItemModel.findAll({
-            subQuery: false,
-            include: [{
-                    model:ItemModel,
-                }],
-            where:{[Op.and]:[{itemStatus:"repair" }]},
-
-        });
-        if(damageItems == null){
-            throw new Error('Something went wrong!');;
-        }
-        // console.log(damageItems);
-        return damageItems;
-
-    }
-
-    async readOldDamageItem(email){
-        const damageItems = await DamageItemModel.findAll({
-            subQuery: false,
-            include: [{
-                    model:ItemModel,
-                }],
-            where:{[Op.and]:[{itemStatus:"finished" }]},
-
-        });
-        if(damageItems == null){
-            throw new Error('Something went wrong!');;
-        }
-        // console.log(damageItems);
-        return damageItems;
-
-    }
-
     async readNewDamageItem(){
         const damageItems = await DamageItemModel.findAll({
             subQuery: false,
             include: [{
                     model:ItemModel,
                 }],
-            where:{[Op.and]:[{itemStatus:"pending" }]},
+            where:{itemStatus:"pending" },
 
         });
         if(damageItems == null){
@@ -69,6 +31,23 @@ class DamageItemService{
         }
         // console.log(damageItems);
         return damageItems;
+    }
+
+    async readUnderRepairDamageItem(){
+        const damageItems = await DamageItemModel.findAll({
+            subQuery: false,
+            include: [{
+                    model:ItemModel,
+                }],
+            where:{itemStatus:"repair" },
+
+        });
+        if(damageItems == null){
+            throw new Error('Something went wrong!');;
+        }
+        // console.log(damageItems);
+        return damageItems;
+
     }
 
     async markFinishedRepair(id,status){
@@ -79,7 +58,7 @@ class DamageItemService{
             include: [{
                     model:ItemModel,
                 }],
-            where:{[Op.and]:[{itemStatus:"repair" , id: id}]},
+            where:{itemStatus:"repair" , id: id},
 
         });
         if(damageItems == null){
@@ -88,7 +67,6 @@ class DamageItemService{
         return true;
  
     }
-
     async markAsSendToRepair(id,status){
         const damageItems = await DamageItemModel.update(
             {itemStatus: status },
@@ -97,7 +75,7 @@ class DamageItemService{
             include: [{
                     model:ItemModel,
                 }],
-            where:{[Op.and]:[{itemStatus:"pending" , id: id}]},
+            where:{itemStatus:"pending" , id: id},
 
         });
         if(damageItems == null){
@@ -107,8 +85,22 @@ class DamageItemService{
  
     }
 
-    
+    async readOldDamageItem(){
+        const damageItems = await DamageItemModel.findAll({
+            subQuery: false,
+            include: [{
+                    model:ItemModel,
+                }],
+            where:{itemStatus:"close" },
 
+        });
+        if(damageItems == null){
+            throw new Error('Something went wrong!');;
+        }
+        // console.log(damageItems);
+        return damageItems;
+
+    }  
 
 }
 

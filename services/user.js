@@ -6,6 +6,9 @@ const equipment = require('../models/equipment');
 const request = require('../models/request');
 const { Op } = require("sequelize");
 
+const UserModel = require('../models/user-model');
+
+// let userModel = new UserModel();
 class User{
 
     constructor(){
@@ -87,6 +90,65 @@ class User{
         const result = await request.findAll({where:{equipmentId:id},attributes:['returnDate']});
         //console.log(result);
         return result;
+    }
+
+
+    //! - uditha
+
+    async createUser(email,password,type,isDelete){
+        let cnt = await UserModel.count({where: {email:email,isDelete: 0 }});
+
+        if (cnt > 0) {
+            return null;
+        }else{                    
+           const user =  await UserModel.create({           
+              email: email,
+                password:   password,
+               type: type,
+              isDelete: isDelete
+            });
+            console.log(user);
+            
+            return user;         
+        }
+    }
+
+    async getUserByEmail(email){
+        let cnt = await UserModel.count({where: {email:email,isDelete: 0 }});
+        if (cnt > 0) {
+            return null;
+        }else{                                       
+            return "no user";         
+        }
+    }
+
+    async getUser(email){
+        
+        console.log(email);
+        const user = await UserModel.findOne({
+            arrtibute:["id","type","password"],
+            where:{email:email,isDelete: 0 },raw:true
+        });
+        if(user == null){
+            throw new Error('Invalid email or password');
+        }
+        return user;
+    }
+
+
+    async readUser(){
+        
+        console.log(email);
+        const user = await TestModel.findOne({
+            arrtibute:["id","type","password"],
+            where:{email:email,isDelete: 0 },raw:true
+        });
+
+        // console.log(user);
+        if(user == null){
+            throw new Error('Invalid email or password');
+        }
+        return user;
     }
 
 }

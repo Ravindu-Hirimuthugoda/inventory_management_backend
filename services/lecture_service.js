@@ -1,100 +1,100 @@
-const sequelize=require('../config/database_config');
+// const sequelize=require('../config/database_config');
 
-const LectureModel=require('../models/lecture_model');
-const {Op} = require("sequelize");
+// const LectureModel=require('../models/lecture_model');
+// const {Op} = require("sequelize");
 
-class LecturerService{
+// class LecturerService{
     
-    constructor(){
-        try {
-            sequelize.authenticate();
-            console.log('Connection has been established successfully.');
-        } catch (error) {
-            console.error('Unable to connect to the database:', error);
-        }
-    }
+//     constructor(){
+//         try {
+//             sequelize.authenticate();
+//             console.log('Connection has been established successfully.');
+//         } catch (error) {
+//             console.error('Unable to connect to the database:', error);
+//         }
+//     }
 
-    async createLecturer(index,firstName,lastName,uid,department){
+//     async createLecturer(index,firstName,lastName,uid,department){
         
           
-        console.log("create lecture");
-        const lecture = await LectureModel.create({
-           id: index,
-           firstName: firstName,
-           lastName: lastName,
-           department: department,
-           userId: uid     
-        });
-        if(lecture == null){
-            return null;
-        }
-        console.log(lecture);
-        return lecture;
-    }
+//         console.log("create lecture");
+//         const lecture = await LectureModel.create({
+//            id: index,
+//            firstName: firstName,
+//            lastName: lastName,
+//            department: department,
+//            userId: uid     
+//         });
+//         if(lecture == null){
+//             return null;
+//         }
+//         console.log(lecture);
+//         return lecture;
+//     }
 
-    async getLecturerByID(index){
-        let cnt = await LectureModel.count({where: {
-            [Op.and]: [
-                { id: index },             
-        ]}});
+//     async getLecturerByID(index){
+//         let cnt = await LectureModel.count({where: {
+//             [Op.and]: [
+//                 { id: index },             
+//         ]}});
 
-        if (cnt > 0) {
-            return null;
-        }else{                    
+//         if (cnt > 0) {
+//             return null;
+//         }else{                    
                     
-            return "no user";         
-        }
+//             return "no user";         
+//         }
           
       
-    }
+//     }
 
-    async readLastEntry(){
-        const lecturers =  await LectureModel.findAll({
-             limit: 1,
-             order: [ [ 'createdAt', 'DESC' ]]
-           });
-           if(lecturers == null){
-             throw new Error('Something went wrong!');
-         }
-         console.log(lecturers);
-         return lecturers;
-     }
+//     async readLastEntry(){
+//         const lecturers =  await LectureModel.findAll({
+//              limit: 1,
+//              order: [ [ 'createdAt', 'DESC' ]]
+//            });
+//            if(lecturers == null){
+//              throw new Error('Something went wrong!');
+//          }
+//          console.log(lecturers);
+//          return lecturers;
+//      }
 
-    async readAllLecture(){        
-        console.log("read Lecture");
-        const lecture = await LectureModel.findAll({
+//     async readAllLecture(){        
+//         console.log("read Lecture");
+//         const lecture = await LectureModel.findAll({
 
-        });
-        if(lecture == null){
-            throw new Error('Something went wrong!');
-        }
-        console.log(lecture);
-        return lecture;
+//         });
+//         if(lecture == null){
+//             throw new Error('Something went wrong!');
+//         }
+//         console.log(lecture);
+//         return lecture;
     
-    }
+//     }
 
-    async updateLecture(firstName,lastName,department){
-        await LectureModel.update(
-            {
-            where:{[Op.and]:
-                [{id:id }]
+//     async updateLecture(firstName,lastName,department){
+//         await LectureModel.update(
+//             {
+//             where:{[Op.and]:
+//                 [{id:id }]
                     
-            },raw:true
-            },
-            {
-                firstName: firstName,
-                lastName: lastName,
-                department:department
-            }
-        ).success(function(lecture) { 
+//             },raw:true
+//             },
+//             {
+//                 firstName: firstName,
+//                 lastName: lastName,
+//                 department:department
+//             }
+//         ).success(function(lecture) { 
 
-           return lecture;
+//            return lecture;
        
-        }).error(function(err) {        
-            throw new Error('lecture not updated');            
-        });        
-    }
+//         }).error(function(err) {        
+//             throw new Error('lecture not updated');            
+//         });        
+//     }
 
 
-}
-module.exports=LecturerService;
+// }
+// module.exports=LecturerService;
