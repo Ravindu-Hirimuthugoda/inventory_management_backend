@@ -1,3 +1,4 @@
+
 const Category = require('../services/technical_officer/category');
 const Equipment = require('../services/technical_officer/equipment')
 const BorrowData = require('../services/technical_officer/borrow_data');
@@ -272,3 +273,4 @@ const addcategory = async (req, res, next) => {
     }
 }
 module.exports = {addmodel,addcategory,acceptEquipment,AddEquipment,Getcategories,findIteamsByCatogary,getBorrowData,Getlabs,GetModels,findIteamByid,UpdateEquipment,temporyBorrow,GetlastBorrowData,GetReport,getRequestData,normalBorrow};
+

@@ -1,3 +1,4 @@
+
 const sequelize = require("../../config/database");
 const db = require('../../models/allmodels');
 const { Op,$lt, } = require("sequelize");
@@ -525,4 +526,5 @@ class BorrowData{
         
     }
 }
+
 module.exports = BorrowData;

@@ -11,6 +11,8 @@ const lecturer = require('../models/lecturer');
 const lecturerAllocation = require('../models/lecturerAllocation');
 const {Op, where} = require('sequelize');
 
+const StudentModel =require('../models/student_model');
+
 class Student{
     constructor(){
         try{
@@ -22,6 +24,7 @@ class Student{
     }
 
     async getBorrowedItems(){
+
         borrowing.hasOne(temporyBorrowing);
         borrowing.hasOne(requestBorrowing);
 
@@ -30,7 +33,10 @@ class Student{
         const result1 = await borrowing.findAll({include:{model:temporyBorrowing,where:{[Op.and]:[{borrowingId:{[Op.ne]:null}},{studentId:{[Op.eq]:'180244B'}}]},attributes:[]},raw:true});
         const result2 = await borrowing.findAll({include:{model:requestBorrowing,where:{[Op.and]:[{borrowingId:{[Op.ne]:null}},{studentId:{[Op.eq]:'180244B'}}]},attributes:[]},raw:true});
         const result = result1.concat(result2);
-        //console.log(result1);
+
+        //console.log(result);
+        //console.log('run here');
+
         return result;
 
     }
@@ -54,14 +60,18 @@ class Student{
         return result;
     }
 
-    async saveData(detail){
-        const transaction = await db.sequelize.transaction();
+
+    async saveDataDB(detail){
+        console.log('run here 4');
+        const transaction = await sequelize.transaction();
+
         const req= new Date(detail.requestDate).toString();
         const ret = new Date(detail.returnDate).toString();
         const reqDate=this.convert(req);
         const retDate = this.convert(ret);
         //console.log(a);
         console.log(detail);
+
 
         try{
             const total = await request.count();
@@ -97,7 +107,9 @@ class Student{
     }
 
     async saveTemoryData(detail){
-        const transaction = await db.sequelize.transaction();
+
+        const transaction = await sequelize.transaction();
+
         //console.log(a);
         console.log(detail);
 
@@ -139,6 +151,84 @@ class Student{
           day = ("0" + date.getDate()).slice(-2);
         return [date.getFullYear(), mnth, day].join("-");
     }
+
+
+    //! - uditha --
+    async createStudent(index,firstName,lastName,uid,department){
+        
+        console.log("create Student");
+        const student = await StudentModel.create({
+           id: index,
+           firstName: firstName,
+           lastName: lastName,
+           department: department,
+           userId: uid     
+        });
+        if(student == null){
+            return null;
+        }
+        console.log(student);
+        return student;
+    }
+
+    async getStudentByID(index){
+
+        let cnt = await StudentModel.count({where: { id: index }});
+
+        if (cnt > 0) {
+            return null;
+        }else{                    
+                    
+            return "no user";         
+        }
+    }
+
+    async readLastEntry(){
+       const students =  await StudentModel.findAll({
+            limit: 1,
+            order: [ [ 'createdAt', 'DESC' ]]
+          });
+          if(students == null){
+            throw new Error('Something went wrong!');
+        }
+        console.log(students);
+        return students;
+    }
+
+    async readAllStudent(){        
+        console.log("read student");
+        const students = await StudentModel.findAll({
+
+        });
+        if(students == null){
+            throw new Error('Something went wrong!');
+        }
+        console.log(students);
+        return students;
+    
+    }
+
+    async updateStudent(firstName,lastName,department){
+        await StudentModel.update(
+            {
+            where:{id:id },raw:true
+            },
+            {
+                firstName: firstName,
+                lastName: lastName,
+                department:department
+            }
+        ).success(function(student) { 
+
+           return student;
+       
+        }).error(function(err) {        
+            throw new Error('student not updated');            
+        });        
+    }
+
+
+
 }
 
 module.exports = Student;

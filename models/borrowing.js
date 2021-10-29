@@ -27,7 +27,8 @@ const BorrowingModel = sequelize.define('Borrowing',{
         type: DataTypes.DATE,
         allowNull: false,
     },
-    EquipmentId:{
+    equipmentId:{
+
         type:String,
         allowNull:false,
     },

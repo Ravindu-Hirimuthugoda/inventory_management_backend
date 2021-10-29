@@ -6,13 +6,16 @@ const getStudentBorrowedItems = async (req,res,next)=>{
     try{
         const response = await student.getBorrowedItems();
         let matches = []
-        //console.log(response);
+
+        console.log('trdpeodmd');
+        console.log(response);
         for(let m of response){
-            let match = await student.getItemDetails(m.itemId);
+            let match = await student.getItemDetails(m.equipmentId);
             let newObj = {...match[0],purchesedDate:m.dueDate}
             matches.push(newObj);
         }
-        //console.log(matches);
+        console.log(matches);
+
         res.send(matches); 
     }catch(err){
         next(err);
@@ -33,8 +36,12 @@ const getReleventLecturer = async(labId)=>{
 }
 
 const saveData = async(detail)=>{
+
+    console.log('run gere 2');
     try{
-        const response = await student.saveData(detail);
+        console.log('run here 3');
+        const response = await student.saveDataDB(detail);
+
         return('Suxxessfully save data');
     }catch(error){
         return(error);

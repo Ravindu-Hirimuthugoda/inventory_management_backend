@@ -15,6 +15,7 @@ const Model = sequelize.define('Model',{
         type: DataTypes.INTEGER,
         allowNull:false,
     },
+
 },{
     sequelize,
     timestamps:false,

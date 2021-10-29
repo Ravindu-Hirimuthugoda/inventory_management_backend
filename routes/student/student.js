@@ -10,16 +10,9 @@ router.get('/checkAvaiability',checkAvailability);
 router.get('/ava',getAvailabelItems);
 router.get('/category',getAllCategories);
 router.get('/borrow',getStudentBorrowedItems);
-router.get('/pending',getPendingRequests);
-router.get('/requestDetail/:id',async(req,res,next)=>{
-    try{
-        const response= await getPendingDetails(req.params.id);
-        //console.log(response);
-        res.send(response);
-    }catch(err){
-        return err;
-    }
-});
+
+
+
 router.get('/model/:category',async(req,res,next)=>{
     try{
         const response = await getModels(req.params.category);
@@ -53,25 +46,6 @@ router.get('/storeCode/:category/:model/:lab',async(req,res,next)=>{
 
 
 
-
-router.post('/routerrove/:id',async(req,res,next)=>{
-    try{
-        const response =await routerroveRequest(req.params.id);
-        res.send(response);
-    }catch(err){
-        return err;
-    }
-});
-
-router.post('/reject/:id',async(req,res,next)=>{
-    try{
-        const response =await rejectRequest(req.params.id);
-        res.send(response);
-    }catch(err){
-        return err;
-    }
-});
-
 router.get('/lecturer/:labid',async(req,res,next)=>{
     try{
         const response = await getReleventLecturer(req.params.labid);
@@ -82,7 +56,9 @@ router.get('/lecturer/:labid',async(req,res,next)=>{
 });
 
 router.post('/sendNormalRequest',async(req,res,next)=>{
-    console.log(req.body);
+
+    console.log('run here1');
+
     try{
         const response = await saveData(req.body);
         res.send(req.body);

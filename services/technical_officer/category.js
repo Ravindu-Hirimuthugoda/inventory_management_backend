@@ -1,3 +1,4 @@
+
 const sequelize = require("../../config/database");
 const db = require('../../models/allmodels');
 
@@ -50,4 +51,5 @@ class Category{
     }
 
 }
+
 module.exports = Category;

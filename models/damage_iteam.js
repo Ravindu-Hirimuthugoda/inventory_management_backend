@@ -29,10 +29,11 @@ const DamageItemModel = sequelize.define('DamageItem', {
         allowNull: false
     }
 }, {
-     sequelize,
-    timestamps:false,
-    modelName:'damageitem',
-    tableName: 'damageitem',
+
+    sequelize,
+    timestamps: false,
+    tableName: 'DamageItem',
+
 
 });
 module.exports = DamageItemModel;

@@ -6,6 +6,11 @@ const equipment = require('../models/equipment');
 const request = require('../models/request');
 const { Op } = require("sequelize");
 
+
+const UserModel = require('../models/user-model');
+
+// let userModel = new UserModel();
+
 class User{
 
     constructor(){
@@ -44,7 +49,9 @@ class User{
     async getCategories(){
         category.hasMany(equipment);
         equipment.belongsTo(category);
-        const result = await equipment.findAll({include:[{model:category,attributes:['categoryName']}],where:{availability:{[Op.eq]:'1'}},attributes:[],raw:true});
+
+        const result = await equipment.findAll({include:[{model:category,attributes:['categoryName']}],where:{availability:{[Op.eq]:'1'}},group:['categoryId'],attributes:[],raw:true});
+
         //console.log(result);
         return result;
     }
@@ -54,7 +61,9 @@ class User{
         equipment.belongsTo(category);
         model.hasMany(equipment);
         equipment.belongsTo(model);
-        const result = await equipment.findAll({include:[{model:category,where:{categoryName:{[Op.eq]:categoryName}},attributes:['categoryName']},{model:model,attributes:['modelName']}],where:{availability:{[Op.eq]:'1'}},attributes:[],raw:true});
+
+        const result = await equipment.findAll({include:[{model:category,where:{categoryName:{[Op.eq]:categoryName}},attributes:['categoryName']},{model:model,attributes:['modelName']}],where:{availability:{[Op.eq]:'1'}},group:['modelId'],attributes:[],raw:true});
+
         console.log(result);
         return result;
     }
@@ -66,7 +75,9 @@ class User{
         equipment.belongsTo(category);
         equipment.belongsTo(model);
         equipment.belongsTo(lab);
-        const result = await equipment.findAll({include:[{model:category,where:{categoryName:{[Op.eq]:categoryName}},attributes:[]},{model:model,where:{modelName:{[Op.eq]:modelName}},attributes:[]},{model:lab,attributes:['labName']},],where:{availability:{[Op.eq]:'1'}},raw:true,attributes:[]});
+
+        const result = await equipment.findAll({include:[{model:category,where:{categoryName:{[Op.eq]:categoryName}},attributes:[]},{model:model,where:{modelName:{[Op.eq]:modelName}},attributes:[]},{model:lab,attributes:['labName']},],where:{availability:{[Op.eq]:'1'}},group:['labId'],raw:true,attributes:[]});
+
         //console.log(result);
         return result;
     }
@@ -88,6 +99,66 @@ class User{
         //console.log(result);
         return result;
     }
+
+
+    //! - uditha
+
+    async createUser(email,password,type,isDelete){
+        let cnt = await UserModel.count({where: {email:email,isDelete: 0 }});
+
+        if (cnt > 0) {
+            return null;
+        }else{                    
+           const user =  await UserModel.create({           
+              email: email,
+                password:   password,
+               type: type,
+              isDelete: isDelete
+            });
+            console.log(user);
+            
+            return user;         
+        }
+    }
+
+    async getUserByEmail(email){
+        let cnt = await UserModel.count({where: {email:email,isDelete: 0 }});
+        if (cnt > 0) {
+            return null;
+        }else{                                       
+            return "no user";         
+        }
+    }
+
+    async getUser(email){
+        
+        console.log(email);
+        const user = await UserModel.findOne({
+            arrtibute:["id","type","password"],
+            where:{email:email,isDelete: 0 },raw:true
+        });
+        if(user == null){
+            throw new Error('Invalid email or password');
+        }
+        return user;
+    }
+
+
+    async readUser(){
+        
+        console.log(email);
+        const user = await TestModel.findOne({
+            arrtibute:["id","type","password"],
+            where:{email:email,isDelete: 0 },raw:true
+        });
+
+        // console.log(user);
+        if(user == null){
+            throw new Error('Invalid email or password');
+        }
+        return user;
+    }
+
 
 }
 
