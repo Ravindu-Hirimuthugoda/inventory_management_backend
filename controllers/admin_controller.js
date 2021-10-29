@@ -30,7 +30,12 @@ const addAdmin = async (req, res, next) => {
     let admin;
     if (checkUserType(req.user.type, "Admin")) {
       try {
-        user = await userService.createUser(email, password, "Admin", false);
+        // generate salt to hash password
+        const salt = await bcrypt.genSalt(10);
+        // now we set user password to hashed password
+        let hashPw = await bcrypt.hash(password, salt);
+      
+        user = await userService.createUser(email, hashPw, "Admin", false);
         
         if (user != null) {
           admin = await adminService.createAdmin(
@@ -81,7 +86,10 @@ const addStudent = async (req, res, next) => {
         if (isUser != null) {
           let isStudent = await studentService.getStudentByID(index);
           if (isStudent != null) {
-            user = await userService.createUser(email, password, "Student", false);
+   
+        const salt = await bcrypt.genSalt(10);
+        let hashPw = await bcrypt.hash(password, salt);
+            user = await userService.createUser(email, hashPw, "Student", false);
             student = await studentService.createStudent(
               index,
               firstName,
@@ -135,7 +143,9 @@ const addLecturer = async (req, res, next) => {
             
           );
           if (isLecturer != null) {
-            user = await userService.createUser(email, password, "Lecturer", false);
+            const salt = await bcrypt.genSalt(10);
+        let hashPw = await bcrypt.hash(password, salt);
+            user = await userService.createUser(email, hashPw, "Lecturer", false);
             lecturer = await lectureService.createLecturer(
               index,
               firstName,
@@ -190,9 +200,11 @@ const addOfficeClerk = async (req, res, next) => {
             
           );
           if (isOfficeClerk != null) {
+            const salt = await bcrypt.genSalt(10);
+        let hashPw = await bcrypt.hash(password, salt);
             user = await userService.createUser(
               email,
-              password,
+              hashPw,
               "OfficeClerk",
               false
             );
@@ -252,9 +264,11 @@ const addTechnicalOfficer = async (req, res, next) => {
               
             );
           if (isTechnicalOfficer != null) {
+            const salt = await bcrypt.genSalt(10);
+        let hashPw = await bcrypt.hash(password, salt);
             user = await userService.createUser(
               email,
-              password,
+              hashPw,
               "TechnicalOfficer",
               false
             );

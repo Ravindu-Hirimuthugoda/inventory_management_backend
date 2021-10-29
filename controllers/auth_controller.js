@@ -15,7 +15,8 @@ const login = async (req, res, next) => {
         let user;
         try {
             user = await guest.getUser(email);
-            if(user.password == password){              
+            const validPassword = await bcrypt.compare(password, user.password);
+            if(validPassword){              
                 jwt.sign({ userID: user.id, expiresIn: 3600, type:user.type},"secretKey",(err,token)=>{
                         if (err) throw err;
                         return successMessage(res, {token})
