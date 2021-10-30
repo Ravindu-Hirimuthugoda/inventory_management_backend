@@ -27,8 +27,8 @@ class User{
         equipment.belongsTo(category);
         equipment.belongsTo(model);
         equipment.belongsTo(lab);
-        const details = await equipment.findAll({include:[{model:category,attributes:['categoryName']},{model:lab,attributes:['labName']},{model:model,attributes:['modelName']}],attributes:['id','imageURL','availability'],raw:true});
-        console.log(details);
+        const details = await equipment.findAll({include:[{model:category,attributes:['categoryName']},{model:lab,attributes:['labName']},{model:model,attributes:['modelName']}],attributes:['id','imageURL','availability','status'],raw:true});
+        //console.log(details);
         return details;
     }
 
