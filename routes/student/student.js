@@ -53,7 +53,6 @@ router.get('/lecturer/:labid',async(req,res,next)=>{
 });
 
 router.post('/sendNormalRequest',async(req,res,next)=>{
-    console.log('run here1');
     try{
         const response = await saveData(req.body);
         res.send(req.body);

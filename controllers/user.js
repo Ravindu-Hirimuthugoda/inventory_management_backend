@@ -5,11 +5,12 @@ const checkAvailability = async(req,res,next)=>{
     try{
         const response = await user.getItemDetails();
         let lst=[];
+        //console.log(response);
         for(let m of response){
-            console.log(m);
-            if(!m.availability){
+            //console.log(m);
+            if(!m.availability && m.status!='damage'){
                 const date = await user.getReturnDate(m.id);
-                console.log(date.slice(-1));
+                //console.log(date.slice(-1));
                 m= {...m,returnDate:date.slice(-1)[0].returnDate};
             }
             lst.push(m);
