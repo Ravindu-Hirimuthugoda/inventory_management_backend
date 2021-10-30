@@ -10,7 +10,7 @@ const sequelize = new Sequelize(process.env.dbname, process.env.usersname, proce
   logging:console.log
 });
 
-
+//
 
 module.exports = sequelize;
 
