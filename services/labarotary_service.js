@@ -17,13 +17,13 @@ class LaboratoryService{
 
     async createLaboratory(labName,department){
 
-        const tempLab = await LaboratoryModel.findOne({
-            arrtibute:["id"],
-            where:{labName:labName,department: department },raw:true
-        });
-        if(tempLab != null){
-            return null;
-        }
+        // const tempLab = await LaboratoryModel.findOne({
+      
+        //     where:{labName:labName,department: department },raw:true
+        // });
+        // if(tempLab != null){
+        //     return null;
+        // }
         console.log("create laboratory");
         const laboratory = await LaboratoryModel.create({
            labName: labName,

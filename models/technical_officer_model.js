@@ -14,6 +14,9 @@ var TechnicalOfficer = sequelize.define('technicalofficer', {
     },
     userId:{
       type: DataTypes.INTEGER
+    },
+    laboratoryId:{
+      type: DataTypes.INTEGER
     }
   }, {
     sequelize,

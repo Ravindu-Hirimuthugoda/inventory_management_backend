@@ -71,13 +71,7 @@ const markAsSendToRepair = async (req, res, next) => {
     try {
         let output;
         const damageId = req.params.damageid;
-        // var today = new Date()
-        // var dd = String(today.getDate()).padStart(2, '0');
-        // var mm = String(today.getMonth() + 1).padStart(2, '0'); 
-        // var yyyy = today.getFullYear();
-        // var date = yyyy + '-' + mm + '-' + dd;
-        // console.log(date);
-        // console.log(damageId);
+
         try {
             output = await damageItemService.markAsSendToRepair(damageId,"repair");
             if(output){
@@ -98,17 +92,11 @@ const markAsFinishedRepair = async (req, res, next) => {
     try {
         let output;
         const damageId = req.params.damageid;
-        // var today = new Date()
-        // var dd = String(today.getDate()).padStart(2, '0');
-        // var mm = String(today.getMonth() + 1).padStart(2, '0'); 
-        // var yyyy = today.getFullYear();
-        // var date = yyyy + '-' + mm + '-' + dd;
-        // console.log(date);
-        // console.log(damageId);
+        const itemId = req.params.itemid;
+
         try {
-            output = await damageItemService.markFinishedRepair(damageId,"finished");
+            output = await damageItemService.markFinishedRepair(damageId,"close",itemId);
             if(output){
-                //!TODO: update item table=> status: available , availability:1
                 return successMessage(res, {update:"update Success"});
             }else{
                 return errorMessage(res, 'Something went wrong', 500);
@@ -131,7 +119,6 @@ module.exports = {
     getNewDamageItem,
     getUnderRepairItem,
     getFinishedDamageItem,
-
     markAsFinishedRepair,
     markAsSendToRepair
 
