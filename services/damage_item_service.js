@@ -114,15 +114,15 @@ class DamageItemService {
             {closeDate : sequelize.literal('CURRENT_TIMESTAMP'), status: status },
             {
 
-            where:{status:"repair" , id: id},
+            where:{id: id},
 
         });
-        const damageItems = await ItemModel.update(
+        const items = await ItemModel.update(
             { status: "notdamage",availability: 1 },
             { where: {status:"damage" , id: itemId},}
         );
 
-        if(damageItems == null){
+        if(damageItems == null || items == null){
             throw new Error('Something went wrong!');;
         }
         return true;
