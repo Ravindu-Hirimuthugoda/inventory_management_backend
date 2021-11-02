@@ -50,7 +50,9 @@ class DamageItemService {
             });
 
             let tempObj = {
-                reason: result[i].reason
+                reason: result[i].reason,
+                openDate: result[i].openDate,
+                damageId: result[i].id,
             }
             outs.push({
                 ...item,
@@ -94,7 +96,9 @@ class DamageItemService {
             });
 
             let tempObj = {
-                reason: result[i].reason
+                reason: result[i].reason,
+                openDate: result[i].openDate,
+                damageId: result[i].id,
             }
             outs.push({
                 ...item,
@@ -109,34 +113,29 @@ class DamageItemService {
 
     }
 
-    async markFinishedRepair(id, status,itemId) {
+    async markFinishedRepair(id, status, itemId) {
         const damageItems = await DamageItemModel.update(
-            {closeDate : sequelize.literal('CURRENT_TIMESTAMP'), status: status },
-            {
-
-            where:{id: id},
-
-        });
+            { closeDate: sequelize.literal('CURRENT_TIMESTAMP'), status: status },
+            { where: { id: id } }
+        );
         const items = await ItemModel.update(
-            { status: "notdamage",availability: 1 },
-            { where: {status:"damage" , id: itemId},}
+            { status: "notdamage", availability: 1 },
+            { where: { status: "damage", id: itemId }, }
         );
 
-        if(damageItems == null || items == null){
+        if (damageItems == null || items == null) {
             throw new Error('Something went wrong!');;
         }
+        console.log("finish update");
         return true;
 
     }
     async markAsSendToRepair(id, status) {
         const damageItems = await DamageItemModel.update(
-            {status: status },
-            {
-
-            where:{status:"pending" , id: id},
-
-        });
-        if(damageItems == null){
+            { status: status },
+            { where: { status: "pending", id: id }, }
+        );
+        if (damageItems == null) {
             throw new Error('Something went wrong!');;
         }
         return true;
@@ -144,7 +143,7 @@ class DamageItemService {
     }
 
     async readOldDamageItem() {
-     
+
         category.hasMany(ItemModel);
         model.hasMany(ItemModel);
         lab.hasMany(ItemModel);
@@ -173,7 +172,10 @@ class DamageItemService {
             });
 
             let tempObj = {
-                reason: result[i].reason
+                reason: result[i].reason,
+                openDate: result[i].openDate,
+                damageId: result[i].id,
+                closeDate:result[i].closeDate,
             }
             outs.push({
                 ...item,

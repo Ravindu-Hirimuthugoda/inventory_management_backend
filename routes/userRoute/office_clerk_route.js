@@ -12,12 +12,7 @@ router.get('/get-under-repair-item',authorization, officeClerkController.getUnde
 router.put('/send-to-repair/:damageid',authorization, officeClerkController.markAsSendToRepair);
 router.put('/finish-repair/:damageid/:itemid',authorization, officeClerkController.markAsFinishedRepair);
 
-// router.get('/get-new-damage-item', officeClerkController.getNewDamageItem);
-// router.get('/get-old-damage-item', officeClerkController.getFinishedDamageItem);
-// router.get('/get-under-repair-item', officeClerkController.getUnderRepairItem);
 
-// router.put('/send-to-repair/:damageid', officeClerkController.markAsSendToRepair);
-// router.put('/finish-repair/:damageid', officeClerkController.markAsFinishedRepair);
 
 
 

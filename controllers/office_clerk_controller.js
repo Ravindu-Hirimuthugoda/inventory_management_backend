@@ -93,6 +93,7 @@ const markAsFinishedRepair = async (req, res, next) => {
         let output;
         const damageId = req.params.damageid;
         const itemId = req.params.itemid;
+        console.log(damageId+ itemId);
 
         try {
             output = await damageItemService.markFinishedRepair(damageId,"close",itemId);
