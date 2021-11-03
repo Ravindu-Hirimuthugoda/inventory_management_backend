@@ -4,6 +4,7 @@ const model = require('../models/model');
 const lab = require('../models/laboratory');
 const equipment = require('../models/equipment');
 const request = require('../models/request');
+const notification = require('../models/notification');
 const { Op } = require("sequelize");
 
 const UserModel = require('../models/user-model');
@@ -60,6 +61,12 @@ class User{
         const result = await equipment.findAll({include:[{model:category,where:{categoryName:{[Op.eq]:categoryName}},attributes:['categoryName']},{model:model,attributes:['modelName']}],where:{availability:{[Op.eq]:'1'}},group:['modelId'],attributes:[],raw:true});
         console.log(result);
         return result;
+    }
+
+    async getNotifi(id){
+        const res = await notification.findAll({where:{receiverId: id,status:'notread'}});
+        console.log(res);
+        return res;
     }
 
     async getLab(categoryName,modelName){

@@ -68,6 +68,19 @@ const getModels = async(category)=>{
     }
 }
 
+const getNotification = async(id)=>{
+    try{
+        const result = await user.getNotifi(id);
+        if(result){
+            return result;
+        }else{
+            return('Error');
+        }
+    }catch(err){
+        return(err);
+    }
+}
+
 
 
 const getLab = async(category,model)=>{
@@ -101,4 +114,4 @@ const getStoreCode = async(category,model,labName)=>{
 
 
 
-module.exports = {checkAvailability,getAllCategories,getModels,getLab,getStoreCode,getAvailabelItems};
+module.exports = {checkAvailability,getAllCategories,getModels,getLab,getStoreCode,getAvailabelItems,getNotification};

@@ -11,6 +11,7 @@ const lecturer = require('../models/lecturer');
 const lecturerAllocation = require('../models/lecturerAllocation');
 const {Op, where} = require('sequelize');
 const StudentModel =require('../models/student_model');
+const notificationModel = require('../models/notification');
 
 class Student{
     constructor(){
@@ -32,8 +33,9 @@ class Student{
         const result1 = await borrowing.findAll({include:{model:temporyBorrowing,where:{[Op.and]:[{borrowingId:{[Op.ne]:null}},{studentId:{[Op.eq]:'180244B'}}]},attributes:[]},raw:true});
         const result2 = await borrowing.findAll({include:{model:requestBorrowing,where:{[Op.and]:[{borrowingId:{[Op.ne]:null}},{studentId:{[Op.eq]:'180244B'}}]},attributes:[]},raw:true});
         const result = result1.concat(result2);
-        //console.log(result);
-        //console.log('run here');
+        
+        console.log('run here');
+        console.log(result1);
         return result;
 
     }
@@ -136,6 +138,28 @@ class Student{
             console.log('Error');
             await transaction.rollback();
         }
+    }
+
+    async saveNotificationByStudent(detail){
+        console.log('readHere');
+        const notifiCount = await notificationModel.count();
+        console.log(notifiCount);
+        const notifi = await notificationModel.create({
+            id: notifiCount+1,
+            senderId: detail.studentId,
+            receiverId: detail.lecId,
+            message: detail.notification,
+            status: 'notread',
+        });
+
+        if (notifi==null){
+            console.log('somethig went wrong');
+            return;
+        }
+        console.log(notifi);
+        console.log('notiiction created');
+        return notifi;
+
     }
 
     convert(str) {
