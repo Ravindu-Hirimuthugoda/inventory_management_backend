@@ -9,6 +9,8 @@ router.get('/get-new-damage-item', authorization,officeClerkController.getNewDam
 router.get('/get-old-damage-item',authorization, officeClerkController.getFinishedDamageItem);
 router.get('/get-under-repair-item',authorization, officeClerkController.getUnderRepairItem);
 
+router.get('/check-availability',authorization, officeClerkController.checkAvailability);
+
 router.put('/send-to-repair/:damageid',authorization, officeClerkController.markAsSendToRepair);
 router.put('/finish-repair/:damageid/:itemid',authorization, officeClerkController.markAsFinishedRepair);
 

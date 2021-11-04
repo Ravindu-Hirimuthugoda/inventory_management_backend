@@ -1,12 +1,13 @@
 const { successMessage, errorMessage } = require("../utils/response_message");
 const DamageItemService = require('../services/damage_item_service');
+const OfficeClerkService = require("../services/office_clerk_service");
 
 //!Dummy Model
 // const ItemModel = require("../models/item_model");
 // const department = require('../models/department_model');
 
 let damageItemService = new DamageItemService();
-
+let officeClerkService = new OfficeClerkService();
 
 
 const getNewDamageItem = async (req, res, next) => {
@@ -67,6 +68,26 @@ const getFinishedDamageItem = async (req, res, next) => {
     }  
 }
 
+const checkAvailability = async (req, res, next) => {
+    try {
+              
+        try {
+            items = await officeClerkService.readAllEquipment();
+            if(items != null){
+                return successMessage(res, items);
+            }else{
+                return errorMessage(res, 'Something went wrong', 500);
+            }     
+        } catch (e) {
+            console.log(e);
+            return errorMessage(res, 'Something went wrong', 500);
+        }
+    } catch (err) {
+        next(err);
+    }  
+}
+
+
 const markAsSendToRepair = async (req, res, next) => {
     try {
         let output;
@@ -121,6 +142,7 @@ module.exports = {
     getUnderRepairItem,
     getFinishedDamageItem,
     markAsFinishedRepair,
-    markAsSendToRepair
+    markAsSendToRepair,
+    checkAvailability
 
 }
