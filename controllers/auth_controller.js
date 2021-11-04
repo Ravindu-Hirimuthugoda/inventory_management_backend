@@ -27,7 +27,7 @@ const login = async (req, res, next) => {
             console.log(role);
             const validPassword = await bcrypt.compare(password, user.password);
             if(validPassword){              
-                jwt.sign({ userID: role.id, expiresIn: 3600, type:user.type, firstName: role.firstName, lastName: role.lastName},"secretKey",(err,token)=>{
+                jwt.sign({ userID: role.id, expiresIn: 3600, type:user.type, firstName: role.firstName, lastName: role.lastName,email: user.email},"secretKey",(err,token)=>{
                         if (err) throw err;
                         return successMessage(res, {token})
                 });
