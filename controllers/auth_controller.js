@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 // const config = require('config');
 // const md5 = require('md5');
+const bcrypt = require("bcrypt");
 const { successMessage, errorMessage } = require("../utils/response_message");
 const UserService = require('../services/user');
 
@@ -16,6 +17,7 @@ const login = async (req, res, next) => {
         try {
             user = await guest.getUser(email);
             const validPassword = await bcrypt.compare(password, user.password);
+            console.log(validPassword,password, user.password);
             if(validPassword){              
                 jwt.sign({ userID: user.id, expiresIn: 3600, type:user.type},"secretKey",(err,token)=>{
                         if (err) throw err;
@@ -26,9 +28,11 @@ const login = async (req, res, next) => {
             }       
         
         } catch (e) {
+             console.log(e)
             return errorMessage(res, 'Invalid email or password', 401);
         }
     } catch (err) {
+        console.log(err)
         next(err);
     }
 };

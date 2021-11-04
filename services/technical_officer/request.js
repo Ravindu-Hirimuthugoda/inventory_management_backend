@@ -14,9 +14,24 @@ class Request{
     }
 
     async GetrequestData(id) {
-        const user = await db.User.findOne({ where: { id: id } })
+         let usertype;
+            let user = await db.Student.findOne(
+                    {
+                        where: { id: userid }
+                });
+            if (user == null) {
+                user = await db.Lecture.findOne(
+                    {
+                        where: { id: userid }
+                    });
+                 usertype = "lecturer";
+            }
+            else {
+                usertype = "student";
+            }
+        //const user = await db.User.findOne({ where: { id: id } })
         if (user != null) {
-            const usertype = user.dataValues.type;
+            //const usertype = user.dataValues.type;
             var reqId;
             if (usertype === "student") {
                 const borrow = await db.RequestBorrowing.findOne({

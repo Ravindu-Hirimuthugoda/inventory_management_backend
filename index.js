@@ -15,15 +15,14 @@ app.use(bodyParser.json({ limit: '30mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }))
 app.use('/', routes);
 
-app.get('/', (req, res) => {
-    res.send('welcome');
-})
+
 console.log(process.env.user);
 
 app.listen(port, () => {
     console.log(`running ${port}`);
 });
 
+module.exports = app;
 
 
 

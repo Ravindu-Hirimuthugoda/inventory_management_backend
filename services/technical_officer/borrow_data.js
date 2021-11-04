@@ -450,8 +450,23 @@ class BorrowData{
                }
                 
             );
-            const user = await db.User.findOne({ where: { id: userid } })
-            const usertype = user.dataValues.type;
+            let usertype;
+            let user = await db.Student.findOne(
+                    {
+                        where: { id: userid }
+                });
+            if (user == null) {
+                user = await db.Lecture.findOne(
+                    {
+                        where: { id: userid }
+                    });
+                 usertype = "lecturer";
+            }
+            else {
+                usertype = "student";
+            }
+            //const user = await db.User.findOne({ where: { id: userid } })
+            
             console.log(available.dataValues.availability);
             if (true) {
                 await db.BorrowData.count().then(async c => {
@@ -460,7 +475,7 @@ class BorrowData{
                         status: 'open',
                         dueDate: todate,
                         fromDate: fromdate,
-                        EquipmentId: storeid,
+                        equipmentId: storeid,
                         id: c + 1
                     }, { transaction: t }).then(async function (x) {
                         console.log(x.id);

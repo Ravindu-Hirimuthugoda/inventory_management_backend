@@ -1,7 +1,7 @@
-const dotenv = require("dotenv");
+//const dotenv = require("dotenv");
 
 
-dotenv.config();
+//dotenv.config();
 const { Sequelize } = require('sequelize');
 
 // const sequelize = new Sequelize("inventoryManagement", "root", "", {
@@ -11,7 +11,7 @@ const { Sequelize } = require('sequelize');
 //   });
 
 
-console.log(process.env.dbname, process.env.user, process.env.psw)
+//console.log(process.env.dbname, process.env.user, process.env.psw)
 const sequelize = new Sequelize('heroku_2f094f4ccd51bd3', 'b5f38ad8090f87', 'fabca632', {
   dialect:"mysql",
   host:'us-cdbr-east-04.cleardb.com',
