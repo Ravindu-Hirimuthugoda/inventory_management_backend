@@ -1,12 +1,13 @@
 const { successMessage, errorMessage } = require("../utils/response_message");
 const DamageItemService = require('../services/damage_item_service');
+const OfficeClerkService = require("../services/office_clerk_service");
 
 //!Dummy Model
 // const ItemModel = require("../models/item_model");
 // const department = require('../models/department_model');
 
 let damageItemService = new DamageItemService();
-
+let officeClerkService = new OfficeClerkService();
 
 
 const getNewDamageItem = async (req, res, next) => {
@@ -67,17 +68,31 @@ const getFinishedDamageItem = async (req, res, next) => {
     }  
 }
 
+const checkAvailability = async (req, res, next) => {
+    try {
+              
+        try {
+            items = await officeClerkService.readAllEquipment();
+            if(items != null){
+                return successMessage(res, items);
+            }else{
+                return errorMessage(res, 'Something went wrong', 500);
+            }     
+        } catch (e) {
+            console.log(e);
+            return errorMessage(res, 'Something went wrong', 500);
+        }
+    } catch (err) {
+        next(err);
+    }  
+}
+
+
 const markAsSendToRepair = async (req, res, next) => {
     try {
         let output;
         const damageId = req.params.damageid;
-        // var today = new Date()
-        // var dd = String(today.getDate()).padStart(2, '0');
-        // var mm = String(today.getMonth() + 1).padStart(2, '0'); 
-        // var yyyy = today.getFullYear();
-        // var date = yyyy + '-' + mm + '-' + dd;
-        // console.log(date);
-        // console.log(damageId);
+
         try {
             output = await damageItemService.markAsSendToRepair(damageId,"repair");
             if(output){
@@ -98,17 +113,12 @@ const markAsFinishedRepair = async (req, res, next) => {
     try {
         let output;
         const damageId = req.params.damageid;
-        // var today = new Date()
-        // var dd = String(today.getDate()).padStart(2, '0');
-        // var mm = String(today.getMonth() + 1).padStart(2, '0'); 
-        // var yyyy = today.getFullYear();
-        // var date = yyyy + '-' + mm + '-' + dd;
-        // console.log(date);
-        // console.log(damageId);
+        const itemId = req.params.itemid;
+        console.log(damageId+ itemId);
+
         try {
-            output = await damageItemService.markFinishedRepair(damageId,"finished");
+            output = await damageItemService.markFinishedRepair(damageId,"close",itemId);
             if(output){
-                //!TODO: update item table=> status: available , availability:1
                 return successMessage(res, {update:"update Success"});
             }else{
                 return errorMessage(res, 'Something went wrong', 500);
@@ -131,8 +141,8 @@ module.exports = {
     getNewDamageItem,
     getUnderRepairItem,
     getFinishedDamageItem,
-
     markAsFinishedRepair,
-    markAsSendToRepair
+    markAsSendToRepair,
+    checkAvailability
 
 }

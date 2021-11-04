@@ -6,6 +6,7 @@ const LabModel = sequelize.define('Lab',{
         type:DataTypes.INTEGER,
         primaryKey:true,
         allowNull:false,
+        autoIncrement:true
     },
     labName:{
         type:DataTypes.STRING,

@@ -1,14 +1,17 @@
 // const sequelize=require('../config/database_config');
 const sequelize = require("../config/database");
 
-const DamageItemModel=require('../models/damage_iteam');
-const {Op} = require("sequelize");
+const DamageItemModel = require('../models/damage_iteam');
+const { Op } = require("sequelize");
 
-const ItemModel = require("../models/item_model")
+const ItemModel = require("../models/equipment");
+const category = require('../models/category');
+const model = require('../models/model');
+const lab = require('../models/laboratory');
 
-class DamageItemService{
-    
-    constructor(){
+class DamageItemService {
+
+    constructor() {
         try {
             sequelize.authenticate();
             console.log('Connection has been established successfully.');
@@ -17,91 +20,176 @@ class DamageItemService{
         }
     }
 
-    async readNewDamageItem(){
-        const damageItems = await DamageItemModel.findAll({
-            subQuery: false,
-            include: [{
-                    model:ItemModel,
-                }],
-            where:{itemStatus:"pending" },
+    async readNewDamageItem() {
 
+        category.hasMany(ItemModel);
+        model.hasMany(ItemModel);
+        lab.hasMany(ItemModel);
+        ItemModel.belongsTo(category);
+        ItemModel.belongsTo(model);
+        ItemModel.belongsTo(lab);
+
+        let outs = [];
+
+        const result = await DamageItemModel.findAll({
+            where: { status: "pending" },
+            raw: true
         });
-        if(damageItems == null){
+
+        for (let i = 0; i < result.length; i++) {
+
+            let id = result[i].itemId;
+            const item = await ItemModel.findOne({
+                include: [
+                    { model: category, attributes: ['categoryName'] },
+                    { model: lab, attributes: ['labName'] },
+                    { model: model, attributes: ['modelName'] }
+                ],
+                where: { id: id },
+                raw: true
+            });
+
+            let tempObj = {
+                reason: result[i].reason,
+                openDate: result[i].openDate,
+                damageId: result[i].id,
+            }
+            outs.push({
+                ...item,
+                ...tempObj,
+            })
+        }
+        if (outs == null) {
             throw new Error('Something went wrong!');;
         }
-        // console.log(damageItems);
-        return damageItems;
+
+        return outs;
     }
 
-    async readUnderRepairDamageItem(){
-        const damageItems = await DamageItemModel.findAll({
-            subQuery: false,
-            include: [{
-                    model:ItemModel,
-                }],
-            where:{itemStatus:"repair" },
+    async readUnderRepairDamageItem() {
 
+        category.hasMany(ItemModel);
+        model.hasMany(ItemModel);
+        lab.hasMany(ItemModel);
+        ItemModel.belongsTo(category);
+        ItemModel.belongsTo(model);
+        ItemModel.belongsTo(lab);
+
+        let outs = [];
+
+        const result = await DamageItemModel.findAll({
+            where: { status: "repair" },
+            raw: true
         });
-        if(damageItems == null){
+
+        for (let i = 0; i < result.length; i++) {
+
+            let id = result[i].itemId;
+            const item = await ItemModel.findOne({
+                include: [
+                    { model: category, attributes: ['categoryName'] },
+                    { model: lab, attributes: ['labName'] },
+                    { model: model, attributes: ['modelName'] }
+                ],
+                where: { id: id },
+                raw: true
+            });
+
+            let tempObj = {
+                reason: result[i].reason,
+                openDate: result[i].openDate,
+                damageId: result[i].id,
+            }
+            outs.push({
+                ...item,
+                ...tempObj,
+            })
+        }
+        if (outs == null) {
             throw new Error('Something went wrong!');;
         }
-        // console.log(damageItems);
-        return damageItems;
+
+        return outs;
 
     }
 
-    async markFinishedRepair(id,status){
+    async markFinishedRepair(id, status, itemId) {
         const damageItems = await DamageItemModel.update(
-            {closeDate : sequelize.literal('CURRENT_TIMESTAMP'), itemStatus: status },
-            {
-            subQuery: false,
-            include: [{
-                    model:ItemModel,
-                }],
-            where:{itemStatus:"repair" , id: id},
+            { closeDate: sequelize.literal('CURRENT_TIMESTAMP'), status: status },
+            { where: { id: id } }
+        );
+        const items = await ItemModel.update(
+            { status: "notdamage", availability: 1 },
+            { where: { status: "damage", id: itemId }, }
+        );
 
-        });
-        if(damageItems == null){
+        if (damageItems == null || items == null) {
+            throw new Error('Something went wrong!');;
+        }
+        console.log("finish update");
+        return true;
+
+    }
+    async markAsSendToRepair(id, status) {
+        const damageItems = await DamageItemModel.update(
+            { status: status },
+            { where: { status: "pending", id: id }, }
+        );
+        if (damageItems == null) {
             throw new Error('Something went wrong!');;
         }
         return true;
- 
-    }
-    async markAsSendToRepair(id,status){
-        const damageItems = await DamageItemModel.update(
-            {itemStatus: status },
-            {
-            subQuery: false,
-            include: [{
-                    model:ItemModel,
-                }],
-            where:{itemStatus:"pending" , id: id},
 
-        });
-        if(damageItems == null){
-            throw new Error('Something went wrong!');;
-        }
-        return true;
- 
     }
 
-    async readOldDamageItem(){
-        const damageItems = await DamageItemModel.findAll({
-            subQuery: false,
-            include: [{
-                    model:ItemModel,
-                }],
-            where:{itemStatus:"close" },
+    async readOldDamageItem() {
 
+        category.hasMany(ItemModel);
+        model.hasMany(ItemModel);
+        lab.hasMany(ItemModel);
+        ItemModel.belongsTo(category);
+        ItemModel.belongsTo(model);
+        ItemModel.belongsTo(lab);
+
+        let outs = [];
+
+        const result = await DamageItemModel.findAll({
+            where: { status: "close" },
+            raw: true
         });
-        if(damageItems == null){
+
+        for (let i = 0; i < result.length; i++) {
+
+            let id = result[i].itemId;
+            const item = await ItemModel.findOne({
+                include: [
+                    { model: category, attributes: ['categoryName'] },
+                    { model: lab, attributes: ['labName'] },
+                    { model: model, attributes: ['modelName'] }
+                ],
+                where: { id: id },
+                raw: true
+            });
+
+            let tempObj = {
+                reason: result[i].reason,
+                openDate: result[i].openDate,
+                damageId: result[i].id,
+                closeDate:result[i].closeDate,
+            }
+            outs.push({
+                ...item,
+                ...tempObj,
+            })
+        }
+        if (outs == null) {
             throw new Error('Something went wrong!');;
         }
-        // console.log(damageItems);
-        return damageItems;
 
-    }  
+        return outs;
+
+    }
 
 }
 
-module.exports=DamageItemService;
+module.exports = DamageItemService;
