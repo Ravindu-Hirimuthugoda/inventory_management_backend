@@ -153,54 +153,56 @@ class User {
     }
 
 
-    async readUser() {
-
-        // console.log(email);
-        // const user = await TestModel.findOne({
-        //     arrtibute:["id","type","password"],
-        //     where:{email:email,isDelete: 0 },raw:true
-        // });
-
-        // // console.log(user);
-        // if(user == null){
-        //     throw new Error('Invalid email or password');
-        // }
-        // return user;
+    async updateUserPassword(email, password) {
+        try {
+            const user = await UserModel.update(
+                { updatedAt: sequelize.literal('CURRENT_TIMESTAMP'), password: password },
+                { where: { email: email } }
+            );
+            // console.log(user);
+            if (user == null) {
+                throw new Error('IUser can not update');
+            }
+            return user;
+        } catch (e) {
+            console.log(e);
+            throw new Error('User can not update');
+        }
     }
 
     async readUserRole(userId, type) {
-console.log(userId + type);
+        console.log(userId + type);
         if (type == "Student") {
             const role = await StudentModel.findOne({
-                
+
                 where: { userId: userId }, raw: true
             });
             return role
         }
         else if (type == "Lecturer") {
             const role = await LecturerModel.findOne({
-                
+
                 where: { userId: userId }, raw: true
             });
             return role
         }
         else if (type == "TechnicalOfficer") {
             const role = await TechnicalOfficerModel.findOne({
-                
+
                 where: { userId: userId }, raw: true
             });
             return role
         }
         else if (type == "OfficeClerk") {
             const role = await OfficeClerkModel.findOne({
-                
+
                 where: { userId: userId }, raw: true
             });
             return role
         }
         else if (type == "Admin") {
             const role = await AdminModel.findOne({
-                
+
                 where: { userId: userId }, raw: true
             });
             return role

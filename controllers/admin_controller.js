@@ -35,9 +35,9 @@ const addAdmin = async (req, res, next) => {
         const salt = await bcrypt.genSalt(10);
         // now we set user password to hashed password
         let hashPw = await bcrypt.hash(password, salt);
-      
+
         user = await userService.createUser(email, hashPw, "Admin", false);
-        
+
         if (user != null) {
           admin = await adminService.createAdmin(
             index,
@@ -87,9 +87,9 @@ const addStudent = async (req, res, next) => {
         if (isUser != null) {
           let isStudent = await studentService.getStudentByID(index);
           if (isStudent != null) {
-   
-        const salt = await bcrypt.genSalt(10);
-        let hashPw = await bcrypt.hash(password, salt);
+
+            const salt = await bcrypt.genSalt(10);
+            let hashPw = await bcrypt.hash(password, salt);
             user = await userService.createUser(email, hashPw, "Student", false);
             student = await studentService.createStudent(
               index,
@@ -136,16 +136,16 @@ const addLecturer = async (req, res, next) => {
 
     if (checkUserType(req.user.type, "Admin")) {
       try {
-       let isUser = await userService.getUserByEmail(email);
-    
+        let isUser = await userService.getUserByEmail(email);
+
         if (isUser != null) {
           let isLecturer = await lectureService.getLecturerByID(
             index,
-            
+
           );
           if (isLecturer != null) {
             const salt = await bcrypt.genSalt(10);
-        let hashPw = await bcrypt.hash(password, salt);
+            let hashPw = await bcrypt.hash(password, salt);
             user = await userService.createUser(email, hashPw, "Lecturer", false);
             lecturer = await lectureService.createLecturer(
               index,
@@ -190,19 +190,19 @@ const addOfficeClerk = async (req, res, next) => {
     let officeClerk;
     if (checkUserType(req.user.type, "Admin")) {
       try {
-       let isUser = await userService.getUserByEmail(
+        let isUser = await userService.getUserByEmail(
           email,
-          
+
         );
-        
+
         if (isUser != null) {
-         let isOfficeClerk = await officeClerkService.getOfficeClerkByID(
+          let isOfficeClerk = await officeClerkService.getOfficeClerkByID(
             index,
-            
+
           );
           if (isOfficeClerk != null) {
             const salt = await bcrypt.genSalt(10);
-        let hashPw = await bcrypt.hash(password, salt);
+            let hashPw = await bcrypt.hash(password, salt);
             user = await userService.createUser(
               email,
               hashPw,
@@ -253,20 +253,20 @@ const addTechnicalOfficer = async (req, res, next) => {
 
     if (checkUserType(req.user.type, "Admin")) {
       try {
-       let isUser = await userService.getUserByEmail(
+        let isUser = await userService.getUserByEmail(
           email
-          
+
         );
-        
+
         if (isUser != null) {
-         let isTechnicalOfficer =
+          let isTechnicalOfficer =
             await technicalOfficerService.getTechnicalOfficerByID(
               index,
-              
+
             );
           if (isTechnicalOfficer != null) {
             const salt = await bcrypt.genSalt(10);
-        let hashPw = await bcrypt.hash(password, salt);
+            let hashPw = await bcrypt.hash(password, salt);
             user = await userService.createUser(
               email,
               hashPw,
@@ -274,13 +274,13 @@ const addTechnicalOfficer = async (req, res, next) => {
               false
             );
             technicalOfficer =
-            await technicalOfficerService.createTechnicalOfficer(
-              index,
-              firstName,
-              lastName,
-              user.id,
-              labId
-            );
+              await technicalOfficerService.createTechnicalOfficer(
+                index,
+                firstName,
+                lastName,
+                user.id,
+                labId
+              );
             let out = {
               user: user,
               technicalOfficer: technicalOfficer,
@@ -476,6 +476,72 @@ const getLastAdmin = async (req, res, next) => {
   }
 };
 
+const getUser = async (req, res, next) => {
+  try {
+    let user;
+    let role;
+    if (checkUserType(req.user.type, "Admin")) {
+      const email = req.body.email;
+      try {
+        user = await userService.getUser(email);
+        role = await userService.readUserRole(user.id, user.type.toString());
+        let tempUser = {
+          userEmail: user.email,
+          userType: user.type
+        }
+        let user_role = {
+          ...role,
+          ...tempUser
+        }
+        if (user != null && role != null) {
+          return successMessage(res, user_role);
+        } else {
+          return errorMessage(res, "User not found", 500);
+        }
+      } catch (e) {
+        console.log(e);
+        return errorMessage(res, "Something went wrong", 500);
+      }
+    } else {
+      return errorMessage(res, "Not authenticated.", 401);
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+const updateUserPassword = async (req, res, next) => {
+  try {
+    let user;
+    if (checkUserType(req.user.type, "Admin")) {
+      const email = req.body.email;
+      const password = req.body.password;
+
+      const salt = await bcrypt.genSalt(10);
+      let hashPw = await bcrypt.hash(password, salt);
+      console.log(email+ hashPw);
+      try {
+        user = await userService.updateUserPassword(email, hashPw);
+        let out = {
+          msg: "update success"
+        }
+        if (user != null) {
+          return successMessage(res, out);
+        } else {
+          return errorMessage(res, "User not found", 500);
+        }
+      } catch (e) {
+        console.log(e);
+        return errorMessage(res, "Something went wrong", 500);
+      }
+    } else {
+      return errorMessage(res, "Not authenticated.", 401);
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   addAdmin,
   addStudent,
@@ -490,4 +556,6 @@ module.exports = {
   getLastOfficeClerk,
   getLastStudent,
   getLastTechnicalOfficer,
+  getUser,
+  updateUserPassword
 };
