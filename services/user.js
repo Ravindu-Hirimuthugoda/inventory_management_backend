@@ -147,7 +147,7 @@ class User {
             where: { email: email, isDelete: 0 }, raw: true
         });
         if (user == null) {
-            throw new Error('Invalid email or password');
+            return user;
         }
         return user;
     }

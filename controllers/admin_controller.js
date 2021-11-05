@@ -484,7 +484,11 @@ const getUser = async (req, res, next) => {
       const email = req.body.email;
       try {
         user = await userService.getUser(email);
+        if(user == null){
+          return errorMessage(res, "User not found", 500);
+        }
         role = await userService.readUserRole(user.id, user.type.toString());
+        
         let tempUser = {
           userEmail: user.email,
           userType: user.type
