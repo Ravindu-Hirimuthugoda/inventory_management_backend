@@ -9,7 +9,14 @@ const router = express.Router();
 router.get('/checkAvaiability',checkAvailability);
 router.get('/ava',getAvailabelItems);
 router.get('/category',getAllCategories);
-router.get('/borrow',getStudentBorrowedItems);
+router.get('/borrow/:id',async(req,res,next)=>{
+    try{
+        const response = await getStudentBorrowedItems(req.params.id);
+        res.send(response);
+    }catch(err){
+        next(err);
+    }
+});
 
 router.get('/model/:category',async(req,res,next)=>{
     try{

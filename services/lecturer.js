@@ -21,12 +21,12 @@ class Lecturer {
         }
     }
 
-    async getPendingList() {
+    async getPendingList(id) {
         request.hasOne(requestBorrowing);
         equipment.hasMany(request);
         request.belongsTo(equipment);
 
-        const result = await request.findAll({ include: [{ model: requestBorrowing, where: { lecturerId: { [Op.eq]: '123456L' } }, attributes: ['studentId', 'lecturerId'] }], where: { status: { [Op.eq]: 'pending' } }, attributes: ['id', 'equipmentId', 'requestDate', 'returnDate'], raw: true });
+        const result = await request.findAll({ include: [{ model: requestBorrowing, where: { lecturerId: { [Op.eq]: id } }, attributes: ['studentId', 'lecturerId'] }], where: { status: { [Op.eq]: 'pending' } }, attributes: ['id', 'equipmentId', 'requestDate', 'returnDate'], raw: true });
         //console.log(result);
         return result;
     }

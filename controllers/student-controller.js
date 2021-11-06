@@ -2,9 +2,9 @@ const Student = require('../services/student');
 
 let student = new Student();
 
-const getStudentBorrowedItems = async (req,res,next)=>{
+const getStudentBorrowedItems = async (id)=>{
     try{
-        const response = await student.getBorrowedItems();
+        const response = await student.getBorrowedItems(id);
         let matches = []
         //console.log('trdpeodmd');
         //console.log(response);
@@ -14,9 +14,9 @@ const getStudentBorrowedItems = async (req,res,next)=>{
             matches.push(newObj);
         }
         //console.log(matches);
-        res.send(matches); 
+        return matches;
     }catch(err){
-        next(err);
+        return(err);
     }
 }
 

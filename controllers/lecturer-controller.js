@@ -2,10 +2,10 @@ const Lecturer = require('../services/lecturer');
 
 let lecturer = new Lecturer();
 
-const getPendingRequests = async(req,res,next)=>{
+const getPendingRequests = async(id)=>{
     try{
-        const response = await lecturer.getPendingList();
-        res.send(response);
+        const response = await lecturer.getPendingList(id);
+        return(response);
     }catch(err){
         next(err);
     }

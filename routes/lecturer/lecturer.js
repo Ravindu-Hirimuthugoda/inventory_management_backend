@@ -51,7 +51,14 @@ router.post('/reject/:id',async(req,res,next)=>{
     }
 });
 
-router.get('/pending',getPendingRequests);
+router.get('/pending/:id',async(req,res,next)=>{
+    try{
+        const response = await getPendingRequests(req.params.id);
+        res.send(response);
+    }catch(err){
+        return(err);
+    }
+});
 
 router.post('/test',async(req,res,next)=>{
     res.send('Hroutery');
