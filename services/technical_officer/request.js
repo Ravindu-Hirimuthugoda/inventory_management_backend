@@ -17,12 +17,12 @@ class Request{
          let usertype;
             let user = await db.Student.findOne(
                     {
-                        where: { id: userid }
+                        where: { id: id }
                 });
             if (user == null) {
                 user = await db.Lecture.findOne(
                     {
-                        where: { id: userid }
+                        where: { id: id }
                     });
                  usertype = "lecturer";
             }

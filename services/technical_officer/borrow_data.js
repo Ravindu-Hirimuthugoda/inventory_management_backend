@@ -118,7 +118,7 @@ class BorrowData{
                             status: 'open',
                             dueDate: todate,
                             fromDate: fromdate,
-                            EquipmentId: storeid,
+                            equipmentId: storeid,
                             id: c + 1
                         }, { transaction: t }).then(async function (x) {
                             console.log(x.id);
@@ -148,6 +148,7 @@ class BorrowData{
                     // If the execution reaches this line, no errors were thrown.
                     // We commit the transaction.
                     await t.commit();
+                    return null;
                 }
                 else {
                     const lec = await db.Lecture.findOne(
@@ -173,7 +174,7 @@ class BorrowData{
                             status: 'open',
                             dueDate: todate,
                             fromDate: fromdate,
-                            EquipmentId: storeid,
+                            equipmentId: storeid,
                             id: c + 1
                         }, { transaction: t }).then(async function (x) {
                             console.log(x.id);
@@ -202,7 +203,8 @@ class BorrowData{
                 
                     // If the execution reaches this line, no errors were thrown.
                     // We commit the transaction.
-                    await t.commit();
+                        await t.commit();
+                         return null;
                     }
                     else {
                         return 'User id is invalid';
