@@ -23,7 +23,7 @@ class Student{
         } 
     }
 
-    async getBorrowedItems(id){
+    async getBorrowedItems(id,page){
         
         borrowing.hasOne(temporyBorrowing);
         borrowing.hasOne(requestBorrowing);
@@ -32,11 +32,12 @@ class Student{
         //const result = await borrowing.findAll({where:{[Op.or]:[{includes:temporyBorrowing},{includes:requestBorrowing}]}});
         const result1 = await borrowing.findAll({include:{model:temporyBorrowing,where:{[Op.and]:[{borrowingId:{[Op.ne]:null}},{studentId:{[Op.eq]:id}}]},attributes:[]},raw:true});
         const result2 = await borrowing.findAll({include:{model:requestBorrowing,where:{[Op.and]:[{borrowingId:{[Op.ne]:null}},{studentId:{[Op.eq]:id}}]},attributes:[]},raw:true});
-        const result = result1.concat(result2);
+        const result = (result1.concat(result2)).slice(parseInt(page)*10,parseInt(page)*10+10);
+        const total = result1.concat(result2).length;
         
         console.log('run here');
-        console.log(result1);
-        return result;
+        console.log(result);
+        return {"result":result,"total":total};
 
     }
     async getItemDetails(id){

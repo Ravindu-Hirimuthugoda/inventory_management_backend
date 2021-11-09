@@ -2,19 +2,19 @@ const Student = require('../services/student');
 
 let student = new Student();
 
-const getStudentBorrowedItems = async (id)=>{
+const getStudentBorrowedItems = async (id,page)=>{
     try{
-        const response = await student.getBorrowedItems(id);
+        const response = await student.getBorrowedItems(id,page);
         let matches = []
         //console.log('trdpeodmd');
         //console.log(response);
-        for(let m of response){
+        for(let m of response["result"]){
             let match = await student.getItemDetails(m.equipmentId);
             let newObj = {...match[0],purchesedDate:m.dueDate}
             matches.push(newObj);
         }
         //console.log(matches);
-        return matches;
+        return {"result":matches,"total":response["total"]};
     }catch(err){
         return(err);
     }

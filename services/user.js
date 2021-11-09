@@ -27,17 +27,48 @@ class User {
         }
     }
 
-    async getItemDetails() {
+    async getItemDetails(value) {
         category.hasMany(equipment);
         model.hasMany(equipment);
         lab.hasMany(equipment);
         equipment.belongsTo(category);
         equipment.belongsTo(model);
         equipment.belongsTo(lab);
-        const details = await equipment.findAll({ include: [{ model: category, attributes: ['categoryName'] }, { model: lab, attributes: ['labName'] }, { model: model, attributes: ['modelName'] }], attributes: ['id', 'imageURL', 'availability', 'status'], raw: true });
+        const details = await equipment.findAll({ include: [{ model: category, attributes: ['categoryName'] }, { model: lab, attributes: ['labName'] }, { model: model, attributes: ['modelName'] }], attributes: ['id', 'imageURL', 'availability', 'status'],limit:10,offset:parseInt(value)*10,raw: true });
         //console.log(details);
         return details;
     }
+
+    async getItemDetailsByCategory(value,page){
+        category.hasMany(equipment);
+        model.hasMany(equipment);
+        lab.hasMany(equipment);
+        equipment.belongsTo(category);
+        equipment.belongsTo(model);
+        equipment.belongsTo(lab);
+        const details = await equipment.findAll({ include: [{ model: category, attributes: ['categoryName'], where:{categoryName: {[Op.like]: '%'+value+'%'}} }, { model: lab, attributes: ['labName'] }, { model: model, attributes: ['modelName'] }], attributes: ['id', 'imageURL', 'availability', 'status'],limit:10,offset:parseInt(page)*10,raw: true });
+        //console.log(details);
+        return details;
+    }
+
+    async getEquipmetCount(){
+        const details = await equipment.count();
+        console.log(details);
+        return details;
+    }
+
+    async getitemCount(value){
+        category.hasMany(equipment);
+        model.hasMany(equipment);
+        lab.hasMany(equipment);
+        equipment.belongsTo(category);
+        equipment.belongsTo(model);
+        equipment.belongsTo(lab);
+        const details = await equipment.count({ include: [{ model: category, attributes: ['categoryName'], where:{categoryName: {[Op.like]: '%'+value+'%'}} }, { model: lab, attributes: ['labName'] }, { model: model, attributes: ['modelName'] }], attributes: ['id', 'imageURL', 'availability', 'status'],raw: true });
+        //console.log(details);
+        return details;
+    }
+
 
     async getAvailableItems() {
         category.hasMany(equipment);
@@ -46,10 +77,11 @@ class User {
         equipment.belongsTo(category);
         equipment.belongsTo(model);
         equipment.belongsTo(lab);
-        const details = await equipment.findAll({ include: [{ model: category, attributes: ['categoryName'] }, { model: lab, attributes: ['labName'] }, { model: model, attributes: ['modelName'] }], where: { availability: { [Op.eq]: '1' } }, attributes: ['id', 'imageURL', 'availability',], raw: true });
+        const details = await equipment.findAll({ include: [{ model: category, attributes: ['categoryName'] }, { model: lab, attributes: ['labName'] }, { model: model, attributes: ['modelName'] }], where: { availability: { [Op.eq]: '1' } }, attributes: ['id', 'imageURL', 'availability',],raw: true });
         //console.log(details);
         return details;
     }
+
 
     async getCategories() {
         category.hasMany(equipment);

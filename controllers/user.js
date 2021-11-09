@@ -1,9 +1,9 @@
 const User = require('../services/user');
 let user = new User();
 
-const checkAvailability = async(req,res,next)=>{
+const checkAvailability = async(value)=>{
     try{
-        const response = await user.getItemDetails();
+        const response = await user.getItemDetails(value);
         let lst=[];
         //console.log(response);
         for(let m of response){
@@ -17,10 +17,53 @@ const checkAvailability = async(req,res,next)=>{
         }
         console.log(lst);
 
-        if(lst.length>0){
-            res.send(lst);
-        }else{
-            res.send('Error');
+        return lst;
+        
+    }catch(err){
+        return(err);
+    }
+}
+
+const checkItemByCategory = async(value,page)=>{
+    try{
+        const response = await user.getItemDetailsByCategory(value,page);
+        let lst=[];
+        //console.log(response);
+        for(let m of response){
+            //console.log(m);
+            if(!m.availability && m.status!='damage'){
+                const date = await user.getReturnDate(m.id);
+                //console.log(date.slice(-1));
+                m= {...m,returnDate:date.slice(-1)[0].returnDate};
+            }
+            lst.push(m);
+        }
+        console.log(lst);
+
+        return lst;
+        
+    }catch(err){
+        return(err);
+    }
+}
+
+const getItemCount = async(value)=>{
+    try{
+        //console.log('running');
+        const result = await user.getitemCount(value);
+        //console.log(result);
+        
+        return result;
+    }catch(err){
+        return err;
+    }
+}
+
+const getEquipmetCount = async(req,res,next)=>{
+    try{
+        const result = await user.getEquipmetCount();
+        if(result){
+            res.send({"count":result});
         }
         
     }catch(err){
@@ -114,4 +157,4 @@ const getStoreCode = async(category,model,labName)=>{
 
 
 
-module.exports = {checkAvailability,getAllCategories,getModels,getLab,getStoreCode,getAvailabelItems,getNotification};
+module.exports = {checkAvailability,getAllCategories,getModels,getLab,getStoreCode,getAvailabelItems,getNotification,getEquipmetCount,checkItemByCategory,getItemCount};
