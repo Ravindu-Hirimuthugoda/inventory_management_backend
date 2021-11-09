@@ -8,6 +8,7 @@ const model = require('../models/model');
 const lab = require('../models/laboratory');
 const { Op } = require('sequelize');
 const lecturerBorrowing = require('../models/lecturerBorrowing');
+const notificationModel = require('../models/notification');
 
 const LectureModel = require('../models/lecturer');
 
@@ -198,6 +199,28 @@ class Lecturer {
         }
         console.log(lecture);
         return lecture;
+
+    }
+
+    async saveNotificationByLec(detail){
+        console.log('readHere');
+        const notifiCount = await notificationModel.count();
+        console.log(notifiCount);
+        const notifi = await notificationModel.create({
+            id: notifiCount+1,
+            senderId: detail.lecId,
+            receiverId: detail.studentId,
+            message: detail.notification,
+            status: 'notread',
+        });
+
+        if (notifi==null){
+            console.log('somethig went wrong');
+            return;
+        }
+        console.log(notifi);
+        console.log('notiiction created');
+        return notifi;
 
     }
 

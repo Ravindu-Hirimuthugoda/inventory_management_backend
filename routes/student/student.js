@@ -1,5 +1,5 @@
 const {checkAvailability,getAllCategories, getModels, getLab, getStoreCode,getAvailabelItems,getNotification,getEquipmetCount, checkItemByCategory,getItemCount} = require('../../controllers/user');
-const { getStudentBorrowedItems, getReleventLecturer, saveData, saveStudentTemporyData, saveNotification } = require('../../controllers/student-controller');
+const { getStudentBorrowedItems, getReleventLecturer, saveData, saveStudentTemporyData, saveNotification, markNotification } = require('../../controllers/student-controller');
 const { getPendingRequests, getPendingDetails, approveRequest, rejectRequest, saveLecturerNormalData, saveLecturerTemporyData } = require('../../controllers/lecturer-controller');
 const express = require('express');
 
@@ -120,6 +120,7 @@ router.post('/sendTemporyRequest',async(req,res,next)=>{
 });
 
 router.post('/sendNotification',async(req,res,next)=>{
+
     console.log(req.body);
     try{
         const response = await saveNotification(req.body);
@@ -127,5 +128,15 @@ router.post('/sendNotification',async(req,res,next)=>{
     }catch(err){
         next(err);
     }
-})
+});
+
+router.post('/markNotification',async(req,res,next)=>{
+    try{
+        console.log(req.body);
+        const response = await markNotification(req.body);
+        res.send(req.body);
+    }catch(err){
+        next(err);
+    }
+});
 module.exports = router;

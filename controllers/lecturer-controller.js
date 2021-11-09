@@ -44,4 +44,13 @@ const saveLecturerTemporyData = async(detail)=>{
     }
 }
 
-module.exports = {getPendingRequests,getPendingDetails,approveRequest,rejectRequest,saveLecturerNormalData,saveLecturerTemporyData};
+const saveNotification = async(detail)=>{
+    try{
+        const response = await lecturer.saveNotificationByLec(detail);
+        return('Successfully save data');
+    }catch(error){
+        return(error);
+    }
+}
+
+module.exports = {getPendingRequests,getPendingDetails,approveRequest,rejectRequest,saveLecturerNormalData,saveLecturerTemporyData,saveNotification};

@@ -62,4 +62,13 @@ const saveNotification = async(detail)=>{
     }
 }
 
-module.exports = {getStudentBorrowedItems,getReleventLecturer,saveData,saveStudentTemporyData,saveNotification}
+const markNotification = async(detail)=>{
+    try{
+        const response = await student.markNotification(detail);
+        return('success');
+    }catch(err){
+        return(err);
+    }
+}
+
+module.exports = {getStudentBorrowedItems,getReleventLecturer,saveData,saveStudentTemporyData,saveNotification,markNotification}

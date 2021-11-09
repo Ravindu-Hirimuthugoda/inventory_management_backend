@@ -1,5 +1,5 @@
 const {checkAvailability,getAllCategories, getModels, getLab, getStoreCode,getAvailabelItems} = require('../../controllers/user');
-const {getPendingRequests,getPendingDetails,approveRequest,rejectRequest, saveLecturerNormalData,saveLecturerTemporyData} = require('../../controllers/lecturer-controller');
+const {getPendingRequests,getPendingDetails,approveRequest,rejectRequest, saveLecturerNormalData,saveLecturerTemporyData,saveNotification} = require('../../controllers/lecturer-controller');
 const express = require('express');
 const router = express.Router();
 router.post('/sendNormalRequest',async(req,res,next)=>{
@@ -62,6 +62,16 @@ router.get('/pending/:id',async(req,res,next)=>{
 
 router.post('/test',async(req,res,next)=>{
     res.send('Hroutery');
+});
+
+router.post('/sendNotification',async(req,res,next)=>{
+    console.log(req.body);
+    try{
+        const response = await saveNotification(req.body);
+        res.send(req.body);
+    }catch(err){
+        next(err);
+    }
 });
 
 module.exports = router;

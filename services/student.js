@@ -12,6 +12,7 @@ const lecturerAllocation = require('../models/lecturerAllocation');
 const {Op, where} = require('sequelize');
 const StudentModel =require('../models/student_model');
 const notificationModel = require('../models/notification');
+const NotificationModel = require("../models/notification");
 
 class Student{
     constructor(){
@@ -242,6 +243,14 @@ class Student{
         }).error(function(err) {        
             throw new Error('student not updated');            
         });        
+    }
+
+    async markNotification(detail){
+        const marker =await NotificationModel.update({status: 'read'},{where: {receiverId:detail.id,status:'notread'}});
+        if(marker){
+            return(marker);
+        }
+        return;
     }
 
 
