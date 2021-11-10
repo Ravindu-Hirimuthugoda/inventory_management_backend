@@ -31,9 +31,9 @@ const addAdmin = async (req, res, next) => {
     let admin;
     if (checkUserType(req.user.type, "Admin")) {
       try {
-        // generate salt to hash password
+    
         const salt = await bcrypt.genSalt(10);
-        // now we set user password to hashed password
+   
         let hashPw = await bcrypt.hash(password, salt);
 
         user = await userService.createUser(email, hashPw, "Admin", false);

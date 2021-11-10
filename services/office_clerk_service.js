@@ -98,7 +98,7 @@ class OfficeClerkService{
         ItemModel.belongsTo(category);
         ItemModel.belongsTo(model);
         ItemModel.belongsTo(lab);
-        let outs = [];   
+        // let outs = [];   
         console.log("read equipment");
         // const officeClerks = await OfficeClerkModel.findAll({
 
