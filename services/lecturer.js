@@ -6,10 +6,15 @@ const equipment = require('../models/equipment');
 const category = require('../models/category');
 const model = require('../models/model');
 const lab = require('../models/laboratory');
+const userModel= require('../models/user-model');
+const student = require('../models/student_model');
+const lecturer = require('../models/lecturer');
 const { Op } = require('sequelize');
 const lecturerBorrowing = require('../models/lecturerBorrowing');
+const notificationModel = require('../models/notification');
 
 const LectureModel = require('../models/lecturer');
+const ResponseMail = require("../utils/approveMail");
 
 class Lecturer {
     constructor() {
@@ -31,7 +36,9 @@ class Lecturer {
         return result;
     }
 
+
     async getPendingDetails(iden) {
+
         equipment.hasMany(request);
         request.belongsTo(equipment);
         category.hasMany(equipment);
@@ -44,18 +51,32 @@ class Lecturer {
 
         //console.log(id);
 
+
         const result = await equipment.findAll({ include: [{ model: request, where: { id: { [Op.eq]: iden } }, attributes: ['id', 'reason', 'requestDate', 'returnDate'], include: [{ model: requestBorrowing, attributes: ['studentId'] }] }, { model: category, attributes: ['categoryName'] }, { model: lab, attributes: ['labName'] }, { model: model, attributes: ['modelName'] }], attributes: ['id', 'imageURL'], raw: true });
+
         //console.log(result);
         return result;
     }
 
-    async approveRequest(varId) {
-        const result = await request.update({ status: 'pass' }, { where: { id: varId } });
+    async approveRequest(detail) {
+        const result = await request.update({ status: 'pass' }, { where: { id: detail.id } });
+        const idnum = await student.findOne({where:{id:detail.studentId},attributes:['userId']});
+        const email = await userModel.findOne({where:{id:idnum['userId']},attributes:['email']});
+        const name = await lecturer.findOne({where:{id:detail.lecId},attributes:['firstName','lastName']});
+        console.log('Here lpl start');
+        console.log(detail);
+        console.log(email);
+        console.log(name);
+        ResponseMail({mail:email['email'],ctegory:detail.category,storeCode:detail.storeCode,fname:name['firstName'],lname:name['lastName'],type:'approved'});
         return result;
     }
 
-    async rejectRequest(varId) {
-        const result = await request.update({ status: 'fail' }, { where: { id: varId } });
+    async rejectRequest(detail) {
+        const result = await request.update({ status: 'fail' }, { where: { id: detail.id } });
+        const idnum = await student.findOne({where:{id:detail.studentId},attributes:['userId']});
+        const email = await userModel.findOne({where:{id:idnum['userId']},attributes:['email']});
+        const name = await lecturer.findOne({where:{id:detail.lecId},attributes:['firstName','lastName']});
+        ResponseMail({mail:email['email'],ctegory:detail.category,storeCode:detail.storeCode,fname:name['firstName'],lname:name['lastName'],type:'rejected'});
         return result;
     }
 
@@ -64,6 +85,7 @@ class Lecturer {
         const req = new Date(detail.requestDate).toString();
         const ret = new Date(detail.returnDate).toString();
         const reqDate = this.convert(req);
+
         const retDate = this.convert(ret);
         //console.log(a);
         //console.log(detail);
@@ -74,16 +96,20 @@ class Lecturer {
             const req = await request.create({
                 id: total + 1,
                 status: 'pass',
+
                 reason: 'testiingLecNormal',
                 requestDate: reqDate,
                 returnDate: retDate,
                 equipmentId: detail.equipmentId,
+
                 type: 'normal',
             }, { transaction });
+
 
             const borrowingCount = await lecturerBorrowing.count();
 
             const reqBorr = await lecturerBorrowing.create({
+
                 id: borrowingCount + 1,
                 requestId: total + 1,
                 lecturerId: detail.lecId,
@@ -95,10 +121,12 @@ class Lecturer {
             //console.log('success');
             await transaction.commit();
         } catch (err) {
+
             //console.log('Error');
             await transaction.rollback();
         }
     }
+
 
     async saveTemporyData(detail) {
         const transaction = await sequelize.transaction();
@@ -111,16 +139,20 @@ class Lecturer {
             const req = await request.create({
                 id: total + 1,
                 status: 'pass',
+
                 reason: detail.reason,
                 requestDate: detail.requestDate,
                 returnDate: detail.returnDate,
                 equipmentId: detail.equipmentId,
+
                 type: 'tempory',
             }, { transaction });
+
 
             const borrowingCount = await lecturerBorrowing.count();
 
             const reqBorr = await lecturerBorrowing.create({
+
                 id: borrowingCount + 1,
                 requestId: total + 1,
                 lecturerId: detail.lecId,
@@ -132,6 +164,7 @@ class Lecturer {
             //console.log('success');
             await transaction.commit();
         } catch (err) {
+
             //console.log('Error');
             await transaction.rollback();
         }
@@ -139,6 +172,7 @@ class Lecturer {
 
     convert(str) {
         var date = new Date(str),
+
             mnth = ("0" + (date.getMonth() + 1)).slice(-2),
             day = ("0" + date.getDate()).slice(-2);
         return [date.getFullYear(), mnth, day].join("-");
@@ -200,6 +234,29 @@ class Lecturer {
         return lecture;
 
     }
+
+    async saveNotificationByLec(detail){
+        console.log('readHere');
+        const notifiCount = await notificationModel.count();
+        console.log(notifiCount);
+        const notifi = await notificationModel.create({
+            id: notifiCount+1,
+            senderId: detail.lecId,
+            receiverId: detail.studentId,
+            message: detail.notification,
+            status: 'notread',
+        });
+
+        if (notifi==null){
+            console.log('somethig went wrong');
+            return;
+        }
+        console.log(notifi);
+        console.log('notiiction created');
+        return notifi;
+
+    }
+
 
 
 

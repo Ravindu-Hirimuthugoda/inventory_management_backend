@@ -10,7 +10,12 @@ const Model = sequelize.define('Model',{
     modelName:{
         type: DataTypes.STRING,
         allowNull:false,
-    }
+    },
+     categoryId:{
+        type: DataTypes.INTEGER,
+        allowNull:false,
+    },
+
 },{
     sequelize,
     timestamps:false,

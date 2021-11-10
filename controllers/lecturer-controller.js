@@ -17,19 +17,21 @@ const getPendingDetails = async(id)=>{
     return response;
 }
 
-const approveRequest = async(id)=>{
-    const res = await lecturer.approveRequest(id);
+const approveRequest = async(detail)=>{
+    const res = await lecturer.approveRequest(detail);
     return res;
 }
 
-const rejectRequest = async(id)=>{
-    const res = await lecturer.rejectRequest(id);
+const rejectRequest = async(detail)=>{
+    const res = await lecturer.rejectRequest(detail);
 }
 
 const saveLecturerNormalData = async(detail)=>{
     try{
         const response = await lecturer.saveNormalData(detail);
+
         return('Successfully save data');
+
     }catch(error){
         return(error);
     }
@@ -38,10 +40,21 @@ const saveLecturerNormalData = async(detail)=>{
 const saveLecturerTemporyData = async(detail)=>{
     try{
         const response = await lecturer.saveTemporyData(detail);
+
+        return('Successfully save data');
+
+    }catch(error){
+        return(error);
+    }
+}
+
+const saveNotification = async(detail)=>{
+    try{
+        const response = await lecturer.saveNotificationByLec(detail);
         return('Successfully save data');
     }catch(error){
         return(error);
     }
 }
 
-module.exports = {getPendingRequests,getPendingDetails,approveRequest,rejectRequest,saveLecturerNormalData,saveLecturerTemporyData};
+module.exports = {getPendingRequests,getPendingDetails,approveRequest,rejectRequest,saveLecturerNormalData,saveLecturerTemporyData,saveNotification};

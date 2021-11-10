@@ -2,19 +2,19 @@ const Student = require('../services/student');
 
 let student = new Student();
 
-const getStudentBorrowedItems = async (id)=>{
+const getStudentBorrowedItems = async (id,page)=>{
     try{
-        const response = await student.getBorrowedItems(id);
+        const response = await student.getBorrowedItems(id,page);
         let matches = []
         //console.log('trdpeodmd');
         //console.log(response);
-        for(let m of response){
+        for(let m of response["result"]){
             let match = await student.getItemDetails(m.equipmentId);
             let newObj = {...match[0],purchesedDate:m.dueDate}
             matches.push(newObj);
         }
         //console.log(matches);
-        return matches;
+        return {"result":matches,"total":response["total"]};
     }catch(err){
         return(err);
     }
@@ -34,10 +34,12 @@ const getReleventLecturer = async(labId)=>{
 }
 
 const saveData = async(detail)=>{
+
     console.log('run gere 2');
     try{
         console.log('run here 3');
         const response = await student.saveDataDB(detail);
+
         return('Suxxessfully save data');
     }catch(error){
         return(error);
@@ -62,4 +64,13 @@ const saveNotification = async(detail)=>{
     }
 }
 
-module.exports = {getStudentBorrowedItems,getReleventLecturer,saveData,saveStudentTemporyData,saveNotification}
+const markNotification = async(detail)=>{
+    try{
+        const response = await student.markNotification(detail);
+        return('success');
+    }catch(err){
+        return(err);
+    }
+}
+
+module.exports = {getStudentBorrowedItems,getReleventLecturer,saveData,saveStudentTemporyData,saveNotification,markNotification}

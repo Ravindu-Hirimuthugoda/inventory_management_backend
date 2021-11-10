@@ -34,12 +34,13 @@ io.on("connection",(socket)=>{
         addNewUser(username,socket.id);
     });
 
-    socket.on("sendNotification",({senderName, receiverName, type})=>{
-        const reciver = getUser(receiverName);
+    socket.on("sendNotification",({senderId, receiverId, message})=>{
+        console.log(onlineUsers);
+        const reciver = getUser(receiverId);
         if(reciver !=null){
             io.to(reciver.socketId).emit("getNotification",{
-                senderName,
-                type,
+                senderId,
+                message,
             });
         }
     });

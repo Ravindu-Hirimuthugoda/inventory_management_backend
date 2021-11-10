@@ -26,6 +26,7 @@ const login = async (req, res, next) => {
             console.log(user);
             console.log(role);
             const validPassword = await bcrypt.compare(password, user.password);
+            console.log(validPassword,password, user.password);
             if(validPassword){              
                 jwt.sign({ userID: role.id, expiresIn: 3600, type:user.type, firstName: role.firstName, lastName: role.lastName,email: user.email},"secretKey",(err,token)=>{
                         if (err) throw err;
@@ -36,9 +37,11 @@ const login = async (req, res, next) => {
             }       
         
         } catch (e) {
+             console.log(e)
             return errorMessage(res, 'Invalid email or password', 401);
         }
     } catch (err) {
+        console.log(err)
         next(err);
     }
 };

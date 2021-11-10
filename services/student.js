@@ -12,6 +12,10 @@ const lecturerAllocation = require('../models/lecturerAllocation');
 const { Op, where } = require('sequelize');
 const StudentModel = require('../models/student_model');
 const notificationModel = require('../models/notification');
+const NotificationModel = require("../models/notification");
+const userModel = require("../models/user-model");
+const StudentMail = require("../utils/studentMail");
+const { hasOne } = require("../models/category");
 
 class Student {
     constructor() {
@@ -23,20 +27,21 @@ class Student {
         }
     }
 
-    async getBorrowedItems(id) {
-
+    async getBorrowedItems(id,page){
+        
         borrowing.hasOne(temporyBorrowing);
         borrowing.hasOne(requestBorrowing);
 
         //const result = await borrowing.findAll({include:[{model:temporyBorrowing,where:{borrowingId:{[Op.ne]:null}}},{model:requestBorrowing,where:{borrowingId:{[Op.ne]:null}}}],raw:true});
         //const result = await borrowing.findAll({where:{[Op.or]:[{includes:temporyBorrowing},{includes:requestBorrowing}]}});
-        const result1 = await borrowing.findAll({ include: { model: temporyBorrowing, where: { [Op.and]: [{ borrowingId: { [Op.ne]: null } }, { studentId: { [Op.eq]: id } }] }, attributes: [] }, raw: true });
-        const result2 = await borrowing.findAll({ include: { model: requestBorrowing, where: { [Op.and]: [{ borrowingId: { [Op.ne]: null } }, { studentId: { [Op.eq]: id } }] }, attributes: [] }, raw: true });
-        const result = result1.concat(result2);
-
+        const result1 = await borrowing.findAll({include:{model:temporyBorrowing,where:{[Op.and]:[{borrowingId:{[Op.ne]:null}},{studentId:{[Op.eq]:id}}]},attributes:[]},raw:true});
+        const result2 = await borrowing.findAll({include:{model:requestBorrowing,where:{[Op.and]:[{borrowingId:{[Op.ne]:null}},{studentId:{[Op.eq]:id}}]},attributes:[]},raw:true});
+        const result = (result1.concat(result2)).slice(parseInt(page)*10,parseInt(page)*10+10);
+        const total = result1.concat(result2).length;
+        
         console.log('run here');
-        console.log(result1);
-        return result;
+        console.log(result);
+        return {"result":result,"total":total};
 
     }
     async getItemDetails(id) {
@@ -96,6 +101,9 @@ class Student {
             const equpment = await equipment.update({ availability: '0' }, { where: { id: detail.equipmentId } }, { transaction });
 
             console.log('success');
+            const idnum = await lecturer.findOne({where:{id:detail.lecId},attributes:['userId']});
+            const email = await userModel.findOne({where:{id:idnum['userId']},attributes:['email']});
+            StudentMail({mail:email['email'],studentId:detail.studentId,catgory:detail.category,storeCode:detail.equipmentId,mdle:detail.model,requestdate:reqDate,returndata:retDate});
             await transaction.commit();
         } catch (err) {
             console.log('Error');
@@ -105,6 +113,7 @@ class Student {
 
     async saveTemoryData(detail) {
         const transaction = await sequelize.transaction();
+
         //console.log(a);
         console.log(detail);
 
@@ -168,6 +177,7 @@ class Student {
             day = ("0" + date.getDate()).slice(-2);
         return [date.getFullYear(), mnth, day].join("-");
     }
+
 
     //! - uditha --
     async createStudent(index, firstName, lastName, uid, department) {
@@ -243,6 +253,24 @@ class Student {
             throw new Error('student not updated');
         });
     }
+
+    async markNotification(detail){
+        const marker =await NotificationModel.update({status: 'read'},{where: {receiverId:detail.id,status:'notread'}});
+        if(marker){
+            return(marker);
+        }
+        return;
+    }
+
+    async getlecEmail(){
+        const idnum = await lecturer.findOne({where:{id:'L100'},attributes:['userId']});
+        const email = await userModel.findOne({where:{id:idnum['userId']},attributes:['email']});
+        if(email){
+            return email;
+        }
+        return;
+    }
+
 
 
 }

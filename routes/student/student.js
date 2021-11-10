@@ -1,22 +1,58 @@
-const {checkAvailability,getAllCategories, getModels, getLab, getStoreCode,getAvailabelItems,getNotification} = require('../../controllers/user');
-const { getStudentBorrowedItems, getReleventLecturer, saveData, saveStudentTemporyData, saveNotification } = require('../../controllers/student-controller');
+const {checkAvailability,getAllCategories, getModels, getLab, getStoreCode,getAvailabelItems,getNotification,getEquipmetCount, checkItemByCategory,getItemCount} = require('../../controllers/user');
+const { getStudentBorrowedItems, getReleventLecturer, saveData, saveStudentTemporyData, saveNotification, markNotification } = require('../../controllers/student-controller');
 const { getPendingRequests, getPendingDetails, approveRequest, rejectRequest, saveLecturerNormalData, saveLecturerTemporyData } = require('../../controllers/lecturer-controller');
-
 const express = require('express');
+const Student = require('../../services/student');
+const student= new Student();
+
+
 
 const router = express.Router();
  
-router.get('/checkAvaiability',checkAvailability);
+router.get('/checkAvaiability',async(req,res,next)=>{
+    try{
+        const response = await checkAvailability(req.query.qstr);
+        res.send(response);
+    }catch(e){
+        next(e);
+    }
+});
+
+router.get('/checkItemsByCategory',async(req,res,next)=>{
+    try{
+        console.log(req.query.qstr);
+        console.log(req.query.page);
+        const response = await checkItemByCategory(req.query.qstr,req.query.page);
+        res.send(response);
+    }catch(e){
+        next(e);
+    }
+});
+
+router.get('/itemCount',async(req,res,next)=>{
+    try{
+        const response = await getItemCount(req.query.qstr);
+        res.send({"count":response});
+        //console.log('running here')
+    }catch(err){
+        next(err);
+    }
+});
+
+
+router.get('/equipmentCount',getEquipmetCount);
 router.get('/ava',getAvailabelItems);
 router.get('/category',getAllCategories);
 router.get('/borrow/:id',async(req,res,next)=>{
     try{
-        const response = await getStudentBorrowedItems(req.params.id);
+        const response = await getStudentBorrowedItems(req.params.id,req.query.qstr);
         res.send(response);
     }catch(err){
         next(err);
     }
 });
+
+
 
 router.get('/model/:category',async(req,res,next)=>{
     try{
@@ -59,6 +95,7 @@ router.get('/storeCode/:category/:model/:lab',async(req,res,next)=>{
 });
 
 
+
 router.get('/lecturer/:labid',async(req,res,next)=>{
     try{
         const response = await getReleventLecturer(req.params.labid);
@@ -69,6 +106,7 @@ router.get('/lecturer/:labid',async(req,res,next)=>{
 });
 
 router.post('/sendNormalRequest',async(req,res,next)=>{
+    console.log(req.body);
     try{
         const response = await saveData(req.body);
         res.send(req.body);
@@ -88,10 +126,30 @@ router.post('/sendTemporyRequest',async(req,res,next)=>{
 });
 
 router.post('/sendNotification',async(req,res,next)=>{
+
     console.log(req.body);
     try{
         const response = await saveNotification(req.body);
         res.send(req.body);
+    }catch(err){
+        next(err);
+    }
+});
+
+router.post('/markNotification',async(req,res,next)=>{
+    try{
+        console.log(req.body);
+        const response = await markNotification(req.body);
+        res.send(req.body);
+    }catch(err){
+        next(err);
+    }
+});
+
+router.get('/getmail',async(req,res,next)=>{
+    try{
+        const data= await student.getlecEmail();
+        res.send(data);
     }catch(err){
         next(err);
     }
