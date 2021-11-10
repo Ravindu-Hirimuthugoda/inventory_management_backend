@@ -1,5 +1,7 @@
 jest.mock('../../middleware/authorization.js', () => jest.fn((req, res, next) => next()));
 
+let val = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjIsImV4cGlyZXNJbiI6MzYwMCwidHlwZSI6IlRlY2huaWNhbE9mZmljZXIiLCJpYXQiOjE2MzU2NjUyODh9.TZRih35x8Amt0RaczAjm5d6tdUBAzm8-Ns9hN5lHTzg";
+
 const request = require('supertest');
 // jest.useFakeTimers();
 
@@ -40,16 +42,13 @@ describe('Admin API ', () => {
             };
             return await request(server).post('/users/admin/create-laboratory')
             .send(lab_info)
-            .set("Accept", "application/json")
-            .expect("Content-Type", "text/html; charset=utf-8")
-            .expect(response => {console.log(response)})
-            .expect(500);;
+            .set("Accept", "application/json");
         }
 
         it('should return 200 status code if lab added success', async () => {           
             const res = await exec();
             console.log(res);    
-            expect(res.status).toBe(500);
+            expect(res.status).toBe(200);
         });
 
       });
