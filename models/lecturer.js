@@ -20,7 +20,10 @@ const Lecturer = sequelize.define('Lecturers',{
     department:{
         type:DataTypes.STRING,
         allowNull:false
-    }
+    },
+    userId:{
+        type: DataTypes.INTEGER
+      }
 },{
 
     sequelize,  

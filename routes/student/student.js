@@ -1,5 +1,5 @@
-const {checkAvailability,getAllCategories, getModels, getLab, getStoreCode,getAvailabelItems} = require('../../controllers/user');
-const { getStudentBorrowedItems, getReleventLecturer, saveData, saveStudentTemporyData } = require('../../controllers/student-controller');
+const {checkAvailability,getAllCategories, getModels, getLab, getStoreCode,getAvailabelItems,getNotification} = require('../../controllers/user');
+const { getStudentBorrowedItems, getReleventLecturer, saveData, saveStudentTemporyData, saveNotification } = require('../../controllers/student-controller');
 const { getPendingRequests, getPendingDetails, approveRequest, rejectRequest, saveLecturerNormalData, saveLecturerTemporyData } = require('../../controllers/lecturer-controller');
 
 const express = require('express');
@@ -9,7 +9,14 @@ const router = express.Router();
 router.get('/checkAvaiability',checkAvailability);
 router.get('/ava',getAvailabelItems);
 router.get('/category',getAllCategories);
-router.get('/borrow',getStudentBorrowedItems);
+router.get('/borrow/:id',async(req,res,next)=>{
+    try{
+        const response = await getStudentBorrowedItems(req.params.id);
+        res.send(response);
+    }catch(err){
+        next(err);
+    }
+});
 
 
 
@@ -21,6 +28,15 @@ router.get('/model/:category',async(req,res,next)=>{
         next(err);
     }
 });
+
+router.get('/getNotification/:id',async(req,res,next)=>{
+    try{
+        const response = await getNotification(req.params.id);
+        res.send(response);
+    }catch(err){
+        next(err);
+    }
+})
 
 router.get('/lab/:category/:model',async(req,res,next)=>{
     
@@ -56,9 +72,6 @@ router.get('/lecturer/:labid',async(req,res,next)=>{
 });
 
 router.post('/sendNormalRequest',async(req,res,next)=>{
-
-    console.log('run here1');
-
     try{
         const response = await saveData(req.body);
         res.send(req.body);
@@ -71,6 +84,16 @@ router.post('/sendTemporyRequest',async(req,res,next)=>{
     console.log(req.body);
     try{
         const response= await saveStudentTemporyData(req.body);
+        res.send(req.body);
+    }catch(err){
+        next(err);
+    }
+});
+
+router.post('/sendNotification',async(req,res,next)=>{
+    console.log(req.body);
+    try{
+        const response = await saveNotification(req.body);
         res.send(req.body);
     }catch(err){
         next(err);

@@ -19,7 +19,7 @@ const sequelize = new Sequelize('heroku_2f094f4ccd51bd3', 'b5f38ad8090f87', 'fab
   logging:console.log
 });
 
-
+//
 
 module.exports = sequelize;
 

@@ -3,6 +3,12 @@ const sequelize = require("../config/database");
 const OfficeClerkModel=require('../models/office_clerk_model');
 const {Op} = require("sequelize");
 
+const ItemModel = require("../models/equipment");
+const category = require('../models/category');
+const model = require('../models/model');
+const lab = require('../models/laboratory');
+
+
 class OfficeClerkService{
     
     constructor(){
@@ -83,6 +89,34 @@ class OfficeClerkService{
         }).error(function(err) {        
             throw new Error('OfficeClerk not updated');            
         });        
+    }
+
+    async readAllEquipment(){     
+        category.hasMany(ItemModel);
+        model.hasMany(ItemModel);
+        lab.hasMany(ItemModel);
+        ItemModel.belongsTo(category);
+        ItemModel.belongsTo(model);
+        ItemModel.belongsTo(lab);
+        // let outs = [];   
+        console.log("read equipment");
+        // const officeClerks = await OfficeClerkModel.findAll({
+
+        // });
+        const item = await ItemModel.findAll({
+            include: [
+                { model: category, attributes: ['categoryName'] },
+                { model: lab, attributes: ['labName'] },
+                { model: model, attributes: ['modelName'] }
+            ],            
+            raw: true
+        });
+        if(item == null){
+            throw new Error('Something went wrong!');
+        }
+        console.log(item);
+        return item;
+    
     }
 
 

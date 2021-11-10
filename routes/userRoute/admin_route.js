@@ -12,6 +12,9 @@ router.post('/create-officeclerk',authorization, adminController.addOfficeClerk)
 router.post('/create-technicalofficer',authorization, adminController.addTechnicalOfficer);
 router.post('/create-laboratory',authorization, adminController.addLaboratory);
 
+router.post('/get-user',authorization, adminController.getUser);
+router.put('/update-user',authorization, adminController.updateUserPassword);
+
 router.get('/last-student',authorization,adminController.getLastStudent);
 router.get('/last-lecture',authorization,adminController.getLastLecture);
 router.get('/last-officeclerk',authorization,adminController.getLastOfficeClerk);
