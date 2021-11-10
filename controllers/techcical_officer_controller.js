@@ -153,7 +153,7 @@ const temporyBorrow = async (req, res, next) => {
         const result = await borrow.AddTemporyBorrow(userid, storeid, fromdate.split('T')[0], todate.split('T')[0], reason);
         console.log(result);
         if (result != null) {
-            res.status(409).json({ message: result });
+            res.json({ message: result });
         }
         else {
             res.status(201).json({ message: result });
