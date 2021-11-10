@@ -21,10 +21,6 @@ console.log(process.env.user);
 
 module.exports = app;
 
-app.listen(port, () => {
-    console.log(`running ${port}`);
-});
-
 
 
 
