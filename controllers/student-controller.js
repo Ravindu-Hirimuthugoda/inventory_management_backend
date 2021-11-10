@@ -34,10 +34,12 @@ const getReleventLecturer = async(labId)=>{
 }
 
 const saveData = async(detail)=>{
+
     console.log('run gere 2');
     try{
         console.log('run here 3');
         const response = await student.saveDataDB(detail);
+
         return('Suxxessfully save data');
     }catch(error){
         return(error);

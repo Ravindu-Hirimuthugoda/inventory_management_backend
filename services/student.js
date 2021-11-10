@@ -113,6 +113,7 @@ class Student {
 
     async saveTemoryData(detail) {
         const transaction = await sequelize.transaction();
+
         //console.log(a);
         console.log(detail);
 
@@ -176,6 +177,7 @@ class Student {
             day = ("0" + date.getDate()).slice(-2);
         return [date.getFullYear(), mnth, day].join("-");
     }
+
 
     //! - uditha --
     async createStudent(index, firstName, lastName, uid, department) {
@@ -268,6 +270,7 @@ class Student {
         }
         return;
     }
+
 
 
 }

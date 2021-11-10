@@ -1,3 +1,4 @@
+
 const sequelize = require("../../config/database");
 const db = require('../../models/allmodels');
 
@@ -35,18 +36,18 @@ class Equipment {
         return equipments;
        
     }
-    static async AddEquipment(category, model, lab) {
+    static async AddEquipment(category, model, lab,url) {
     
         const re= await db.Equipment.count().then( async c => {
         
             const eq=await db.Equipment.create({
             categoryId: category,
             modelId: model,
-            LaboratoryId: lab,
+            labId: lab,
             availability: 1,
-                status: 'notdamage',
+            status: 'notdamage',
             addDate:new Date(),
-            imageURL:'http://pngimg.com/uploads/photo_camera/photo_camera_PNG101644.png'
+            imageURL:url
             ,
                 id: `${category}-${model}-${lab}-${c}`
     
@@ -62,10 +63,42 @@ class Equipment {
         
        
     }
-     async UpdateEquipment(store_code,status) {
+     async UpdateEquipment(store_code,status,imgPreview) {
+         if (status === "damage") {
+             const t = await sequelize.transaction();
+             var equipment;
+             try {
+                  equipment = await db.Equipment.update({
+                     status: status,
+                     imageURL: imgPreview,
+                     availability: 0,
+                 },
+                     {
+                         where: {
+                             id: store_code
+                         }, transaction: t
+                          
+                     });
+                 
+                 const re = await db.DamageEquipment.count().then(async c => {
         
-         const equipment = await db.Equipment.update({
+                     const eq = await db.DamageEquipment.create({
+                         id: c + 1,
+                         itemId: store_code,
+                         openDate: new Date(),
+                         reason: "update item",
+                         status: "pending",
+                     }, {transaction: t})
+                 })
+                  await t.commit();
+             } catch (error) {
+                 await t.rollback();
+             }
+         }
+         else {
+                equipment = await db.Equipment.update({
              status: status,
+             imageURL:imgPreview,
          },
             {
                  where: {
@@ -74,7 +107,9 @@ class Equipment {
              }).then().catch(error => {
             console.log(error);
         });
-        console.log(equipment)
+         }
+       
+       
 
         return equipment;
        
@@ -102,4 +137,5 @@ class Equipment {
     }
 
 }
+
 module.exports = Equipment;

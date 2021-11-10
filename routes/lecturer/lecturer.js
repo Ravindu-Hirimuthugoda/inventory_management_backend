@@ -22,6 +22,7 @@ router.post('/sendTemporyRequest',async(req,res,next)=>{
     }
 });
 
+
 router.get('/requestDetail/:id',async(req,res,next)=>{
     try{
         const response= await getPendingDetails(req.params.id);
@@ -62,6 +63,7 @@ router.get('/pending/:id',async(req,res,next)=>{
         return(err);
     }
 });
+
 
 router.post('/test',async(req,res,next)=>{
     res.send('Hroutery');

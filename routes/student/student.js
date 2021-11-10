@@ -52,6 +52,8 @@ router.get('/borrow/:id',async(req,res,next)=>{
     }
 });
 
+
+
 router.get('/model/:category',async(req,res,next)=>{
     try{
         const response = await getModels(req.params.category);
@@ -91,6 +93,7 @@ router.get('/storeCode/:category/:model/:lab',async(req,res,next)=>{
         next(err);
     }
 });
+
 
 
 router.get('/lecturer/:labid',async(req,res,next)=>{

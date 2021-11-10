@@ -29,7 +29,9 @@ const rejectRequest = async(detail)=>{
 const saveLecturerNormalData = async(detail)=>{
     try{
         const response = await lecturer.saveNormalData(detail);
+
         return('Successfully save data');
+
     }catch(error){
         return(error);
     }
@@ -38,7 +40,9 @@ const saveLecturerNormalData = async(detail)=>{
 const saveLecturerTemporyData = async(detail)=>{
     try{
         const response = await lecturer.saveTemporyData(detail);
+
         return('Successfully save data');
+
     }catch(error){
         return(error);
     }

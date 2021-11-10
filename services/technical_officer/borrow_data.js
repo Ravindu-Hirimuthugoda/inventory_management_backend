@@ -1,3 +1,4 @@
+
 const sequelize = require("../../config/database");
 const db = require('../../models/allmodels');
 const { Op,$lt, } = require("sequelize");
@@ -27,9 +28,9 @@ class BorrowData{
                 model: db.Student
             }]
                 }, {
-                    model: db.LectureBorrowing,
+                    model: db.RequestBorrowing,
                     include: [{
-                        model: db.Lecture
+                        model: db.Student
                     }]
                 }],
             where: {[Op.or]:[
@@ -59,7 +60,13 @@ class BorrowData{
                  include: [{
                 model: db.Student
             }]
-            },{
+                },{
+                model: db.RequestBorrowing,
+                 include: [{
+                model: db.Student
+            }]
+            }
+                , {
                 model: db.Equipment,
                 include: [{
                 model: db.Category,
@@ -77,7 +84,7 @@ class BorrowData{
     }
     async AddTemporyBorrow(userid, storeid, fromdate, todate,reason) {
         console.log(userid, storeid, fromdate, todate);
-        const t = await sequelize.sequelize.transaction();
+        const t = await sequelize.transaction();
         try {
   // Then, we do some calls passing this transaction as an option:
             const available = await db.Equipment.findOne(
@@ -88,42 +95,121 @@ class BorrowData{
             );
             console.log(available.dataValues.availability);
             if (available.dataValues.availability) {
-                await db.BorrowData.count().then(async c => {
-                    await db.BorrowData.create({
-                        type: 'temporary',
-                        status: 'open',
-                        dueDate: todate,
-                        fromdate: fromdate,
-                        EquipmentId: storeid,
-                        id: c + 1
-                    }, { transaction: t }).then(async function (x) {
-                        console.log(x.id);
-                        await db.BorrowData.count().then(async cou => {
-                            await db.TemporyBorrowing.create(
-                                {
-                                    id: cou + 1,
-                                    studentId: userid,
-                                    reason: reason,
-                                    borrowingId: x.id
-                                }, { transaction: t }
-                            )
-                        }).then(async function (x){
-                            await db.Equipment.update({
-                                availability: 0,  
-                            },
-                                {
-                        where: {
-                            id: storeid
-                        },
-                        transaction: t
+                const user = await db.Student.findOne(
+                    {
+                        where: { id: userid }
                     });
+                if (user != null) {
+                    const req = await db.Request.count()
+
+                    await db.Request.create({
+                        id: req + 1,
+                        status: 'pass',
+                        reason: reason,
+                        requestDate: fromdate,
+                        returnDate: todate,
+                        equipmentId: storeid,
+                        type: 'tempory',
+                    }, { transaction: t });
+                
+                    await db.BorrowData.count().then(async c => {
+                        await db.BorrowData.create({
+                            type: 'temporary',
+                            status: 'open',
+                            dueDate: todate,
+                            fromDate: fromdate,
+                            equipmentId: storeid,
+                            id: c + 1
+                        }, { transaction: t }).then(async function (x) {
+                            console.log(x.id);
+                            await db.TemporyBorrowing.count().then(async cou => {
+                                await db.TemporyBorrowing.create(
+                                    {
+                                        id: cou + 2,
+                                        studentId: userid,
+                                        requestId: req + 1,
+                                        borrowingId: x.id
+                                    }, { transaction: t }
+                                )
+                            }).then(async function (x) {
+                                await db.Equipment.update({
+                                    availability: 0,
+                                },
+                                    {
+                                        where: {
+                                            id: storeid
+                                        },
+                                        transaction: t
+                                    });
+                            });
                         });
                     });
-                });
                 
-                // If the execution reaches this line, no errors were thrown.
-                // We commit the transaction.
-                await t.commit();
+                    // If the execution reaches this line, no errors were thrown.
+                    // We commit the transaction.
+                    await t.commit();
+                    return null;
+                }
+                else {
+                    const lec = await db.Lecture.findOne(
+                    {
+                        where: { id: userid }
+                        });
+                    if (lec != null) {
+                         const req = await db.Request.count()
+
+                    await db.Request.create({
+                        id: req + 1,
+                        status: 'pass',
+                        reason: reason,
+                        requestDate: fromdate,
+                        returnDate: todate,
+                        equipmentId: storeid,
+                        type: 'tempory',
+                    }, { transaction: t });
+                
+                    await db.BorrowData.count().then(async c => {
+                        await db.BorrowData.create({
+                            type: 'temporary',
+                            status: 'open',
+                            dueDate: todate,
+                            fromDate: fromdate,
+                            equipmentId: storeid,
+                            id: c + 1
+                        }, { transaction: t }).then(async function (x) {
+                            console.log(x.id);
+                            await db.LectureBorrowing.count().then(async cou => {
+                                await db.LectureBorrowing.create(
+                                    {
+                                        id: cou + 1,
+                                        lecturerId: userid,
+                                        requestId: req + 1,
+                                        borrowingId: x.id
+                                    }, { transaction: t }
+                                )
+                            }).then(async function (x) {
+                                await db.Equipment.update({
+                                    availability: 0,
+                                },
+                                    {
+                                        where: {
+                                            id: storeid
+                                        },
+                                        transaction: t
+                                    });
+                            });
+                        });
+                    });
+                
+                    // If the execution reaches this line, no errors were thrown.
+                    // We commit the transaction.
+                        await t.commit();
+                         return null;
+                    }
+                    else {
+                        return 'User id is invalid';
+                    }
+                }
             }
             else {
                 return 'Equipment is Unavailable';
@@ -136,10 +222,10 @@ class BorrowData{
             return '';
 
         }
-        
+         console.log("error");
     }
     async acceptEquipment(id, status) {
-        const t = await sequelize.sequelize.transaction();
+        const t = await sequelize.transaction();
         try {
             await db.BorrowData.update({
                 status: 'close',
@@ -156,13 +242,35 @@ class BorrowData{
                  where: { id: id }
             }, { transaction: t }).then(async function (x) {
                 console.log(x);
-                await db.Equipment.update({
-                    availability: 1,
-                    status: status
-                }, {
-                    where: { id: x.dataValues.EquipmentId },
-                    transaction: t
-                })
+                if (status === "damage") {
+                  
+                        const equipment = await db.Equipment.update({
+                            status: status,
+                            availability: 0,
+                        },
+                            { where: { id: x.dataValues.EquipmentId}, transaction: t
+                            });
+                        const re = await db.DamageEquipment.count().then(async c => {
+                            const eq = await db.DamageEquipment.create({
+                                id: c + 1,
+                                itemId: x.dataValues.EquipmentId,
+                                openDate: new Date(),
+                                reason: "Accept item",
+                                status: "pending",
+                            }, { transaction: t })
+                        })
+                       
+                    
+                }
+                else {
+                    await db.Equipment.update({
+                        availability: 1,
+                        status: status
+                    }, {
+                        where: { id: x.dataValues.EquipmentId },
+                        transaction: t
+                    })
+                }
             });
             await t.commit();
         } catch (error) {
@@ -200,7 +308,7 @@ class BorrowData{
             var t = new Date(toDate);
 
             while (f < t) {
-                var dat = { date: `${f.getMonth()}/${f.getDate()}`, data: [] }
+                var dat = { date: `${f.getMonth()+1}/${f.getDate()}`, data: [] }
                 categories.forEach(e => {
                     dat.data.push({cat:e.categoryName,data:0});
                 });
@@ -272,13 +380,30 @@ class BorrowData{
 
 
             while (f <= t) {
-                var dat = { date: `${f.getMonth()}/${f.getDate()}`, data: [] }
+                var dat = { date: `${f.getMonth()+1}/${f.getDate()}`, data: [] }
                 await Promise.all( categories.map(async (e)=> {
                     var count = await db.Equipment.count({ where: { [Op.and]:[{ categoryId: e.id },{addDate: { [Op.lte]: f } }] }});
                     
                     dat.data.push({ cat: e.categoryName, data: count });
                     
                 }));
+                const compareObjects=(object1, object2, key) =>{
+                    const obj1 = object1[key].toUpperCase()
+                    
+                    const obj2 = object2[key].toUpperCase()
+                    if (obj1 < obj2) {
+                        return -1
+                    }
+                    if (obj1 > obj2) {
+                        return 1
+                    }
+                    return 0  
+                }
+                
+
+                dat.data.sort((d1, d2) => {
+                    return compareObjects(d1, d2, 'cat')
+                })
                 
                  console.log(dat);
                 borrowdata.forEach(element => {
@@ -318,7 +443,7 @@ class BorrowData{
 
     async AddnormalBorrow(userid, storeid, fromdate, todate,requestId) {
         console.log(userid, storeid, fromdate, todate);
-        const t = await sequelize.sequelize.transaction();
+        const t = await sequelize.transaction();
         try {
   // Then, we do some calls passing this transaction as an option:
             const available = await db.Equipment.findOne(
@@ -327,37 +452,76 @@ class BorrowData{
                }
                 
             );
+            let usertype;
+            let user = await db.Student.findOne(
+                    {
+                        where: { id: userid }
+                });
+            if (user == null) {
+                user = await db.Lecture.findOne(
+                    {
+                        where: { id: userid }
+                    });
+                 usertype = "lecturer";
+            }
+            else {
+                usertype = "student";
+            }
+            //const user = await db.User.findOne({ where: { id: userid } })
+            
             console.log(available.dataValues.availability);
-            if (available.dataValues.availability) {
+            if (true) {
                 await db.BorrowData.count().then(async c => {
                     await db.BorrowData.create({
-                        type: 'normal',
+                        type: usertype=="student"?'normal':'lecturer',
                         status: 'open',
                         dueDate: todate,
-                        fromdate: fromdate,
-                        EquipmentId: storeid,
+                        fromDate: fromdate,
+                        equipmentId: storeid,
                         id: c + 1
                     }, { transaction: t }).then(async function (x) {
                         console.log(x.id);
-                        await db.BorrowData.count().then(async cou => {
-                            await db.RequestBorrowing.create(
-                                {
-                                    id: cou + 1,
-                                    requestId: requestId,
-                                    borrowingId: x.id
-                                }, { transaction: t }
-                            )
-                        }).then(async function (x){
-                            await db.Equipment.update({
-                                availability: 0,  
-                            },
-                                {
-                        where: {
-                            id: storeid
-                        },
-                        transaction: t
-                    });
+                        if (usertype === "student") {
+                            const borrow = await db.RequestBorrowing.update({
+                                borrowingId: x.id,  
+                            },{
+                                where: {
+                                    [Op.and]: [{
+                                        studentId: userid
+                                    }, { borrowingId: null }]},transaction: t
+                            })
+                        }
+                        else {
+                            
+                            const borrow = await db.LectureBorrowing.update({
+                                borrowingId: x.id,  
+                            },{
+                                where: {
+                                    [Op.and]: [{
+                    
+                                        lecturerId: userid
+                                        
+                                    }, { borrowingId: null }]},transaction: t
+                            })
+                        }
+                        await db.Equipment.update({
+                            availability: 0,
+                            
+                        },{ where: {id: storeid },
+                            transaction: t
                         });
+                        
+                        // await db.BorrowData.count().then(async cou => {
+                        //     await db.RequestBorrowing.create(
+                        //         {
+                        //             id: cou + 1,
+                        //             requestId: requestId,
+                        //             borrowingId: x.id
+                        //         }, { transaction: t }
+                        //     )
+                        // }).then(async function (x){
+                            
+                        // });
                     });
                 });
                 
@@ -379,4 +543,5 @@ class BorrowData{
         
     }
 }
+
 module.exports = BorrowData;

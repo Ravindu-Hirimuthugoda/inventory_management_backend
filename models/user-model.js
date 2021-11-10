@@ -18,12 +18,14 @@ const UserModel = sequelize.define('User',{
     type:{
         type:DataTypes.STRING,
         allowNull:false,
+
     },
     isDelete: {
         type: DataTypes.BOOLEAN
       }
 },{
     sequelize,
+
     modelName: 'User',
     tableName: 'user',
 });

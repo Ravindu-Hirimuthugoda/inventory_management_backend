@@ -28,6 +28,7 @@ const BorrowingModel = sequelize.define('Borrowing',{
         allowNull: false,
     },
     equipmentId:{
+
         type:String,
         allowNull:false,
     },

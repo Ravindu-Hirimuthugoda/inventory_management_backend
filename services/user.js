@@ -7,6 +7,7 @@ const request = require('../models/request');
 const notification = require('../models/notification');
 const { Op } = require("sequelize");
 
+
 const UserModel = require('../models/user-model');
 
 const StudentModel = require('../models/student_model');
@@ -251,6 +252,7 @@ class User {
         return users;
           
     }
+
 
 }
 
