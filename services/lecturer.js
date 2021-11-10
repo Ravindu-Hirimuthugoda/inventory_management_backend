@@ -73,6 +73,7 @@ class Lecturer {
 
     async rejectRequest(detail) {
         const result = await request.update({ status: 'fail' }, { where: { id: detail.id } });
+        const res = await equipment.update({availability:'1'},{where:{id: detail.storeCode}});
         const idnum = await student.findOne({where:{id:detail.studentId},attributes:['userId']});
         const email = await userModel.findOne({where:{id:idnum['userId']},attributes:['email']});
         const name = await lecturer.findOne({where:{id:detail.lecId},attributes:['firstName','lastName']});
