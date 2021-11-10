@@ -60,8 +60,8 @@ db.Equipment.hasMany(db.BorrowData);
 
 
 
-db.Request.belongsTo(db.Lecture);
-db.Lecture.hasMany(db.Request);
+//db.Request.belongsTo(db.Lecture);
+//db.Lecture.hasMany(db.Request);
 
 
 db.Request.belongsTo(db.Equipment);

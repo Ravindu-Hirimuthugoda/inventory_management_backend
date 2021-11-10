@@ -18,12 +18,12 @@ app.use('/', routes);
 
 console.log(process.env.user);
 
-app.listen(port, () => {
-    console.log(`running ${port}`);
-});
 
 module.exports = app;
 
+app.listen(port, () => {
+    console.log(`running ${port}`);
+});
 
 
 
