@@ -146,9 +146,7 @@ class User {
             arrtibute: ["id", "type", "password"],
             where: { email: email, isDelete: 0 }, raw: true
         });
-        if (user == null) {
-            return user;
-        }
+        
         return user;
     }
 
@@ -161,7 +159,7 @@ class User {
             );
             // console.log(user);
             if (user == null) {
-                throw new Error('IUser can not update');
+                throw new Error('User can not update');
             }
             return user;
         } catch (e) {
@@ -210,6 +208,16 @@ class User {
             return null;
         }
 
+    }
+
+    async getAllUsers(){
+      
+        const users=UserModel.findAll({
+        attributes:['email','type'], raw: true
+        })
+        
+        return users;
+          
     }
 
 }
