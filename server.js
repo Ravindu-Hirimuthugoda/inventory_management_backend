@@ -1,5 +1,6 @@
 const server = require('./index');
 const port = 5000;
+const dotenv = require("dotenv");
 const {Server} = require("socket.io");
 const http = require("http");
 
@@ -53,7 +54,7 @@ io.on("connection",(socket)=>{
 
 console.log(onlineUsers);
 
-srver.listen(port, () => {
+srver.listen(process.env.PORT || port, () => {
     console.log(`running ${port}`);
 });
 
