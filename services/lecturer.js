@@ -6,11 +6,15 @@ const equipment = require('../models/equipment');
 const category = require('../models/category');
 const model = require('../models/model');
 const lab = require('../models/laboratory');
+const userModel= require('../models/user-model');
+const student = require('../models/student_model');
+const lecturer = require('../models/lecturer');
 const { Op } = require('sequelize');
 const lecturerBorrowing = require('../models/lecturerBorrowing');
 const notificationModel = require('../models/notification');
 
 const LectureModel = require('../models/lecturer');
+const ResponseMail = require("../utils/approveMail");
 
 class Lecturer {
     constructor() {
@@ -50,13 +54,25 @@ class Lecturer {
         return result;
     }
 
-    async approveRequest(varId) {
-        const result = await request.update({ status: 'pass' }, { where: { id: varId } });
+    async approveRequest(detail) {
+        const result = await request.update({ status: 'pass' }, { where: { id: detail.id } });
+        const idnum = await student.findOne({where:{id:detail.studentId},attributes:['userId']});
+        const email = await userModel.findOne({where:{id:idnum['userId']},attributes:['email']});
+        const name = await lecturer.findOne({where:{id:detail.lecId},attributes:['firstName','lastName']});
+        console.log('Here lpl start');
+        console.log(detail);
+        console.log(email);
+        console.log(name);
+        ResponseMail({mail:email['email'],ctegory:detail.category,storeCode:detail.storeCode,fname:name['firstName'],lname:name['lastName'],type:'approved'});
         return result;
     }
 
-    async rejectRequest(varId) {
-        const result = await request.update({ status: 'fail' }, { where: { id: varId } });
+    async rejectRequest(detail) {
+        const result = await request.update({ status: 'fail' }, { where: { id: detail.id } });
+        const idnum = await student.findOne({where:{id:detail.studentId},attributes:['userId']});
+        const email = await userModel.findOne({where:{id:idnum['userId']},attributes:['email']});
+        const name = await lecturer.findOne({where:{id:detail.lecId},attributes:['firstName','lastName']});
+        ResponseMail({mail:email['email'],ctegory:detail.category,storeCode:detail.storeCode,fname:name['firstName'],lname:name['lastName'],type:'rejected'});
         return result;
     }
 

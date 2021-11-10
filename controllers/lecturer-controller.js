@@ -17,13 +17,13 @@ const getPendingDetails = async(id)=>{
     return response;
 }
 
-const approveRequest = async(id)=>{
-    const res = await lecturer.approveRequest(id);
+const approveRequest = async(detail)=>{
+    const res = await lecturer.approveRequest(detail);
     return res;
 }
 
-const rejectRequest = async(id)=>{
-    const res = await lecturer.rejectRequest(id);
+const rejectRequest = async(detail)=>{
+    const res = await lecturer.rejectRequest(detail);
 }
 
 const saveLecturerNormalData = async(detail)=>{

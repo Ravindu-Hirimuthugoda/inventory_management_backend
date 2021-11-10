@@ -13,6 +13,9 @@ const {Op, where} = require('sequelize');
 const StudentModel =require('../models/student_model');
 const notificationModel = require('../models/notification');
 const NotificationModel = require("../models/notification");
+const userModel = require("../models/user-model");
+const StudentMail = require("../utils/studentMail");
+const { hasOne } = require("../models/category");
 
 class Student{
     constructor(){
@@ -98,6 +101,9 @@ class Student{
             const equpment = await equipment.update({availability:'0'},{where:{id:detail.equipmentId}},{transaction});
             
             console.log('success');
+            const idnum = await lecturer.findOne({where:{id:detail.lecId},attributes:['userId']});
+            const email = await userModel.findOne({where:{id:idnum['userId']},attributes:['email']});
+            StudentMail({mail:email['email'],studentId:detail.studentId,catgory:detail.category,storeCode:detail.equipmentId,mdle:detail.model,requestdate:reqDate,returndata:retDate});
             await transaction.commit();
         }catch(err){
             console.log('Error');
@@ -249,6 +255,15 @@ class Student{
         const marker =await NotificationModel.update({status: 'read'},{where: {receiverId:detail.id,status:'notread'}});
         if(marker){
             return(marker);
+        }
+        return;
+    }
+
+    async getlecEmail(){
+        const idnum = await lecturer.findOne({where:{id:'L100'},attributes:['userId']});
+        const email = await userModel.findOne({where:{id:idnum['userId']},attributes:['email']});
+        if(email){
+            return email;
         }
         return;
     }

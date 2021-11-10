@@ -35,19 +35,22 @@ router.get('/requestDetail/:id',async(req,res,next)=>{
 
 router.post('/approve/:id',async(req,res,next)=>{
     try{
-        const response =await approveRequest(req.params.id);
+        console.log('fire');
+        console.log(req.params.id);
+        console.log(req.body);
+        const response =await approveRequest(req.body);
         res.send(response);
     }catch(err){
-        return err;
+        next(err);
     }
 });
 
 router.post('/reject/:id',async(req,res,next)=>{
     try{
-        const response =await rejectRequest(req.params.id);
+        const response =await rejectRequest(req.body);
         res.send(response);
     }catch(err){
-        return err;
+        next(err);
     }
 });
 

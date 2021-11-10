@@ -2,6 +2,8 @@ const {checkAvailability,getAllCategories, getModels, getLab, getStoreCode,getAv
 const { getStudentBorrowedItems, getReleventLecturer, saveData, saveStudentTemporyData, saveNotification, markNotification } = require('../../controllers/student-controller');
 const { getPendingRequests, getPendingDetails, approveRequest, rejectRequest, saveLecturerNormalData, saveLecturerTemporyData } = require('../../controllers/lecturer-controller');
 const express = require('express');
+const Student = require('../../services/student');
+const student= new Student();
 
 
 
@@ -101,6 +103,7 @@ router.get('/lecturer/:labid',async(req,res,next)=>{
 });
 
 router.post('/sendNormalRequest',async(req,res,next)=>{
+    console.log(req.body);
     try{
         const response = await saveData(req.body);
         res.send(req.body);
@@ -139,4 +142,13 @@ router.post('/markNotification',async(req,res,next)=>{
         next(err);
     }
 });
+
+router.get('/getmail',async(req,res,next)=>{
+    try{
+        const data= await student.getlecEmail();
+        res.send(data);
+    }catch(err){
+        next(err);
+    }
+})
 module.exports = router;
