@@ -161,7 +161,7 @@ class Student {
             const borrowingCount = await temporyBorrowing.count();
 
             const reqBorr = await temporyBorrowing.create({
-                id: borrowingCount + 1,
+                id: borrowingCount + 2,
                 requestId: total + 1,
                 studentId: detail.studentId,
                 borrowingId: null,
