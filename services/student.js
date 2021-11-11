@@ -137,6 +137,10 @@ class Student {
 
     async saveTemoryData(detail) {
         const transaction = await sequelize.transaction();
+        const req = new Date(detail.requestDate).toString();
+        const ret = new Date(detail.returnDate).toString();
+        const reqDate = this.convert(req);
+        const retDate = this.convert(ret);
 
         //console.log(a);
         console.log(detail);
@@ -148,8 +152,8 @@ class Student {
                 id: total + 1,
                 status: 'pass',
                 reason: detail.reason,
-                requestDate: detail.requestDate,
-                returnDate: detail.returnDate,
+                requestDate: reqDate,
+                returnDate: retDate,
                 equipmentId: detail.equipmentId,
                 type: 'tempory',
             }, { transaction });
