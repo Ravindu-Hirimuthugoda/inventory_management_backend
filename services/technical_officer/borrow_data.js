@@ -310,7 +310,7 @@ class BorrowData {
             var f = new Date(fromdate);
             var t = new Date(toDate);
 
-            while (f <= t) {
+            while (f < t) {
                 var dat = { date: `${f.getMonth() + 1}/${f.getDate()}`, data: [] }
                 categories.forEach(e => {
                     dat.data.push({ cat: e.categoryName, data: 0 });
@@ -342,7 +342,7 @@ class BorrowData {
             return list;
 
         } catch (error) {
-
+            console.log(error);
         }
 
 
@@ -419,7 +419,10 @@ class BorrowData {
                         dat.data.forEach((e, index) => {
                             if (e.cat === element.dataValues.Equipment.dataValues.Category.categoryName) {
 
-                                dat.data[index].data -= 1;
+
+                                if (dat.data[index].data > 0) {
+                                    dat.data[index].data -= 1;
+                                }
                             }
 
                         });
