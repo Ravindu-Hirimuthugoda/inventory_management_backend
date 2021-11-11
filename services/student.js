@@ -172,7 +172,7 @@ class Student {
             console.log('success');
             await transaction.commit();
         } catch (err) {
-            console.log('Error');
+            console.log(err);
             await transaction.rollback();
         }
     }
