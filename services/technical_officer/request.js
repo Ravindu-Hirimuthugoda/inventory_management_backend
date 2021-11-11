@@ -46,7 +46,7 @@ class Request {
                     }
                 })
 
-                if (borrow.dataValues == null) {
+                if (borrow == null) {
                     const borrowtem = await db.TemporyBorrowing.findOne({
 
                         include: [{
