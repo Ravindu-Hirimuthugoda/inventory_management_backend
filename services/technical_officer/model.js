@@ -4,31 +4,31 @@ const db = require('../../models/allmodels');
 
 
 
-class Model{
+class Model {
     constructor() {
         try {
             sequelize.sequelize.authenticate();
-           
+
         } catch (error) {
-            
+
         }
     }
 
     async getModels(category) {
-        console.log('ca',category)
-         const labs = db.Model.findAll({
-             attributes: ['id', 'modelName'], raw: true,
-             where: {
-                 categoryId:category
-             }
+
+        const labs = db.Model.findAll({
+            attributes: ['id', 'modelName'], raw: true,
+            where: {
+                categoryId: category
+            }
         })
-        console.log(labs);
+
         return labs;
     }
-     async addmodel(model , category) {
-         const equipment =await db.Model.findOne({
+    async addmodel(model, category) {
+        const equipment = await db.Model.findOne({
             where: {
-                 modelName:model,
+                modelName: model,
                 categoryId: category
             }
         }).then().catch(error => {
@@ -37,21 +37,21 @@ class Model{
         if (equipment != null) {
             return null;
         }
-        const re= await db.Model.count().then( async c => {
-        
-            const eq=await db.Model.create({
+        const re = await db.Model.count().then(async c => {
+
+            const eq = await db.Model.create({
                 id: c + 1,
                 categoryId: category,
-                modelName:model
-    
+                modelName: model
+
             }).then(function (x) {
-                console.log(x.dataValues);
-               
+
+
 
             });
-           
+
         });
-      return this.getModels(category)
+        return this.getModels(category)
     }
 
 }
