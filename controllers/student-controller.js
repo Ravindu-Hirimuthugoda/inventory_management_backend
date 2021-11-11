@@ -68,6 +68,7 @@ const saveData = async(detail)=>{
 }
 
 const saveStudentTemporyData = async(detail)=>{
+    console.log('runn temp');
     try{
         const response = await student.saveTemoryData(detail);
         return('Successfully save data');
