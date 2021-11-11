@@ -45,8 +45,8 @@ class Request {
                         }, { borrowingId: null }, { '$Request.status$': 'pass' }]
                     }
                 })
-                reqId = borrow.dataValues.requestId;
-                if (reqId == null) {
+
+                if (borrow.dataValues == null) {
                     const borrowtem = await db.TemporyBorrowing.findOne({
 
                         include: [{
@@ -60,6 +60,9 @@ class Request {
                     })
                     reqId = borrowtem.dataValues.requestId;
 
+                }
+                else {
+                    reqId = borrow.dataValues.requestId;
                 }
             }
             else {
