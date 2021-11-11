@@ -456,6 +456,7 @@ class BorrowData {
 
             );
             let usertype;
+            let type;
             let user = await db.Student.findOne(
                 {
                     where: { id: userid }
@@ -466,8 +467,14 @@ class BorrowData {
                         where: { id: userid }
                     });
                 usertype = "lecturer";
+                type = "lecturer";
             }
             else {
+                let req = await db.Request.findOne(
+                    {
+                        where: { id: requestId }
+                    });
+                type = req.dataValues.type;
                 usertype = "student";
             }
             //const user = await db.User.findOne({ where: { id: userid } })
@@ -476,7 +483,7 @@ class BorrowData {
             if (true) {
                 await db.BorrowData.count().then(async c => {
                     await db.BorrowData.create({
-                        type: usertype == "student" ? 'normal' : 'lecturer',
+                        type: type,
                         status: 'open',
                         dueDate: todate,
                         fromDate: fromdate,
@@ -484,18 +491,18 @@ class BorrowData {
                         id: c + 1
                     }, { transaction: t }).then(async function (x) {
 
-                        if (usertype === "student") {
+                        if (type === "normal") {
                             const borrow = await db.RequestBorrowing.update({
                                 borrowingId: x.id,
                             }, {
                                 where: {
                                     [Op.and]: [{
                                         studentId: userid
-                                    }, { borrowingId: null }]
+                                    }, { borrowingId: null }, { requestId: requestId }]
                                 }, transaction: t
                             })
                         }
-                        else {
+                        else if (type === "lecturer") {
 
                             const borrow = await db.LectureBorrowing.update({
                                 borrowingId: x.id,
@@ -505,7 +512,21 @@ class BorrowData {
 
                                         lecturerId: userid
 
-                                    }, { borrowingId: null }]
+                                    }, { borrowingId: null }, { requestId: requestId }]
+                                }, transaction: t
+                            })
+                        }
+                        else {
+
+                            const borrow = await db.TemporyBorrowing.update({
+                                borrowingId: x.id,
+                            }, {
+                                where: {
+                                    [Op.and]: [{
+
+                                        studentId: userid
+
+                                    }, { borrowingId: null }, { requestId: requestId }]
                                 }, transaction: t
                             })
                         }
