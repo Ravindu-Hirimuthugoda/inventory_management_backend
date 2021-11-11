@@ -42,7 +42,7 @@ describe('Inventory management system backend technical officer', () => {
     });
 
     test('get borrowdata', async () => {
-        await request.get('/technicalofficer/borrowdata/1-1-75-0').set("Authorization", val).expect(409);
+        await request.get('/technicalofficer/borrowdata/1-1-75-0').set("Authorization", val).expect(200);
     });
 
     test('get requestdata', async () => {
@@ -56,7 +56,7 @@ describe('Inventory management system backend technical officer', () => {
     });
     test('get requestdata valid', async () => {
 
-        await request.get('/technicalofficer/requestdata/S001').set("Authorization", val).expect(409);
+        await request.get('/technicalofficer/requestdata/S0001').set("Authorization", val).expect(200);
 
     });
 
