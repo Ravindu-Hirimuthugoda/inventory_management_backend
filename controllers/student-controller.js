@@ -28,12 +28,13 @@ const getStudentBorrowedItemsmobile = async (id)=>{
         //console.log('trdpeodmd');
         //console.log(response);
         for(let m of response){
+            console.log(m.equipmentId);
             let match = await student.getItemDetails(m.equipmentId);
             let newObj = {...match[0],purchesedDate:m.dueDate}
             matches.push(newObj);
         }
         //console.log(matches);
-        //console.log(matches);
+        console.log(matches);
         return(matches);
     }catch(err){
         return(err);

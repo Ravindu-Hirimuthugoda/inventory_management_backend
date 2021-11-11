@@ -55,8 +55,10 @@ class Student {
         const result1 = await borrowing.findAll({include:{model:temporyBorrowing,where:{[Op.and]:[{borrowingId:{[Op.ne]:null}},{studentId:{[Op.eq]:id}}]},attributes:[]},raw:true});
         const result2 = await borrowing.findAll({include:{model:requestBorrowing,where:{[Op.and]:[{borrowingId:{[Op.ne]:null}},{studentId:{[Op.eq]:id}}]},attributes:[]},raw:true});
         const result = result1.concat(result2);
-        //console.log('step1');
-        //console.log(result);
+        console.log('step1');
+        console.log(result1);
+        console.log('step2');
+        console.log(result2);
         return result;
 
     }
