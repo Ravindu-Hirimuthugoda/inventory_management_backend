@@ -258,7 +258,7 @@ class BorrowData {
                             id: c + 1,
                             itemId: x.dataValues.EquipmentId,
                             openDate: new Date(),
-                            reason: "Accept item",
+                            reason: "Item has Damaged",
                             status: "pending",
                         }, { transaction: t })
                     })

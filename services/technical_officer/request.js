@@ -46,9 +46,27 @@ class Request {
                     }
                 })
                 reqId = borrow.dataValues.requestId;
+                if (reqId == null) {
+                    const borrowtem = await db.TemporyBorrowing.findOne({
+
+                        include: [{
+                            model: db.Request,
+                        }],
+                        where: {
+                            [Op.and]: [{
+                                studentId: id
+                            }, { borrowingId: null }]
+                        }
+                    })
+                    reqId = borrowtem.dataValues.requestId;
+
+                }
             }
             else {
                 const borrow = await db.LectureBorrowing.findOne({
+                    include: [{
+                        model: db.Request,
+                    }],
                     where: {
                         [Op.and]: [{
                             lecturerId: id

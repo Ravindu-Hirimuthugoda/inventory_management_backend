@@ -86,7 +86,7 @@ class Equipment {
                         id: c + 1,
                         itemId: store_code,
                         openDate: new Date(),
-                        reason: "update item",
+                        reason: "Item has Damaged",
                         status: "pending",
                     }, { transaction: t })
                 })
