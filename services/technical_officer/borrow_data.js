@@ -310,7 +310,7 @@ class BorrowData {
             var f = new Date(fromdate);
             var t = new Date(toDate);
 
-            while (f < t) {
+            while (f <= t) {
                 var dat = { date: `${f.getMonth() + 1}/${f.getDate()}`, data: [] }
                 categories.forEach(e => {
                     dat.data.push({ cat: e.categoryName, data: 0 });
