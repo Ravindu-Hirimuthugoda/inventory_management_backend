@@ -309,28 +309,30 @@ class BorrowData {
             var list = [];
             var f = new Date(fromdate);
             var t = new Date(toDate);
-
+            console.log(borrowdata);
             while (f < t) {
                 var dat = { date: `${f.getMonth() + 1}/${f.getDate()}`, data: [] }
                 categories.forEach(e => {
                     dat.data.push({ cat: e.categoryName, data: 0 });
                 });
                 borrowdata.forEach(element => {
-
-                    var bdate = new Date(element.dataValues.fromDate)
-                    if (f.getDate() === bdate.getDate() && f.getMonth() === bdate.getMonth()) {
-                        dat.data
-                        dat.data.forEach((e, index) => {
-                            if (e.cat === element.dataValues.Equipment.dataValues.Category.categoryName) {
-
-                                dat.data[index].data += 1;
-                            }
-
-                        });
+                    if (element != null) {
 
 
+                        var bdate = new Date(element.dataValues.fromDate)
+                        if (f.getDate() === bdate.getDate() && f.getMonth() === bdate.getMonth()) {
+                            dat.data
+                            dat.data.forEach((e, index) => {
+                                if (e.cat === element.dataValues.Equipment.dataValues.Category.categoryName) {
+
+                                    dat.data[index].data += 1;
+                                }
+
+                            });
+
+
+                        }
                     }
-
 
                 });
 
