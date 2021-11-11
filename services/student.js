@@ -44,6 +44,23 @@ class Student {
         return {"result":result,"total":total};
 
     }
+
+    async getBorrowedItemsmobile(id){
+        
+        borrowing.hasOne(temporyBorrowing);
+        borrowing.hasOne(requestBorrowing);
+
+        //const result = await borrowing.findAll({include:[{model:temporyBorrowing,where:{borrowingId:{[Op.ne]:null}}},{model:requestBorrowing,where:{borrowingId:{[Op.ne]:null}}}],raw:true});
+        //const result = await borrowing.findAll({where:{[Op.or]:[{includes:temporyBorrowing},{includes:requestBorrowing}]}});
+        const result1 = await borrowing.findAll({include:{model:temporyBorrowing,where:{[Op.and]:[{borrowingId:{[Op.ne]:null}},{studentId:{[Op.eq]:id}}]},attributes:[]},raw:true});
+        const result2 = await borrowing.findAll({include:{model:requestBorrowing,where:{[Op.and]:[{borrowingId:{[Op.ne]:null}},{studentId:{[Op.eq]:id}}]},attributes:[]},raw:true});
+        const result = result1.concat(result2);
+        //console.log('step1');
+        //console.log(result);
+        return result;
+
+    }
+
     async getItemDetails(id) {
         category.hasMany(equipment);
         model.hasMany(equipment);
@@ -66,13 +83,18 @@ class Student {
 
     async saveDataDB(detail) {
         console.log('run here 4');
+        console.log(detail);
+        console.log(detail.requestDate);
+        console.log(detail.returnDate);
         const transaction = await sequelize.transaction();
         const req = new Date(detail.requestDate).toString();
         const ret = new Date(detail.returnDate).toString();
         const reqDate = this.convert(req);
         const retDate = this.convert(ret);
         //console.log(a);
-        console.log(detail);
+        console.log("print req,ret");
+        console.log(ret);
+        console.log(req);
 
 
         try {

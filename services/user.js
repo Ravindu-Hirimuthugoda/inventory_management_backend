@@ -40,6 +40,18 @@ class User {
         return details;
     }
 
+    async getItemDetailsmobile() {
+        category.hasMany(equipment);
+        model.hasMany(equipment);
+        lab.hasMany(equipment);
+        equipment.belongsTo(category);
+        equipment.belongsTo(model);
+        equipment.belongsTo(lab);
+        const details = await equipment.findAll({ include: [{ model: category, attributes: ['categoryName'] }, { model: lab, attributes: ['labName'] }, { model: model, attributes: ['modelName'] }], attributes: ['id', 'imageURL', 'availability', 'status'],raw: true });
+        //console.log(details);
+        return details;
+    }
+
     async getItemDetailsByCategory(value,page){
         category.hasMany(equipment);
         model.hasMany(equipment);

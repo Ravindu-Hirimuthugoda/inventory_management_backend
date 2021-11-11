@@ -20,6 +20,26 @@ const getStudentBorrowedItems = async (id,page)=>{
     }
 }
 
+const getStudentBorrowedItemsmobile = async (id)=>{
+    try{
+        const response = await student.getBorrowedItemsmobile(id);
+        //console.log(response);
+        let matches = []
+        //console.log('trdpeodmd');
+        //console.log(response);
+        for(let m of response){
+            let match = await student.getItemDetails(m.equipmentId);
+            let newObj = {...match[0],purchesedDate:m.dueDate}
+            matches.push(newObj);
+        }
+        //console.log(matches);
+        //console.log(matches);
+        return(matches);
+    }catch(err){
+        return(err);
+    }
+}
+
 const getReleventLecturer = async(labId)=>{
     try{
         const result = await student.getLecturer(labId);
@@ -73,4 +93,4 @@ const markNotification = async(detail)=>{
     }
 }
 
-module.exports = {getStudentBorrowedItems,getReleventLecturer,saveData,saveStudentTemporyData,saveNotification,markNotification}
+module.exports = {getStudentBorrowedItems,getStudentBorrowedItemsmobile,getReleventLecturer,saveData,saveStudentTemporyData,saveNotification,markNotification}
