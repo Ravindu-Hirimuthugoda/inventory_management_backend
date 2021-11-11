@@ -58,6 +58,7 @@ router.get('/borrowmobile/:id',async(req,res,next)=>{
     try{
         console.log('final response');
         const response = await getStudentBorrowedItemsmobile(req.params.id);
+        console.log(response.length);
         res.send(response);
     }catch(err){
         next(err);
