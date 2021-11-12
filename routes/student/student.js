@@ -1,5 +1,5 @@
-const {checkAvailability,getAllCategories, getModels, getLab, getStoreCode,getAvailabelItems,getNotification,getEquipmetCount, checkItemByCategory,getItemCount} = require('../../controllers/user');
-const { getStudentBorrowedItems, getReleventLecturer, saveData, saveStudentTemporyData, saveNotification, markNotification } = require('../../controllers/student-controller');
+const {checkAvailability,getAllCategories, getModels, getLab, getStoreCode,getAvailabelItems,getNotification,getEquipmetCount, checkItemByCategory,getItemCount,checkAvailabilitymobile} = require('../../controllers/user');
+const { getStudentBorrowedItems,getStudentBorrowedItemsmobile, getReleventLecturer, saveData, saveStudentTemporyData, saveNotification, markNotification } = require('../../controllers/student-controller');
 const { getPendingRequests, getPendingDetails, approveRequest, rejectRequest, saveLecturerNormalData, saveLecturerTemporyData } = require('../../controllers/lecturer-controller');
 const express = require('express');
 const Student = require('../../services/student');
@@ -17,6 +17,8 @@ router.get('/checkAvaiability',async(req,res,next)=>{
         next(e);
     }
 });
+
+router.get('/checkAvaiabilitymobile',checkAvailabilitymobile);
 
 router.get('/checkItemsByCategory',async(req,res,next)=>{
     try{
@@ -46,6 +48,17 @@ router.get('/category',getAllCategories);
 router.get('/borrow/:id',async(req,res,next)=>{
     try{
         const response = await getStudentBorrowedItems(req.params.id,req.query.qstr);
+        res.send(response);
+    }catch(err){
+        next(err);
+    }
+});
+
+router.get('/borrowmobile/:id',async(req,res,next)=>{
+    try{
+        console.log('final response');
+        const response = await getStudentBorrowedItemsmobile(req.params.id);
+        console.log(response.length);
         res.send(response);
     }catch(err){
         next(err);

@@ -23,7 +23,13 @@ const approveRequest = async(detail)=>{
 }
 
 const rejectRequest = async(detail)=>{
-    const res = await lecturer.rejectRequest(detail);
+    try{
+        const res = await lecturer.rejectRequest(detail);
+        return res;
+    }catch(err){
+        return(err);
+    }
+    
 }
 
 const saveLecturerNormalData = async(detail)=>{

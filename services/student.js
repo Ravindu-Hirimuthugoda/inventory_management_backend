@@ -44,6 +44,25 @@ class Student {
         return {"result":result,"total":total};
 
     }
+
+    async getBorrowedItemsmobile(id){
+        
+        borrowing.hasOne(temporyBorrowing);
+        borrowing.hasOne(requestBorrowing);
+
+        //const result = await borrowing.findAll({include:[{model:temporyBorrowing,where:{borrowingId:{[Op.ne]:null}}},{model:requestBorrowing,where:{borrowingId:{[Op.ne]:null}}}],raw:true});
+        //const result = await borrowing.findAll({where:{[Op.or]:[{includes:temporyBorrowing},{includes:requestBorrowing}]}});
+        const result1 = await borrowing.findAll({include:{model:temporyBorrowing,where:{[Op.and]:[{borrowingId:{[Op.ne]:null}},{studentId:{[Op.eq]:id}}]},attributes:[]},raw:true});
+        const result2 = await borrowing.findAll({include:{model:requestBorrowing,where:{[Op.and]:[{borrowingId:{[Op.ne]:null}},{studentId:{[Op.eq]:id}}]},attributes:[]},raw:true});
+        const result = result1.concat(result2);
+        console.log('step1');
+        console.log(result1);
+        console.log('step2');
+        console.log(result2);
+        return result;
+
+    }
+
     async getItemDetails(id) {
         category.hasMany(equipment);
         model.hasMany(equipment);
@@ -66,13 +85,18 @@ class Student {
 
     async saveDataDB(detail) {
         console.log('run here 4');
+        console.log(detail);
+        console.log(detail.requestDate);
+        console.log(detail.returnDate);
         const transaction = await sequelize.transaction();
         const req = new Date(detail.requestDate).toString();
         const ret = new Date(detail.returnDate).toString();
         const reqDate = this.convert(req);
         const retDate = this.convert(ret);
         //console.log(a);
-        console.log(detail);
+        console.log("print req,ret");
+        console.log(ret);
+        console.log(req);
 
 
         try {
@@ -113,6 +137,10 @@ class Student {
 
     async saveTemoryData(detail) {
         const transaction = await sequelize.transaction();
+        const req = new Date(detail.requestDate).toString();
+        const ret = new Date(detail.returnDate).toString();
+        const reqDate = this.convert(req);
+        const retDate = this.convert(ret);
 
         //console.log(a);
         console.log(detail);
@@ -124,8 +152,8 @@ class Student {
                 id: total + 1,
                 status: 'pass',
                 reason: detail.reason,
-                requestDate: detail.requestDate,
-                returnDate: detail.returnDate,
+                requestDate: reqDate,
+                returnDate: retDate,
                 equipmentId: detail.equipmentId,
                 type: 'tempory',
             }, { transaction });
@@ -133,7 +161,7 @@ class Student {
             const borrowingCount = await temporyBorrowing.count();
 
             const reqBorr = await temporyBorrowing.create({
-                id: borrowingCount + 1,
+                id: borrowingCount + 2,
                 requestId: total + 1,
                 studentId: detail.studentId,
                 borrowingId: null,
@@ -144,7 +172,7 @@ class Student {
             console.log('success');
             await transaction.commit();
         } catch (err) {
-            console.log('Error');
+            console.log(err);
             await transaction.rollback();
         }
     }

@@ -2,53 +2,78 @@
 const sequelize = require("../../config/database");
 const db = require('../../models/allmodels');
 
-const { Op,$lt, } = require("sequelize");
+const { Op, $lt, } = require("sequelize");
 
-class Request{
+class Request {
     constructor() {
         try {
             sequelize.sequelize.authenticate();
         } catch (error) {
-            
+
         }
     }
 
     async GetrequestData(id) {
-         let usertype;
-            let user = await db.Student.findOne(
-                    {
-                        where: { id: id }
+        let usertype;
+        let user = await db.Student.findOne(
+            {
+                where: { id: id }
+            });
+        if (user == null) {
+            user = await db.Lecture.findOne(
+                {
+                    where: { id: id }
                 });
-            if (user == null) {
-                user = await db.Lecture.findOne(
-                    {
-                        where: { id: id }
-                    });
-                 usertype = "lecturer";
-            }
-            else {
-                usertype = "student";
-            }
+            usertype = "lecturer";
+        }
+        else {
+            usertype = "student";
+        }
         //const user = await db.User.findOne({ where: { id: id } })
         if (user != null) {
             //const usertype = user.dataValues.type;
             var reqId;
             if (usertype === "student") {
                 const borrow = await db.RequestBorrowing.findOne({
+
+                    include: [{
+                        model: db.Request,
+                    }],
                     where: {
                         [Op.and]: [{
                             studentId: id
-                        }, { borrowingId: null }]
+                        }, { borrowingId: null }, { '$Request.status$': 'pass' }]
                     }
                 })
-                reqId = borrow.dataValues.requestId;
+
+                if (borrow == null) {
+                    const borrowtem = await db.TemporyBorrowing.findOne({
+
+                        include: [{
+                            model: db.Request,
+                        }],
+                        where: {
+                            [Op.and]: [{
+                                studentId: id
+                            }, { borrowingId: null }]
+                        }
+                    })
+                    reqId = borrowtem.dataValues.requestId;
+
+                }
+                else {
+                    reqId = borrow.dataValues.requestId;
+                }
             }
             else {
                 const borrow = await db.LectureBorrowing.findOne({
+                    include: [{
+                        model: db.Request,
+                    }],
                     where: {
                         [Op.and]: [{
                             lecturerId: id
-                        }, { borrowingId: null }]
+                        }, { borrowingId: null }, { '$Request.status$': 'pass' }]
                     }
                 })
                 reqId = borrow.dataValues.requestId;
@@ -70,7 +95,7 @@ class Request{
                     }, { status: 'pass' }]
                 }
             })
-            console.log(request);
+
             return request;
         }
         else {

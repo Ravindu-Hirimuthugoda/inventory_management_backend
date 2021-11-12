@@ -32,6 +32,8 @@ db.Lecture.hasMany(db.LectureBorrowing);
 db.LectureBorrowing.belongsTo(db.BorrowData);
 db.BorrowData.hasMany(db.LectureBorrowing);
 
+db.LectureBorrowing.belongsTo(db.Request);
+db.Request.hasMany(db.LectureBorrowing);
 
 db.TemporyBorrowing.belongsTo(db.Student);
 db.Student.hasMany(db.TemporyBorrowing);
@@ -47,6 +49,8 @@ db.BorrowData.hasMany(db.RequestBorrowing);
 db.RequestBorrowing.belongsTo(db.Request);
 db.Request.hasMany(db.RequestBorrowing);
 
+db.TemporyBorrowing.belongsTo(db.Request);
+db.Request.hasMany(db.TemporyBorrowing);
 
 db.RequestBorrowing.belongsTo(db.Student);
 db.Student.hasMany(db.RequestBorrowing);

@@ -23,12 +23,12 @@ const sequelize = require("../../config/database");
 describe('create student ', () => {
 
     let student;
-    let index,firstName,lastName,uid,department;
-    
+    let index, firstName, lastName, uid, department;
+
     const exec = async () => {
         studentModel.create = jest.fn().mockReturnValue(student);
         const studentService = new StudentService();
-        return await studentService.createStudent(index,firstName,lastName,uid,department);
+        return await studentService.createStudent(index, firstName, lastName, uid, department);
     }
 
     beforeEach(() => {
@@ -37,18 +37,18 @@ describe('create student ', () => {
             index: "S001",
             firstName: "Test",
             lastName: "Student",
-            department : "CSE",         
+            department: "CSE",
             uid: 1,
-            
+
         };
 
     });
 
     test('should student model if create student', async () => {
-        index = "S001";        
-        firstName= "Test",
-        lastName= "Student",            
-        uid= 1;
+        index = "S001";
+        firstName = "Test",
+            lastName = "Student",
+            uid = 1;
         department = "CSE";
         const result = await exec();
         expect(result).toBe(student);
@@ -59,12 +59,12 @@ describe('create student ', () => {
 describe('create lecturer ', () => {
 
     let lecturer;
-    let index,firstName,lastName,uid,department;
-    
+    let index, firstName, lastName, uid, department;
+
     const exec = async () => {
         lectureModel.create = jest.fn().mockReturnValue(lecturer);
         const lecturerService = new LectureService();
-        return await lecturerService.createLecturer(index,firstName,lastName,uid,department);
+        return await lecturerService.createLecturer(index, firstName, lastName, uid, department);
     }
 
     beforeEach(() => {
@@ -73,18 +73,18 @@ describe('create lecturer ', () => {
             index: "L001",
             firstName: "Test",
             lastName: "Lecturer",
-            department : "CSE",         
+            department: "CSE",
             uid: 1,
-            
+
         };
 
     });
 
     test('should lecturer model if create lecturer', async () => {
-        index = "L001";        
-        firstName= "Test",
-        lastName= "Lecturer",            
-        uid= 1;
+        index = "L001";
+        firstName = "Test",
+            lastName = "Lecturer",
+            uid = 1;
         department = "CSE";
         const result = await exec();
         expect(result).toBe(lecturer);
@@ -94,12 +94,12 @@ describe('create lecturer ', () => {
 describe('create officeClerk', () => {
 
     let officeClerk;
-    let index,firstName,lastName,uid;
-    
+    let index, firstName, lastName, uid;
+
     const exec = async () => {
         officeClerkModel.create = jest.fn().mockReturnValue(officeClerk);
         const officeClerkService = new OfficeClerkService();
-        return await officeClerkService.createOfficeClerk(index,firstName,lastName,uid);
+        return await officeClerkService.createOfficeClerk(index, firstName, lastName, uid);
     }
 
     beforeEach(() => {
@@ -107,17 +107,17 @@ describe('create officeClerk', () => {
         officeClerk = {
             index: "C001",
             firstName: "Test",
-            lastName: "Office Clerk",            
+            lastName: "Office Clerk",
             uid: 1
         };
 
     });
 
     test('should office clerk model if create office clerk', async () => {
-        index = "C001";        
-        firstName= "Test",
-        lastName= "Office Clerk",            
-        uid= 1;
+        index = "C001";
+        firstName = "Test",
+            lastName = "Office Clerk",
+            uid = 1;
         const result = await exec();
         expect(result).toBe(officeClerk);
     });
@@ -126,12 +126,12 @@ describe('create officeClerk', () => {
 describe('create technicalOfficer', () => {
 
     let technicalOfficer;
-    let index,firstName,lastName,uid,labId;
-    
+    let index, firstName, lastName, uid, labId;
+
     const exec = async () => {
         technicalOfficerModel.create = jest.fn().mockReturnValue(technicalOfficer);
         const technicalOfficerService = new TechnicalService();
-        return await technicalOfficerService.createTechnicalOfficer(index,firstName,lastName,uid,labId);
+        return await technicalOfficerService.createTechnicalOfficer(index, firstName, lastName, uid, labId);
     }
 
     beforeEach(() => {
@@ -139,18 +139,18 @@ describe('create technicalOfficer', () => {
         technicalOfficer = {
             index: "T001",
             firstName: "Test",
-            lastName: "Office Clerk",            
+            lastName: "Office Clerk",
             uid: 1,
-            labId:1
+            labId: 1
         };
 
     });
 
     test('should technical officer model if create technical officer', async () => {
-        index = "T001";        
-        firstName= "Test",
-        lastName= "Technical Officer",            
-        uid= 1;
+        index = "T001";
+        firstName = "Test",
+            lastName = "Technical Officer",
+            uid = 1;
         labId = 1;
         const result = await exec();
         expect(result).toBe(technicalOfficer);
@@ -161,8 +161,8 @@ describe('create technicalOfficer', () => {
 describe('get last student ', () => {
 
     let student;
-    
-    
+
+
     const exec = async () => {
         studentModel.findAll = jest.fn().mockReturnValue(student);
         const studentService = new StudentService();
@@ -171,7 +171,7 @@ describe('get last student ', () => {
 
     beforeEach(() => {
         sequelize.authenticate = jest.fn();
-        
+
 
     });
 
@@ -180,8 +180,8 @@ describe('get last student ', () => {
             index: "S001",
             firstName: "Test",
             lastName: "Student",
-            department : "CSE",         
-            uid: 1,            
+            department: "CSE",
+            uid: 1,
         };
         const result = await exec();
         expect(result).toBe(student);

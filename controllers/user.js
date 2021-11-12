@@ -71,6 +71,29 @@ const getEquipmetCount = async(req,res,next)=>{
     }
 }
 
+const checkAvailabilitymobile = async(req,res,next)=>{
+    try{
+        const response = await user.getItemDetailsmobile();
+        let lst=[];
+        //console.log(response);
+        for(let m of response){
+            //console.log(m);
+            if(!m.availability && m.status!='damage'){
+                const date = await user.getReturnDate(m.id);
+                //console.log(date.slice(-1));
+                m= {...m,returnDate:date.slice(-1)[0].returnDate};
+            }
+            lst.push(m);
+        }
+        console.log(lst);
+
+        res.send(lst);
+        
+    }catch(err){
+        return(err);
+    }
+}
+
 const getAvailabelItems = async(req,res,next)=>{
     try{
         const result = await user.getAvailableItems();
@@ -157,4 +180,4 @@ const getStoreCode = async(category,model,labName)=>{
 
 
 
-module.exports = {checkAvailability,getAllCategories,getModels,getLab,getStoreCode,getAvailabelItems,getNotification,getEquipmetCount,checkItemByCategory,getItemCount};
+module.exports = {checkAvailability,getAllCategories,getModels,getLab,getStoreCode,getAvailabelItems,getNotification,getEquipmetCount,checkItemByCategory,getItemCount,checkAvailabilitymobile};
