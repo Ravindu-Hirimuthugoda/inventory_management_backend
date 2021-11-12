@@ -81,41 +81,33 @@ const addStudent = async (req, res, next) => {
 
     let user;
     let student;
-    if (checkUserType(req.user.type, "Admin")) {
-      try {
-        let isUser = await userService.getUserByEmail(email);
-        if (isUser != null) {
-          let isStudent = await studentService.getStudentByID(index);
-          if (isStudent != null) {
+    let isUser = await userService.getUserByEmail(email);
+    if (isUser != null) {
+      let isStudent = await studentService.getStudentByID(index);
+      if (isStudent != null) {
 
-            const salt = await bcrypt.genSalt(10);
-            let hashPw = await bcrypt.hash(password, salt);
-            user = await userService.createUser(email, hashPw, "Student", false);
-            student = await studentService.createStudent(
-              index,
-              firstName,
-              lastName,
-              user.id,
-              department
-            );
-            let out = {
-              user: user,
-              student: student,
-            };
-            return successMessage(res, out);
-          } else {
-            return errorMessage(res, "Student already exsist for entered index", 406);
-          }
-        } else {
-          return errorMessage(res, "User already exsist", 406);
-        }
-      } catch (e) {
-        console.log(e);
-        return errorMessage(res, "Something went wrong", 500);
+        const salt = await bcrypt.genSalt(10);
+        let hashPw = await bcrypt.hash(password, salt);
+        user = await userService.createUser(email, hashPw, "Student", false);
+        student = await studentService.createStudent(
+          index,
+          firstName,
+          lastName,
+          user.id,
+          department
+        );
+        let out = {
+          user: user,
+          student: student,
+        };
+        return successMessage(res, out);
+      } else {
+        return errorMessage(res, "Student already exsist for entered index", 406);
       }
     } else {
-      return errorMessage(res, "Not authenticated.", 401);
+      return errorMessage(res, "User already exsist", 406);
     }
+    
   } catch (err) {
     next(err);
   }
@@ -133,45 +125,45 @@ const addLecturer = async (req, res, next) => {
 
     let user;
     let lecturer;
+    
+      let isUser = await userService.getUserByEmail(email);
 
-    if (checkUserType(req.user.type, "Admin")) {
-      try {
-        let isUser = await userService.getUserByEmail(email);
+      if (isUser != null) {
+        let isLecturer = await lectureService.getLecturerByID(
+          index,
 
-        if (isUser != null) {
-          let isLecturer = await lectureService.getLecturerByID(
+        );
+        if (isLecturer != null) {
+          const salt = await bcrypt.genSalt(10);
+          let hashPw = await bcrypt.hash(password, salt);
+          user = await userService.createUser(email, hashPw, "Lecturer", false);
+          lecturer = await lectureService.createLecturer(
             index,
-
+            firstName,
+            lastName,
+            user.id,
+            department
           );
-          if (isLecturer != null) {
-            const salt = await bcrypt.genSalt(10);
-            let hashPw = await bcrypt.hash(password, salt);
-            user = await userService.createUser(email, hashPw, "Lecturer", false);
-            lecturer = await lectureService.createLecturer(
-              index,
-              firstName,
-              lastName,
-              user.id,
-              department
-            );
-            let out = {
-              user: user,
-              lecturer: lecturer,
-            };
-            return successMessage(res, out);
-          } else {
-            return errorMessage(res, "Lecturer  already exsist", 406);
-          }
+          let out = {
+            user: user,
+            lecturer: lecturer,
+          };
+          return successMessage(res, out);
         } else {
-          return errorMessage(res, "User already exsist", 406);
+          return errorMessage(res, "Lecturer  already exsist", 406);
         }
-      } catch (e) {
-        console.log(e);
-        return errorMessage(res, "Something went wrong", 500);
+      } else {
+        return errorMessage(res, "User already exsist", 406);
       }
-    } else {
-      return errorMessage(res, "Not authenticated.", 401);
-    }
+    // if (checkUserType(req.user.type, "Admin")) {
+      
+    //   } catch (e) {
+    //     console.log(e);
+    //     return errorMessage(res, "Something went wrong", 500);
+    //   }
+    // } else {
+    //   return errorMessage(res, "Not authenticated.", 401);
+    // }
   } catch (err) {
     next(err);
   }
@@ -311,26 +303,17 @@ const addLaboratory = async (req, res, next) => {
     const department = req.body.department;
 
     let laboratory;
-    if (checkUserType(req.user.type, "Admin")) {
-      try {
-        laboratory = await laboratoryService.createLaboratory(
-          labName,
-          department
-        );
-        if (laboratory != null) {
-          let out = {
-            laboratory: laboratory,
-          };
-          return successMessage(res, out);
-        } else {
-          return errorMessage(res, "Laboratory has already exist", 406);
-        }
-      } catch (e) {
-        console.log(e);
-        return errorMessage(res, "Something went wrong", 500);
-      }
+    laboratory = await laboratoryService.createLaboratory(
+      labName,
+      department
+    );
+    if (laboratory != null) {
+      let out = {
+        laboratory: laboratory,
+      };
+      return successMessage(res, out);
     } else {
-      return errorMessage(res, "Not authenticated.", 401);
+      return errorMessage(res, "Laboratory has already exist", 406);
     }
   } catch (err) {
     next(err);
@@ -340,23 +323,14 @@ const addLaboratory = async (req, res, next) => {
 const getLaboratory = async (req, res, next) => {
   try {
     let laboratories;
-    if (checkUserType(req.user.type, "Admin")) {
-      try {
-        laboratories = await laboratoryService.readAllLaboratory();
-        if (laboratories != null) {
-          let out = {
-            laboratory: laboratories,
-          };
-          return successMessage(res, out);
-        } else {
-          return errorMessage(res, "Laboratories not found", 500);
-        }
-      } catch (e) {
-        console.log(e);
-        return errorMessage(res, "Something went wrong", 500);
-      }
+    laboratories = await laboratoryService.readAllLaboratory();
+    if (laboratories != null) {
+      let out = {
+        laboratory: laboratories,
+      };
+      return successMessage(res, out);
     } else {
-      return errorMessage(res, "Not authenticated.", 401);
+      return errorMessage(res, "Laboratories not found", 500);
     }
   } catch (err) {
     next(err);
@@ -367,21 +341,16 @@ const getLaboratory = async (req, res, next) => {
 const getLastStudent = async (req, res, next) => {
   try {
     let student;
-
-    if (checkUserType(req.user.type, "Admin")) {
-      try {
-        student = await studentService.readLastEntry();
-        if (student != null) {
-          return successMessage(res, student);
-        } else {
-          return errorMessage(res, "Last entry not found", 500);
-        }
-      } catch (e) {
-        console.log(e);
-        return errorMessage(res, "Something went wrong", 500);
+    try {
+      student = await studentService.readLastEntry();
+      if (student != null) {
+        return successMessage(res, student);
+      } else {
+        return errorMessage(res, "Last entry not found", 500);
       }
-    } else {
-      return errorMessage(res, "Not authenticated for this user.", 401);
+    } catch (e) {
+      console.log(e);
+      return errorMessage(res, "Something went wrong", 500);
     }
   } catch (err) {
     next(err);
@@ -390,21 +359,13 @@ const getLastStudent = async (req, res, next) => {
 const getLastLecture = async (req, res, next) => {
   try {
     let lecture;
-    if (checkUserType(req.user.type, "Admin")) {
-      try {
-        lecture = await lectureService.readLastEntry();
+    lecture = await lectureService.readLastEntry();
         if (lecture != null) {
           return successMessage(res, lecture);
         } else {
           return errorMessage(res, "Last entry not found", 500);
         }
-      } catch (e) {
-        console.log(e);
-        return errorMessage(res, "Something went wrong", 500);
-      }
-    } else {
-      return errorMessage(res, "Not authenticated.", 401);
-    }
+   
   } catch (err) {
     next(err);
   }
@@ -412,21 +373,12 @@ const getLastLecture = async (req, res, next) => {
 const getLastOfficeClerk = async (req, res, next) => {
   try {
     let officeClerk;
-    if (checkUserType(req.user.type, "Admin")) {
-      try {
-        officeClerk = await officeClerkService.readLastEntry();
+    officeClerk = await officeClerkService.readLastEntry();
         if (officeClerk != null) {
           return successMessage(res, officeClerk);
         } else {
           return errorMessage(res, "Last entry not found", 500);
         }
-      } catch (e) {
-        console.log(e);
-        return errorMessage(res, "Something went wrong", 500);
-      }
-    } else {
-      return errorMessage(res, "Not authenticated.", 401);
-    }
   } catch (err) {
     next(err);
   }
@@ -434,20 +386,11 @@ const getLastOfficeClerk = async (req, res, next) => {
 const getLastTechnicalOfficer = async (req, res, next) => {
   try {
     let technicalOfficer;
-    if (checkUserType(req.user.type, "Admin")) {
-      try {
-        technicalOfficer = await technicalOfficerService.readLastEntry();
-        if (technicalOfficer != null) {
-          return successMessage(res, technicalOfficer);
-        } else {
-          return errorMessage(res, "Last entry not found", 500);
-        }
-      } catch (e) {
-        console.log(e);
-        return errorMessage(res, "Something went wrong", 500);
-      }
+    technicalOfficer = await technicalOfficerService.readLastEntry();
+    if (technicalOfficer != null) {
+      return successMessage(res, technicalOfficer);
     } else {
-      return errorMessage(res, "Not authenticated.", 401);
+      return errorMessage(res, "Last entry not found", 500);
     }
   } catch (err) {
     next(err);
@@ -456,21 +399,12 @@ const getLastTechnicalOfficer = async (req, res, next) => {
 const getLastAdmin = async (req, res, next) => {
   try {
     let admin;
-    if (checkUserType(req.user.type, "Admin")) {
-      try {
-        admin = await adminService.readLastEntry();
+    admin = await adminService.readLastEntry();
         if (admin != null) {
           return successMessage(res, admin);
         } else {
           return errorMessage(res, "Last entry not found", 500);
         }
-      } catch (e) {
-        console.log(e);
-        return errorMessage(res, "Something went wrong", 500);
-      }
-    } else {
-      return errorMessage(res, "Not authenticated.", 401);
-    }
   } catch (err) {
     next(err);
   }
@@ -480,35 +414,27 @@ const getUser = async (req, res, next) => {
   try {
     let user;
     let role;
-    if (checkUserType(req.user.type, "Admin")) {
-      const email = req.body.email;
-      try {
-        user = await userService.getUser(email);
-        if(user == null){
-          return errorMessage(res, "User not found", 500);
-        }
-        role = await userService.readUserRole(user.id, user.type.toString());
-        
-        let tempUser = {
-          userEmail: user.email,
-          userType: user.type
-        }
-        let user_role = {
-          ...role,
-          ...tempUser
-        }
-        if (user != null && role != null) {
-          return successMessage(res, user_role);
-        } else {
-          return errorMessage(res, "User not found", 500);
-        }
-      } catch (e) {
-        console.log(e);
-        return errorMessage(res, "Something went wrong", 500);
-      }
-    } else {
-      return errorMessage(res, "Not authenticated.", 401);
+    const email = req.body.email;
+    user = await userService.getUser(email);
+    if(user == null){
+      return errorMessage(res, "User not found", 500);
     }
+    role = await userService.readUserRole(user.id, user.type.toString());
+    
+    let tempUser = {
+      userEmail: user.email,
+      userType: user.type
+    }
+    let user_role = {
+      ...role,
+      ...tempUser
+    }
+    if (user != null && role != null) {
+      return successMessage(res, user_role);
+    } else {
+      return errorMessage(res, "User not found", 500);
+    }
+    
   } catch (err) {
     next(err);
   }
@@ -517,8 +443,7 @@ const getUser = async (req, res, next) => {
 const updateUserPassword = async (req, res, next) => {
   try {
     let user;
-    if (checkUserType(req.user.type, "Admin")) {
-      const email = req.body.email;
+    const email = req.body.email;
       const password = req.body.password;
 
       const salt = await bcrypt.genSalt(10);
@@ -538,9 +463,6 @@ const updateUserPassword = async (req, res, next) => {
         console.log(e);
         return errorMessage(res, "Something went wrong", 500);
       }
-    } else {
-      return errorMessage(res, "Not authenticated.", 401);
-    }
   } catch (err) {
     next(err);
   }
