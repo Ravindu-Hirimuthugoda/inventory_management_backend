@@ -187,15 +187,5 @@ describe('get last student ', () => {
         expect(result).toBe(student);
     });
 
-   
-    // test("Test description", async() => {
-    //     student = null;
-    //     // const t = () => {
-    //     //   throw new Error("UNKNOWN ERROR");
-    //     // };
-    //     const result = await exec();
-    //     expect(t).toBe("TypeError");
-    //     // expect(result).toThrow("UNKNOWN ERROR");
-    //   });
 });
 
